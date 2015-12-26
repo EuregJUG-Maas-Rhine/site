@@ -1,0 +1,54 @@
+/*
+	Slate by Pixelarity
+	pixelarity.com @pixelarity
+	License: pixelarity.com/license
+*/
+
+/* Button */
+
+	input[type="submit"],
+	input[type="reset"],
+	input[type="button"],
+	button,
+	.button {
+		border: solid 1px #e6e6e6 !important;
+	}
+
+		input[type="submit"].special,
+		input[type="reset"].special,
+		input[type="button"].special,
+		button.special,
+		.button.special {
+			border: 0 !important;
+		}
+
+/* Header */
+
+	#header {
+		border-bottom: solid 1px #e6e6e6;
+	}
+
+	.dropotron {
+		border: solid 1px #e6e6e6;
+	}
+
+/* Banner */
+
+	#banner .indicators li:before {
+		background: #000;
+	}
+
+	#banner > article {
+		overflow: hidden;
+	}
+
+		#banner > article:after {
+			display: none;
+		}
+
+		#banner > article img {
+			display: block;
+			position: absolute;
+			top: 0;
+			left: 0;
+		}

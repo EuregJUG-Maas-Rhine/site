@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<!--
+Copyright 2015 EuregJUG.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:th="http://www.thymeleaf.org"
+      th:lang="${#locale.language}">
+    <head>
+	<title>Header and CSS Information</title>
+	<meta charset="UTF-8" />	
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<!--[if lte IE 8]>
+	<script src="../../../../test/resources/templates/js/html5shiv.min.js" 
+		th:href="@{/webjars/html5shiv/{version}/html5shiv.min.js(version=${@environment.getProperty('info.versions.html5shiv')})}"></script>
+	<![endif]-->		  	
+	<link rel="stylesheet"
+	      href="../../../../test/resources/templates/css/font-awesome.css"
+	      th:href="@{/webjars/font-awesome/{version}/css/font-awesome.min.css(version=${@environment.getProperty('info.versions.font-awesome')})}" />
+	<link rel="stylesheet"
+	      href="../../../../main/webapp/public/css/main.css"
+	      th:href="@{/css/main.css}"
+	/>
+	<!--[if lte IE 8]>
+	<link rel="stylesheet"
+	      href="../../../../main/webapp/public/css/ie8.css"
+	      th:href="@{/css/ie8.css}"
+	/>
+	<![endif]-->	
+	<!--[if lte IE 9]>
+	<link rel="stylesheet"
+	      href="../../../../main/webapp/public/css/ie9.css"
+	      th:href="@{/css/ie9.css}"
+	/>
+	<![endif]-->
+	<noscript>
+	    <link rel="stylesheet"
+		href="../../../../main/webapp/public/css/noscript.css"
+		th:href="@{/css/noscript.css}"
+	    />	    
+	</noscript>
+    </head>
+    <body />
+</html>

@@ -1,0 +1,113 @@
+/*
+	Slate by Pixelarity
+	pixelarity.com @pixelarity
+	License: pixelarity.com/license
+*/
+
+/* List */
+
+	ul.bulleted-icons:after {
+		content: '';
+		display: block;
+		clear: both;
+	}
+
+	ul.bulleted-icons li {
+		float: left;
+		width: 50%;
+		padding-right: 1.55em !important;
+	}
+
+/* Spotlight */
+
+	.spotlight:after {
+		content: '';
+		display: block;
+		clear: both;
+	}
+
+	.spotlight .content {
+		float: left;
+		padding-right: 1.5em !important;
+		width: 33.33333%;
+	}
+
+	.spotlight .image {
+		width: 66.66666%;
+	}
+
+/* Features */
+
+	.features:after {
+		content: '';
+		display: block;
+		clear: both;
+	}
+
+	.features > section {
+		width: 33.33333%;
+		float: left;
+		padding-right: 1.5em !important;
+	}
+
+		.features > section:before {
+			display: none;
+		}
+
+/* Posts */
+
+	.posts:after {
+		content: '';
+		display: block;
+		clear: both;
+	}
+
+	.posts .post {
+		width: 33.33333%;
+		float: left;
+		padding-right: 1.5em !important;
+	}
+
+		.posts .post.first {
+			clear: both;
+		}
+
+/* Wrapper */
+
+	.wrapper.split > .inner:after {
+		content: '';
+		display: block;
+		clear: both;
+	}
+
+	.wrapper.split > .inner > * {
+		width: 50%;
+		float: left;
+		padding-right: 4em !important;
+	}
+
+		.wrapper.split > .inner > *:before {
+			display: none;
+		}
+
+	.wrapper.sidebar > .inner:after {
+		content: '';
+		display: block;
+		clear: both;
+	}
+
+	.wrapper.sidebar.left > .inner > .content {
+		float: right;
+	}
+
+	.wrapper.sidebar.left > .inner > .sidebar {
+		float: right;
+	}
+
+	.wrapper.sidebar.right > .inner > .content {
+		float: left;
+	}
+
+	.wrapper.sidebar.right > .inner > .sidebar {
+		float: left;
+	}
