@@ -90,6 +90,12 @@ public class RegistrationEntity implements Serializable {
     @Column(name = "first_name", length = 512)
     private String firstName;
 
+    /**
+     * Needed for Hibernate, not to be called by application code.
+     */
+    protected RegistrationEntity() {
+    }
+        
     public RegistrationEntity(EventEntity event, String email, String name, String firstName) {
 	this.event = event;
 	this.email = email;

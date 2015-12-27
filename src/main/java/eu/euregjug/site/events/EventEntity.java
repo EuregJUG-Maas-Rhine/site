@@ -52,16 +52,18 @@ import org.hibernate.validator.constraints.NotBlank;
 )
 @NamedQueries({
     @NamedQuery(
-	    name = "EventEntity.findUpcomingEvents",	    
+	    name = "EventEntity.findUpcomingEvents",
 	    query
 	    = " Select e"
 	    + "   from EventEntity e"
 	    + "  where e.heldOn > current_date()"
-	    + " order by e.heldOn asc "
+	    + "  order by e.heldOn asc "
     )
 })
 public class EventEntity implements Serializable {
-    
+
+    private static final long serialVersionUID = 2005305860095134425L;
+
     /**
      * Types of events
      */
@@ -69,8 +71,6 @@ public class EventEntity implements Serializable {
 
 	talk, meetup
     }
-
-    private static final long serialVersionUID = 2005305860095134425L;
 
     /**
      * Primary key of this event.
@@ -110,9 +110,9 @@ public class EventEntity implements Serializable {
      * A flag if a guest needs to register for this event. Defaults to
      * {@code false}.
      */
-    @Column(name = "needs_registration", nullable = false)    
+    @Column(name = "needs_registration", nullable = false)
     private boolean needsRegistration = false;
-    
+
     @Column(name = "type")
     @Enumerated(EnumType.STRING)
     @NotNull
@@ -137,7 +137,7 @@ public class EventEntity implements Serializable {
 	this.name = name;
 	this.description = description;
     }
-    
+
     @JsonProperty
     public Integer getId() {
 	return id;
@@ -174,7 +174,7 @@ public class EventEntity implements Serializable {
     public void setType(Type type) {
 	this.type = type;
     }
-    
+
     @Override
     public int hashCode() {
 	int hash = 7;
