@@ -13,7 +13,9 @@
     <body>
 	<!-- Header -->
 	<header id="header">
-	    <h1><a href="index.html">Slate <span>by Pixelarity</span></a></h1>
+	    <h1>		
+		<a href="index.html" th:href="@{/}"><span th:text="#{siteTitle}" th:remove="tag">Site title</span> &mdash; <span th:text="#{siteSubTitle}">Sub title</span></a>	    
+	    </h1>
 	    <nav id="nav">
 		<ul>
 		    <li><a href="index.html">Home</a></li>
@@ -45,8 +47,8 @@
 	    <div class="inner">
 
 		<header class="major">
-		    <h2>Right Sidebar</h2>
-		    <p>Sed magna in pharetra ultricies dolor sit amet consequat adipiscing lorem.</p>
+		    <h2 th:text="#{blogTitle}">Page Title</h2>
+		    <p th:text="#{blogSubTitle}">Sed magna in pharetra ultricies dolor sit amet consequat adipiscing lorem.</p>
 		</header>
 
 		<!-- Content -->
@@ -68,30 +70,16 @@
 
 		<!-- Sidebar -->
 		<div class="sidebar">
-
 		    <section>
-			<h3>Magna Feugiat</h3>
-			<p>Sed tristique purus vitae volutpat commodo suscipit amet sed nibh. Proin a ullamcorper sed blandit. Sed tristique purus vitae volutpat commodo suscipit ullamcorper commodo suscipit amet sed nibh. Proin a ullamcorper sed blandit..</p>
-			<footer>
-			    <ul class="actions">
-				<li><a href="#" class="button">Learn More</a></li>
-			    </ul>
-			</footer>
-		    </section>
-		    <hr />
-		    <section>
-			<a href="#" class="image fit"><img src="img/pic01.jpg" alt="" /></a>
-			<h3>Amet Lorem Tempus</h3>
-			<p>Sed tristique purus vitae volutpat commodo suscipit amet sed nibh. Proin a ullamcorper sed blandit. Sed tristique purus vitae volutpat commodo suscipit ullamcorper sed blandit lorem ipsum dolore.</p>
-			<footer>
-			    <ul class="actions">
-				<li><a href="#" class="button">Learn More</a></li>
-			    </ul>
-			</footer>
-		    </section>
-
+			<h3 th:text="#{upcomingEvents}">Magna Feugiat</h3>
+			<ol class="upcomingEvents">
+			    <li th:each="upcomingEvent : ${upcomingEvents}">
+				<span class="title" th:utext="#{upcomingEvents.title(${upcomingEvent.heldOn.time},${upcomingEvent.name})}">27.12.2015 14:00 Some title:</span>
+				<span th:text="${upcomingEvent.description}">Sed tristique purus vitae volutpat commodo suscipit amet sed nibh. Proin a ullamcorper sed blandit. Sed tristique purus vitae volutpat commodo suscipit ullamcorper commodo suscipit amet sed nibh. Proin a ullamcorper sed blandit.</span>
+			    </li>
+			</ol>						
+		    </section>		   
 		</div>
-
 	    </div>
 	</section>
 
