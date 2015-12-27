@@ -4,17 +4,17 @@
 	pixelarity.com @pixelarity
 	License: pixelarity.com/license
 -->
-<html xmlns="http://www.w3.org/1999/xhtml" 
+<html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
       th:lang="${#locale.language}">
     <head th:replace="fragments/head :: head">
-	<title>index.html</title>	
+	<title>index.html</title>
     </head>
     <body>
 	<!-- Header -->
 	<header id="header">
-	    <h1>		
-		<a href="index.html" th:href="@{/}"><span th:text="#{siteTitle}" th:remove="tag">Site title</span> &mdash; <span th:text="#{siteSubTitle}">Sub title</span></a>	    
+	    <h1>
+		<a href="index.html" th:href="@{/}"><span th:text="#{siteTitle}" th:remove="tag">Site title</span> &mdash; <span th:text="#{siteSubTitle}">Sub title</span></a>
 	    </h1>
 	    <nav id="nav">
 		<ul>
@@ -70,15 +70,36 @@
 
 		<!-- Sidebar -->
 		<div class="sidebar">
-		    <section>
+		    <section id="upcomingEvents">
 			<h3 th:text="#{upcomingEvents}">Magna Feugiat</h3>
-			<ol class="upcomingEvents">
+			<ol>
 			    <li th:each="upcomingEvent : ${upcomingEvents}">
 				<span class="title" th:utext="#{upcomingEvents.title(${upcomingEvent.heldOn.time},${upcomingEvent.name})}">27.12.2015 14:00 Some title:</span>
 				<span th:text="${upcomingEvent.description}">Sed tristique purus vitae volutpat commodo suscipit amet sed nibh. Proin a ullamcorper sed blandit. Sed tristique purus vitae volutpat commodo suscipit ullamcorper commodo suscipit amet sed nibh. Proin a ullamcorper sed blandit.</span>
 			    </li>
-			</ol>						
-		    </section>		   
+			</ol>
+		    </section>
+
+		    <section id="profiles">
+			<h3 th:text="#{profiles}">#profiles</h3>
+			<ul>
+			    <li th:each="link : ${links.get(T(eu.euregjug.site.links.LinkEntity.Type).profile)}" th:include="fragments/link :: body">A link</li>
+			</ul>
+		    </section>
+		    
+		    <section id="links">
+			<h3 th:text="#{links}">#links</h3>
+			<ul>
+			    <li th:each="link : ${links.get(T(eu.euregjug.site.links.LinkEntity.Type).generic)}" th:include="fragments/link :: body">A link</li>
+			</ul>
+		    </section>
+		    
+		    <section id="sponsors">
+			<h3 th:text="#{sponsors}">#sponsors</h3>
+			<ul>
+			    <li th:each="link : ${links.get(T(eu.euregjug.site.links.LinkEntity.Type).sponsor)}" th:include="fragments/link :: body">A link</li>
+			</ul>
+		    </section>
 		</div>
 	    </div>
 	</section>

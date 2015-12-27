@@ -14,17 +14,27 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-ol.upcomingEvents {
+#upcomingEvents ol {
     list-style: none;    
     padding-left: 0;
 }
 
-ol.upcomingEvents li {    
+#upcomingEvents ol li {    
     margin-bottom: 2em;
 }
 
-.upcomingEvents span.title {
+#upcomingEvents ol li span.title {
    font-weight:bold;
    display:block;
    margin-bottom: 0.5em;
+}
+
+
+#sponsors ul {
+    list-style: none;    
+    padding-left: 0;
+}
+
+#sponsors ul li {        
+    padding-left: 0;
 }

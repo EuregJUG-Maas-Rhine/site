@@ -16,10 +16,14 @@
 package eu.euregjug.site.web;
 
 import eu.euregjug.site.events.EventRepository;
+import eu.euregjug.site.links.LinkEntity;
+import eu.euregjug.site.links.LinkRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import static java.util.stream.Collectors.groupingBy;
 
 /**
  * @author Michael J. Simons, 2015-12-27
@@ -27,15 +31,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class IndexController {
     private final EventRepository eventRepository;
+    
+    private final LinkRepository linkRepository;
 
     @Autowired
-    public IndexController(EventRepository eventRepository) {
+    public IndexController(EventRepository eventRepository, LinkRepository linkRepository) {
 	this.eventRepository = eventRepository;
+	this.linkRepository = linkRepository;	
     }
     
     @RequestMapping({"", "/"})
     public String index(final Model model) {
-	model.addAttribute("upcomingEvents", this.eventRepository.findUpcomingEvents());
+	model
+		.addAttribute("upcomingEvents", this.eventRepository.findUpcomingEvents())
+		.addAttribute("links", this.linkRepository.findAllByOrderByTypeAscSortColAscTitleAsc().stream().collect(groupingBy(LinkEntity::getType)))		
+		;
 	return "index";
     }
 }
