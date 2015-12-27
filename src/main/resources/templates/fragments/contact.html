@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<!--
+Copyright 2015 EuregJUG.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:th="http://www.thymeleaf.org"
+      th:lang="${#locale.language}">
+    <head>
+	<title>Contact details</title>
+	<meta charset="UTF-8" />
+    </head>
+    <body>
+	<section id="contact" class="wrapper split">
+	    <div class="inner">
+		<section>
+		    <h2 th:text="#{contactTitle}">Conctac</h2>
+		    <ul class="bulleted-icons">
+			<li>
+			    <span class="icon-wrapper"><span class="icon fa-envelope"></span></span>
+			    <h3>Email</h3>
+			    <p><a href="mailto:info@euregjug.eu">info@euregjug.eu</a></p>
+			</li>
+			<li>
+			    <span class="icon-wrapper"><span class="icon fa-twitter"></span></span>
+			    <h3>Twitter</h3>
+			    <p><a href="https://twitter.com/euregjug">@euregjug</a></p>
+			</li>
+			<li>
+			    <span class="icon-wrapper"><span class="icon fa-home"></span></span>
+			    <h3>JUG Lead</h3>
+			    <p><a href="http://michael-simons.eu">Michael Simons</a></p>
+			</li>			
+		    </ul>
+		</section>		
+	    </div>
+	</section>
+    </body>
+</html>
