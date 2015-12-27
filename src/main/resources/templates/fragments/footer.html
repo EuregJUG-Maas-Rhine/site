@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<!--
+Copyright 2015 EuregJUG.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:th="http://www.thymeleaf.org"
+      th:lang="${#locale.language}">
+    <head>
+	<title>Default Footer for all templates</title>
+	<meta charset="UTF-8" />	
+    </head>
+    <body>
+	<footer id="footer">
+	    <div class="inner">
+		<p class="copyright">Copyright &copy; 2015 - <span th:text="${#dates.year(#dates.createNow())}">now</span> EuregJUG Maas-Rhine.</p>		
+		<ul class="menu">
+		    <li>Powered by <a href="http://projects.spring.io/spring-boot/">Spring Boot</a></li>
+
+		</ul>
+	    </div>
+	</footer>
+    </body>
+</html>
