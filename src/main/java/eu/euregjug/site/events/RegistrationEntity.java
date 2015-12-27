@@ -15,6 +15,8 @@
  */
 package eu.euregjug.site.events;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
 import java.util.Objects;
 import javax.persistence.Column;
@@ -28,6 +30,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.Size;
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * A registration by a person identified by his email for an
@@ -53,6 +58,7 @@ public class RegistrationEntity implements Serializable {
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "registrations_id_seq_generator")
     @SequenceGenerator(name = "registrations_id_seq_generator", sequenceName = "registrations_id_seq")
+    @JsonIgnore
     private Integer id;
 
     /**
@@ -66,12 +72,16 @@ public class RegistrationEntity implements Serializable {
      * Name of the person registered for the event.
      */
     @Column(name = "email", length = 1024, nullable = false)
+    @Email
+    @Size(max = 1024)
     private String email;
 
     /**
      * Name of the person registered for the event.
      */
     @Column(name = "name", length = 512, nullable = false)
+    @NotBlank
+    @Size(max = 512)
     private String name;
 
     /**
@@ -87,6 +97,7 @@ public class RegistrationEntity implements Serializable {
 	this.firstName = firstName;
     }
 
+    @JsonProperty
     public Integer getId() {
 	return id;
     }

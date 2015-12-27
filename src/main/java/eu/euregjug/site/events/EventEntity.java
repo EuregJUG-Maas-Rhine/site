@@ -15,6 +15,8 @@
  */
 package eu.euregjug.site.events;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Objects;
@@ -30,6 +32,9 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * Represents events for the EuregJUG.
@@ -62,6 +67,7 @@ public class EventEntity implements Serializable {
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "events_id_seq_generator")
     @SequenceGenerator(name = "events_id_seq_generator", sequenceName = "events_id_seq")
+    @JsonIgnore
     private Integer id;
 
     /**
@@ -69,29 +75,35 @@ public class EventEntity implements Serializable {
      */
     @Column(name = "held_on", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
+    @NotNull
     private Calendar heldOn;
 
     /**
      * Name of this event. Must be unique on a given {@link #heldOn date}.
      */
     @Column(name = "name", length = 512, nullable = false)
+    @NotBlank
+    @Size(max = 512)
     private String name;
 
     /**
      * Description of this event.
      */
     @Column(name = "description", length = 2048, nullable = false)
+    @NotBlank
+    @Size(max = 2048)
     private String description;
 
     /**
      * A flag if a guest needs to register for this event. Defaults to
      * {@code false}.
      */
-    @Column(name = "needs_registration", nullable = false)
+    @Column(name = "needs_registration", nullable = false)    
     private boolean needsRegistration = false;
     
     @Column(name = "type")
     @Enumerated(EnumType.STRING)
+    @NotNull
     private Type type = Type.talk;
 
     /**
@@ -114,6 +126,7 @@ public class EventEntity implements Serializable {
 	this.description = description;
     }
     
+    @JsonProperty
     public Integer getId() {
 	return id;
     }
