@@ -27,6 +27,8 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -48,6 +50,16 @@ import org.hibernate.validator.constraints.NotBlank;
 	    @UniqueConstraint(name = "events_uk", columnNames = {"held_on", "name"})
 	}
 )
+@NamedQueries({
+    @NamedQuery(
+	    name = "EventEntity.findUpcomingEvents",	    
+	    query
+	    = " Select e"
+	    + "   from EventEntity e"
+	    + "  where e.heldOn > current_date()"
+	    + " order by e.heldOn asc "
+    )
+})
 public class EventEntity implements Serializable {
     
     /**

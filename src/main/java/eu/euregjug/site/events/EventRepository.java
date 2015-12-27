@@ -15,10 +15,12 @@
  */
 package eu.euregjug.site.events;
 
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
  * @author Michael J. Simons, 2015-12-26
  */
-public interface EventRepository extends JpaRepository<EventEntity, Integer> {   
+public interface EventRepository extends JpaRepository<EventEntity, Integer> {
+    List<EventEntity> findUpcomingEvents();
 }
