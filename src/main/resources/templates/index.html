@@ -80,21 +80,21 @@
 			</ol>
 		    </section>
 
-		    <section id="profiles">
+		    <section id="profiles" class="links">
 			<h3 th:text="#{profiles}">#profiles</h3>
 			<ul>
 			    <li th:each="link : ${links.get(T(eu.euregjug.site.links.LinkEntity.Type).profile)}" th:include="fragments/link :: body">A link</li>
 			</ul>
 		    </section>
 		    
-		    <section id="links">
+		    <section id="links" class="links">
 			<h3 th:text="#{links}">#links</h3>
 			<ul>
 			    <li th:each="link : ${links.get(T(eu.euregjug.site.links.LinkEntity.Type).generic)}" th:include="fragments/link :: body">A link</li>
 			</ul>
 		    </section>
 		    
-		    <section id="sponsors">
+		    <section id="sponsors" class="links">
 			<h3 th:text="#{sponsors}">#sponsors</h3>
 			<ul>
 			    <li th:each="link : ${links.get(T(eu.euregjug.site.links.LinkEntity.Type).sponsor)}" th:include="fragments/link :: body">A link</li>

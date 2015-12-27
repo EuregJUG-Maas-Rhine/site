@@ -29,7 +29,6 @@ limitations under the License.
    margin-bottom: 0.5em;
 }
 
-
 #sponsors ul {
     list-style: none;    
     padding-left: 0;
@@ -37,4 +36,8 @@ limitations under the License.
 
 #sponsors ul li {        
     padding-left: 0;
+}
+
+.links img {
+    max-width: 250px;
 }
