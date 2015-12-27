@@ -70,7 +70,7 @@
 
 		<!-- Sidebar -->
 		<div class="sidebar">
-		    <section id="upcomingEvents">
+		    <section id="upcomingEvents" th:if="${upcomingEvents.size()}">
 			<h3 th:text="#{upcomingEvents}">Magna Feugiat</h3>
 			<ol>
 			    <li th:each="upcomingEvent : ${upcomingEvents}">
@@ -80,21 +80,21 @@
 			</ol>
 		    </section>
 
-		    <section id="profiles" class="links">
+		    <section id="profiles" class="links" th:if="${links.get(T(eu.euregjug.site.links.LinkEntity.Type).profile)}">
 			<h3 th:text="#{profiles}">#profiles</h3>
 			<ul>
 			    <li th:each="link : ${links.get(T(eu.euregjug.site.links.LinkEntity.Type).profile)}" th:include="fragments/link :: body">A link</li>
 			</ul>
 		    </section>
 		    
-		    <section id="links" class="links">
+		    <section id="links" class="links" th:if="${links.get(T(eu.euregjug.site.links.LinkEntity.Type).generic)}">
 			<h3 th:text="#{links}">#links</h3>
 			<ul>
 			    <li th:each="link : ${links.get(T(eu.euregjug.site.links.LinkEntity.Type).generic)}" th:include="fragments/link :: body">A link</li>
 			</ul>
 		    </section>
 		    
-		    <section id="sponsors" class="links">
+		    <section id="sponsors" class="links" th:if="${links.get(T(eu.euregjug.site.links.LinkEntity.Type).sponsor)}">
 			<h3 th:text="#{sponsors}">#sponsors</h3>
 			<ul>
 			    <li th:each="link : ${links.get(T(eu.euregjug.site.links.LinkEntity.Type).sponsor)}" th:include="fragments/link :: body">A link</li>
