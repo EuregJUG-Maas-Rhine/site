@@ -18,16 +18,20 @@ limitations under the License.
       xmlns:th="http://www.thymeleaf.org"
       th:lang="${#locale.language}">
     <head>
-	<title>Template for rendering a LinkEntity</title>
+	<title>Default Header for all templates</title>
 	<meta charset="UTF-8" />	
     </head>
     <body>
-	<span th:unless="${link.localImageResource}" th:remove="tag">
-	    <i class="fa" th:classappend="${link.icon}"  th:if="${link.icon}"></i>
-	    <a href="#" th:href="@{${link.target}}" th:text="${link.title}">Link title</a>
-	</span>
-	<a th:if="${link.localImageResource}" href="#" th:href="@{${link.target}}" th:title="${link.title}" class="image fit">
-	    <img src="../../../webapp/public/img/logo-euregjug-small.png" alt="" th:alt="'Logo ' + ${link.title}" th:src="@{'/img/' + ${link.localImageResource}}"/>
-	</a>
+	<header id="header">
+	    <h1>
+		<a href="../index.html" th:href="@{/}"><span th:text="#{siteTitle}" th:remove="tag">Site title</span> &mdash; <span th:text="#{siteSubTitle}">Sub title</span></a>
+	    </h1>
+	    <nav id="nav">
+		<ul>
+		    <li><a href="../index.html" th:href="@{/}"      th:text="#{homeLink}">Title</a></li>
+		    <li><a href="../index.html" th:href="@{/about}" th:text="#{aboutLink}">Title</a></li>		    
+		</ul>
+	    </nav>
+	</header>
     </body>
 </html>
