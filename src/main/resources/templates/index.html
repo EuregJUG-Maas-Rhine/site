@@ -22,23 +22,33 @@
 		    <p th:text="#{blogSubTitle}">Sed magna in pharetra ultricies dolor sit amet consequat adipiscing lorem.</p>
 		</header>
 
-		<!-- Content -->
-		<div class="content">
-		    <h3>Dolore Amet Consequat</h3>
-		    <p>Aliquam massa urna, imperdiet sit amet mi non, bibendum euismod est. Curabitur mi justo, tincidunt vel eros ullamcorper, porta cursus justo. Cras vel neque eros. Vestibulum diam quam, mollis at magna consectetur non, malesuada quis augue. Morbi tincidunt pretium interdum est. Curabitur mi justo, tincidunt vel eros ullamcorper, porta cursus justo. Cras vel neque eros. Vestibulum diam.</p>
-		    <p>Vestibulum diam quam, mollis at consectetur non, malesuada quis augue. Morbi tincidunt pretium interdum. Morbi mattis elementum orci, nec dictum porta cursus justo. Quisque ultricies lorem in ligula condimentum, et egestas turpis sagittis. Cras ac nunc urna. Nullam eget lobortis purus. Phasellus vitae tortor non est placerat tristique.</p>
-		    <h3>Sed Magna Ornare</h3>
-		    <p>In vestibulum massa quis arcu lobortis tempus. Nam pretium arcu in odio vulputate luctus. Suspendisse euismod lorem eget lacinia fringilla. Sed sed felis justo. Nunc sodales elit in laoreet aliquam. Nam gravida, nisl sit amet iaculis porttitor, risus nisi rutrum metus.</p>
-		    <ul>
-			<li>Faucibus orci lobortis ac adipiscing integer.</li>
-			<li>Col accumsan arcu mi aliquet placerat.</li>
-			<li>Lobortis vestibulum ut magna tempor massa nascetur.</li>
-			<li>Blandit massa non blandit tempor interdum.</li>
-			<li>Lacinia mattis arcu nascetur lobortis.</li>
-		    </ul>
-		</div>
+		<section id="posts" class="content">	
+		    <div class="post" th:unless="${posts.size()}">
+			<header>
+			<h3 th:text="#{noPosts}">No posts</h3>
+			</header>
+		    </div>
+		    <div th:each="post : ${posts}" class="post">
+			<header>
+			    <h3 th:text="${post.title}">Dolore Amet Consequat</h3>
+			    <p><em th:text="#{publishedOn(${#temporals.formatDate(post.publishedOn, 'MEDIUM')})}">Published On</em></p>
+			</header>
+			<div th:utext="${post.content}" th:remove="tag">
+			    <p>Aliquam massa urna, imperdiet sit amet mi non, bibendum euismod est. Curabitur mi justo, tincidunt vel eros ullamcorper, porta cursus justo. Cras vel neque eros. Vestibulum diam quam, mollis at magna consectetur non, malesuada quis augue. Morbi tincidunt pretium interdum est. Curabitur mi justo, tincidunt vel eros ullamcorper, porta cursus justo. Cras vel neque eros. Vestibulum diam.</p>
+			    <p>Vestibulum diam quam, mollis at consectetur non, malesuada quis augue. Morbi tincidunt pretium interdum. Morbi mattis elementum orci, nec dictum porta cursus justo. Quisque ultricies lorem in ligula condimentum, et egestas turpis sagittis. Cras ac nunc urna. Nullam eget lobortis purus. Phasellus vitae tortor non est placerat tristique.</p>
+			    <h3>Sed Magna Ornare</h3>
+			    <p>In vestibulum massa quis arcu lobortis tempus. Nam pretium arcu in odio vulputate luctus. Suspendisse euismod lorem eget lacinia fringilla. Sed sed felis justo. Nunc sodales elit in laoreet aliquam. Nam gravida, nisl sit amet iaculis porttitor, risus nisi rutrum metus.</p>
+			    <ul>
+				<li>Faucibus orci lobortis ac adipiscing integer.</li>
+				<li>Col accumsan arcu mi aliquet placerat.</li>
+				<li>Lobortis vestibulum ut magna tempor massa nascetur.</li>
+				<li>Blandit massa non blandit tempor interdum.</li>
+				<li>Lacinia mattis arcu nascetur lobortis.</li>
+			    </ul>
+			</div>
+		    </div>
+		</section>
 
-		<!-- Sidebar -->
 		<div class="sidebar">
 		    <section id="upcomingEvents" th:if="${upcomingEvents.size()}">
 			<h3 th:text="#{upcomingEvents}">Magna Feugiat</h3>
@@ -56,14 +66,14 @@
 			    <li th:each="link : ${links.get(T(eu.euregjug.site.links.LinkEntity.Type).profile)}" th:include="fragments/link :: body">A link</li>
 			</ul>
 		    </section>
-		    
+
 		    <section id="links" class="links" th:if="${links.get(T(eu.euregjug.site.links.LinkEntity.Type).generic)}">
 			<h3 th:text="#{links}">#links</h3>
 			<ul>
 			    <li th:each="link : ${links.get(T(eu.euregjug.site.links.LinkEntity.Type).generic)}" th:include="fragments/link :: body">A link</li>
 			</ul>
 		    </section>
-		    
+
 		    <section id="sponsors" class="links" th:if="${links.get(T(eu.euregjug.site.links.LinkEntity.Type).sponsor)}">
 			<h3 th:text="#{sponsors}">#sponsors</h3>
 			<ul>
@@ -73,7 +83,7 @@
 		</div>
 	    </div>
 	</section>
-	
+
 	<section th:replace="fragments/contact :: #contact" />
 
 	<footer th:replace="fragments/footer :: footer" />

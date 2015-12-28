@@ -82,6 +82,11 @@
 	    <groupId>org.flywaydb</groupId>
 	    <artifactId>flyway-core</artifactId>
 	</dependency>
+	<dependency>
+	    <groupId>org.asciidoctor</groupId>
+	    <artifactId>asciidoctorj</artifactId>
+	    <version>1.5.2</version>
+	</dependency>
 			
 	<!-- Webjars -->
 	<dependency>

@@ -41,3 +41,7 @@ limitations under the License.
 .links img {
     max-width: 250px;
 }
+
+.ulist ul li p {
+    margin-bottom: inherit;
+}
