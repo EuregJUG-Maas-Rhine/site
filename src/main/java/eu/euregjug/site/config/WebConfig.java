@@ -15,6 +15,8 @@
  */
 package eu.euregjug.site.config;
 
+import eu.euregjug.site.support.thymeleaf.EuregJUGDialect;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
@@ -28,5 +30,10 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
 	registry.addViewController("/about").setViewName("about");
+    }
+
+    @Bean
+    public EuregJUGDialect enSupplyDialect() {
+	return new EuregJUGDialect();
     }
 }
