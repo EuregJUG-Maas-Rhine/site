@@ -15,16 +15,13 @@
  */
 package eu.euregjug.site.posts;
 
-import java.util.Date;
 import java.util.Optional;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
- * @author Michael J. Simons, 2015-12-28
+ * @author Michael J. Simons, 2015-12-29
  */
-public interface PostRepository extends JpaRepository<PostEntity, Integer>, PostRepositoryExt {
-
-    @Transactional(readOnly = true)
-    public Optional<PostEntity> findByPublishedOnAndSlug(final Date publishedOn, final String slug);
+public interface PostRepositoryExt {
+    public Optional<PostEntity> getPrevious(final Optional<PostEntity> post);
+    
+    public Optional<PostEntity> getNext(final Optional<PostEntity> post);
 }

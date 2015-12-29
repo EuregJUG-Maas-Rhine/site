@@ -1,4 +1,4 @@
-/*
+/* 
  * Copyright 2015 EuregJUG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,18 +13,5 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.euregjug.site.posts;
 
-import java.util.Date;
-import java.util.Optional;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.transaction.annotation.Transactional;
-
-/**
- * @author Michael J. Simons, 2015-12-28
- */
-public interface PostRepository extends JpaRepository<PostEntity, Integer>, PostRepositoryExt {
-
-    @Transactional(readOnly = true)
-    public Optional<PostEntity> findByPublishedOnAndSlug(final Date publishedOn, final String slug);
-}
+CREATE INDEX posts_published_on_idx ON posts (published_on);

@@ -34,6 +34,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.NamedAttributeNode;
+import javax.persistence.NamedEntityGraph;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.SequenceGenerator;
@@ -55,6 +59,32 @@ import org.hibernate.validator.constraints.NotBlank;
 	    @UniqueConstraint(name = "posts_uk", columnNames = {"published_on", "slug"})
 	}
 )
+@NamedEntityGraph(name = "PostEntity.linkable",
+	attributeNodes = {
+	    @NamedAttributeNode("publishedOn"),
+	    @NamedAttributeNode("slug"),
+	    @NamedAttributeNode("title")}
+)
+@NamedQueries({
+	// Named query for older posts relative to the current 	 
+	@NamedQuery(name = "PostEntity.getPrevious",		
+		query
+    		= "Select p1 from PostEntity p1, PostEntity p2 "
+		+ " where p2.id = :id "
+		+ "   and p1.id <> p2.id "
+		+ "   and (p1.publishedOn < p2.publishedOn or (p1.publishedOn = p2.publishedOn and p1.createdAt < p2.createdAt)) "
+		+ " order by p1.publishedOn desc, p1.createdAt desc "
+	),
+	// Named query for newer posts relative to the current 
+	@NamedQuery(name = "PostEntity.getNext",		
+		query
+    		= "Select p1 from PostEntity p1, PostEntity p2 "
+		+ " where p2.id = :id "
+		+ "   and p1.id <> p2.id "
+		+ "   and (p1.publishedOn > p2.publishedOn or (p1.publishedOn = p2.publishedOn and p1.createdAt > p2.createdAt)) "
+		+ " order by p1.publishedOn asc, p1.createdAt asc "
+	)
+})
 public class PostEntity implements Serializable {
 
     private static final long serialVersionUID = -2488354242899068540L;
@@ -146,7 +176,7 @@ public class PostEntity implements Serializable {
 	this.content = content;
 	this.createdAt = Calendar.getInstance();
     }
-    
+
     final String generateSlug(final String slug, final String title) {
 	return Optional.ofNullable(slug).orElseGet(() -> Normalizer.normalize(title.toLowerCase(), Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}|[^\\w\\s]", "").replaceAll("[\\s-]+", " ").trim().replaceAll("\\s", "-"));
     }
@@ -157,7 +187,7 @@ public class PostEntity implements Serializable {
     @PrePersist
     @PreUpdate
     void updateUpdatedAt() {
-	if(this.createdAt == null) {
+	if (this.createdAt == null) {
 	    this.createdAt = Calendar.getInstance();
 	}
 	this.slug = generateSlug(slug, title);

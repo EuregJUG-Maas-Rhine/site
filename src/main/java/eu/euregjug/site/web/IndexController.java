@@ -19,6 +19,7 @@ import eu.euregjug.site.events.EventRepository;
 import eu.euregjug.site.events.RegistrationService;
 import eu.euregjug.site.links.LinkEntity;
 import eu.euregjug.site.links.LinkRepository;
+import eu.euregjug.site.posts.PostEntity;
 import eu.euregjug.site.posts.PostRenderingService;
 import eu.euregjug.site.posts.PostRepository;
 import java.time.DateTimeException;
@@ -26,6 +27,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
@@ -75,7 +77,7 @@ public class IndexController {
 	model
 		.addAttribute("upcomingEvents", this.eventRepository.findUpcomingEvents())
 		.addAttribute("links", this.linkRepository.findAllByOrderByTypeAscSortColAscTitleAsc().stream().collect(groupingBy(LinkEntity::getType)))
-		.addAttribute("posts", this.postRepository.findAll(new PageRequest(page, 5, Direction.DESC, "publishedOn")).map(postRenderingService::render))	
+		.addAttribute("posts", this.postRepository.findAll(new PageRequest(page, 5, Direction.DESC, "publishedOn", "createdAt")).map(postRenderingService::render))	
 		;
 	return "index";
     }   
@@ -95,8 +97,12 @@ public class IndexController {
 	String rv = "redirect:/";
 	try {
 	    final Date publishedOn = Date.from(LocalDate.of(year, month, day).atStartOfDay(ZoneId.systemDefault()).toInstant());	    
+	    final Optional<PostEntity> postEntity = this.postRepository.findByPublishedOnAndSlug(publishedOn, slug);
 	    model
-		    .addAttribute("post", this.postRepository.findByPublishedOnAndSlug(publishedOn, slug).map(postRenderingService::render).get());
+		    .addAttribute("previousPost", this.postRepository.getPrevious(postEntity))
+		    .addAttribute("post", postEntity.map(postRenderingService::render).get())
+		    .addAttribute("nextPost", this.postRepository.getNext(postEntity))
+		    ;
 	    rv = "post";
 
 	} catch (DateTimeException | NoSuchElementException e) {

@@ -44,7 +44,7 @@ public class PostRenderingService {
 		
 	@Override
 	public String render(String content) {
-	    String rv = null;
+	    String rv;
 	    try {		
 		rv = asciidoctor.render(content, options);
 	    } catch(Exception e) {
