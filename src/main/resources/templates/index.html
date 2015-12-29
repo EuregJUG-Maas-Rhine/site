@@ -23,7 +23,7 @@
 		</header>
 
 		<section id="posts" class="content">	
-		    <div class="post" th:unless="${posts.size()}">
+		    <div class="post" th:unless="${posts.hasContent()}">
 			<header>
 			<h3 th:text="#{noPosts}">No posts</h3>
 			</header>
@@ -52,6 +52,23 @@
 			    </div>
 			</div>
 		    </div>
+		    
+		    <nav>
+			<div class="row uniform">
+			    <div class="4u 6u(small) 12u(xsmall) nav_previous">				
+				<a href="#" class="button" th:if="${posts.hasPrevious()}" th:href="@{/(page=${posts.previousPageable().getPageNumber()})}" th:text="#{paginatorNewer}">« Newer entries</a>
+				<span class="button disabled" th:unless="${posts.hasPrevious()}" th:text="#{paginatorFirstPage}" >at the first page</span>
+			    </div>
+			    <div class="4u 12u(small) nav_home">
+				<span class="button disabled" th:text="#{paginator(${posts.number}+1, ${posts.totalPages})}">Page 2 of 54</span>
+			    </div>
+			    <div class="4u 6u(small) 12u(xsmall)  nav_next">				
+				<a href="#" class="button" th:if="${posts.hasNext()}" th:href="@{/(page=${posts.nextPageable().getPageNumber()})}" th:text="#{paginatorOlder}">Older entries »</a>
+				<span class="button disabled" th:unless="${posts.hasNext()}" th:text="#{paginatorLastPage}">at the last page</span>				
+			    </div>
+			</div>
+		    </nav>
+		    
 		</section>
 
 		<div class="sidebar">

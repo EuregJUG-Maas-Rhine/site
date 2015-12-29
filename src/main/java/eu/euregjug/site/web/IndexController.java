@@ -36,7 +36,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.toList;
 
 /**
  * @author Michael J. Simons, 2015-12-27
@@ -76,7 +75,7 @@ public class IndexController {
 	model
 		.addAttribute("upcomingEvents", this.eventRepository.findUpcomingEvents())
 		.addAttribute("links", this.linkRepository.findAllByOrderByTypeAscSortColAscTitleAsc().stream().collect(groupingBy(LinkEntity::getType)))
-		.addAttribute("posts", this.postRepository.findAll(new PageRequest(page, 5, Direction.DESC, "publishedOn")).getContent().stream().map(postRenderingService::render).collect(toList()))	
+		.addAttribute("posts", this.postRepository.findAll(new PageRequest(page, 5, Direction.DESC, "publishedOn")).map(postRenderingService::render))	
 		;
 	return "index";
     }   

@@ -58,3 +58,21 @@ limitations under the License.
 .imageblock.pull-right .content {
     padding-left: 1em;    
 }
+
+.nav_previous {
+    text-align:left;
+}
+
+.nav_home {
+    text-align:center;
+}
+
+.nav_home span.button.disabled {
+    border:none;
+    box-shadow: none;
+    opacity: 1;
+}
+
+.nav_next {
+    text-align:right;
+}
