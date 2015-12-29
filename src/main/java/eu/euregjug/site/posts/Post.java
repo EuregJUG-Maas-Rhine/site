@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.euregjug.site.web;
+package eu.euregjug.site.posts;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -25,18 +25,25 @@ import java.util.Date;
 public class Post {
     private final LocalDate publishedOn;
     
+    private final String slug;
+    
     private final String title;
     
     private final String content;
 
-    public Post(final Date publishedOn, String title, String content) {
+    public Post(final Date publishedOn, String slug, String title, String content) {
 	this.publishedOn = publishedOn instanceof java.sql.Date? ((java.sql.Date)publishedOn).toLocalDate() : publishedOn.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+	this.slug = slug;
 	this.title = title;
 	this.content = content;
     }
 
     public LocalDate getPublishedOn() {
 	return publishedOn;
+    }
+
+    public String getSlug() {
+	return slug;
     }
     
     public String getTitle() {

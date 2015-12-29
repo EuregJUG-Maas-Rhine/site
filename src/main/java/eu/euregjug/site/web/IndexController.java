@@ -19,15 +19,19 @@ import eu.euregjug.site.events.EventRepository;
 import eu.euregjug.site.events.RegistrationService;
 import eu.euregjug.site.links.LinkEntity;
 import eu.euregjug.site.links.LinkRepository;
-import eu.euregjug.site.posts.PostEntity;
 import eu.euregjug.site.posts.PostRenderingService;
 import eu.euregjug.site.posts.PostRepository;
-import java.util.ArrayList;
+import java.time.DateTimeException;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
+import java.util.NoSuchElementException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -72,13 +76,32 @@ public class IndexController {
 	model
 		.addAttribute("upcomingEvents", this.eventRepository.findUpcomingEvents())
 		.addAttribute("links", this.linkRepository.findAllByOrderByTypeAscSortColAscTitleAsc().stream().collect(groupingBy(LinkEntity::getType)))
-		.addAttribute("posts", this.postRepository.findAll(new PageRequest(page, 5, Direction.DESC, "publishedOn")).getContent().stream().map(this::createRenderedPosts).collect(toList()))	
+		.addAttribute("posts", this.postRepository.findAll(new PageRequest(page, 5, Direction.DESC, "publishedOn")).getContent().stream().map(postRenderingService::render).collect(toList()))	
 		;
 	return "index";
-    }
+    }   
     
-    Post createRenderedPosts(final PostEntity postEntity) {
-	final String renderedContent = this.postRenderingService.render(postEntity);	
-	return new Post(postEntity.getPublishedOn(), postEntity.getTitle(), renderedContent);
+    @RequestMapping({
+	"/{year:\\d+}/{month:\\d+}/{day:\\d+}/{slug}",
+	"/posts/{year:\\d+}-{month:\\d+}-{day:\\d+}-{slug}"
+    })
+    public String post(
+	    final @PathVariable Integer year,
+	    final @PathVariable Integer month,
+	    final @PathVariable Integer day,
+	    final @PathVariable String slug,
+	    final Model model
+    ) {
+
+	String rv = "redirect:/";
+	try {
+	    final Date publishedOn = Date.from(LocalDate.of(year, month, day).atStartOfDay(ZoneId.systemDefault()).toInstant());	    
+	    model
+		    .addAttribute("post", this.postRepository.findByPublishedOnAndSlug(publishedOn, slug).map(postRenderingService::render).get());
+	    rv = "post";
+
+	} catch (DateTimeException | NoSuchElementException e) {
+	}
+	return rv;
     }
 }

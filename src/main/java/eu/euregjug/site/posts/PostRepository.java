@@ -15,10 +15,13 @@
  */
 package eu.euregjug.site.posts;
 
+import java.util.Date;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
  * @author Michael J. Simons, 2015-12-28
  */
 public interface PostRepository extends JpaRepository<PostEntity, Integer> {
+    public Optional<PostEntity> findByPublishedOnAndSlug(final Date publishedOn, final String slug);
 }

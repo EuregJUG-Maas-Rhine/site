@@ -30,7 +30,10 @@
 		    </div>
 		    <div th:each="post : ${posts}" class="post">
 			<header>
-			    <h3 th:text="${post.title}">Dolore Amet Consequat</h3>
+			    <h3>
+				<a href="#" th:href="@{/{date}/{slug}(date=${#temporals.format(post.publishedOn,'yyyy/MM/dd')},slug=${post.slug})}">#</a> 
+				<span th:text="${post.title}">Dolore Amet Consequat</span>
+			    </h3>
 			    <p><em th:text="#{publishedOn(${#temporals.formatDate(post.publishedOn, 'MEDIUM')})}">Published On</em></p>
 			</header>
 			<div class="body">

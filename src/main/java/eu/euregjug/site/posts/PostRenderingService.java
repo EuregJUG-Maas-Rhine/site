@@ -57,14 +57,14 @@ public class PostRenderingService {
     
     private final Renderer renderer = new AsciiDocRenderer();
 	        
-    public String render(final PostEntity post) {
-	String rv = null;
+    public Post render(final PostEntity post) {
+	String renderedContent = null;
 	if(post.getFormat() != Format.asciidoc) {
-	    rv = "<strong>Could not render content.</strong>";
+	    renderedContent = "<strong>Could not render content.</strong>";
 	} else {
-	    rv = renderer.render(post.getContent());
+	    renderedContent = renderer.render(post.getContent());
 	}
 	
-	return rv;
+	return new Post(post.getPublishedOn(), post.getSlug(), post.getTitle(), renderedContent);
     }
 }
