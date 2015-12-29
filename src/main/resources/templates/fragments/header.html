@@ -31,7 +31,7 @@ limitations under the License.
 		    <li><a href="../index.html" th:href="@{/}"      th:text="#{homeLink}">Title</a></li>
 		    <li><a href="../index.html" th:href="@{/about}" th:text="#{aboutLink}">Title</a></li>
 		    <li>
-			<a href="../index.html" class="submenu fa-angle-down" th:text="#{language}">Title</a>
+			<a href="#" class="submenu fa-angle-down" th:text="#{language}">Title</a>
 			<ul>
 			    <li><a href="../index.html" th:href="@{/(lang=de)}" th:text="${T(java.util.Locale).GERMAN.getDisplayLanguage(#locale)}">de</a></li>
 			    <li><a href="../index.html" th:href="@{/(lang=en)}" th:text="${T(java.util.Locale).ENGLISH.getDisplayLanguage(#locale)}">en</a></li>
