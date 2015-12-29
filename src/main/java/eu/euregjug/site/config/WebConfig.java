@@ -16,10 +16,15 @@
 package eu.euregjug.site.config;
 
 import eu.euregjug.site.support.thymeleaf.EuregJUGDialect;
+import java.util.Locale;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.LocaleResolver;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.i18n.CookieLocaleResolver;
+import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 
 /**
  * @author Michael J. Simons, 2015-12-27
@@ -35,5 +40,17 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     @Bean
     public EuregJUGDialect enSupplyDialect() {
 	return new EuregJUGDialect();
+    }
+
+    @Bean
+    public LocaleResolver localeResolver() {
+	return new CookieLocaleResolver();
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {	
+	final LocaleChangeInterceptor localeChangeInterceptor = new LocaleChangeInterceptor();
+	localeChangeInterceptor.setParamName("lang");
+	registry.addInterceptor(localeChangeInterceptor);
     }
 }

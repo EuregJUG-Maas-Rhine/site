@@ -14,12 +14,12 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-<html xmlns="http://www.w3.org/1999/xhtml" 
+<html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
       th:lang="${#locale.language}">
     <head>
 	<title>Default Header for all templates</title>
-	<meta charset="UTF-8" />	
+	<meta charset="UTF-8" />
     </head>
     <body>
 	<header id="header">
@@ -29,7 +29,14 @@ limitations under the License.
 	    <nav id="nav">
 		<ul>
 		    <li><a href="../index.html" th:href="@{/}"      th:text="#{homeLink}">Title</a></li>
-		    <li><a href="../index.html" th:href="@{/about}" th:text="#{aboutLink}">Title</a></li>		    
+		    <li><a href="../index.html" th:href="@{/about}" th:text="#{aboutLink}">Title</a></li>
+		    <li>
+			<a href="../index.html" class="submenu fa-angle-down" th:text="#{language}">Title</a>
+			<ul>
+			    <li><a href="../index.html" th:href="@{/(lang=de)}" th:text="${T(java.util.Locale).GERMAN.getDisplayLanguage(#locale)}">de</a></li>
+			    <li><a href="../index.html" th:href="@{/(lang=en)}" th:text="${T(java.util.Locale).ENGLISH.getDisplayLanguage(#locale)}">en</a></li>
+			</ul>
+		    </li>
 		</ul>
 	    </nav>
 	</header>
