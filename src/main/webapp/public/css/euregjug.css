@@ -51,6 +51,10 @@ limitations under the License.
     border: none;
 }
 
+.imageblock .content img {
+    max-width: 100%;
+}
+
 .imageblock.pull-right .content {
     padding-left: 1em;    
 }
