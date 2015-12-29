@@ -66,6 +66,7 @@ public class RegistrationEntity implements Serializable {
      */
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     @JoinColumn(name = "event_id", referencedColumnName = "id")
+    @JsonIgnore
     private EventEntity event;
 
     /**
@@ -88,6 +89,7 @@ public class RegistrationEntity implements Serializable {
      * First name of the person registered for the event.
      */
     @Column(name = "first_name", length = 512)
+    @Size(max = 512)
     private String firstName;
 
     /**
@@ -108,6 +110,7 @@ public class RegistrationEntity implements Serializable {
 	return id;
     }
 
+    @JsonProperty
     public EventEntity getEvent() {
 	return event;
     }

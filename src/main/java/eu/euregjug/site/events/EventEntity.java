@@ -166,6 +166,14 @@ public class EventEntity implements Serializable {
     public void setNeedsRegistration(boolean needsRegistration) {
 	this.needsRegistration = needsRegistration;
     }
+    
+    /**
+     * @return True if the event is still open for registration
+     */
+    @JsonIgnore
+    public boolean isOpen() {
+	return this.heldOn.after(Calendar.getInstance());
+    }
 
     public Type getType() {
 	return type;

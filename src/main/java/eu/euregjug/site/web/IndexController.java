@@ -16,6 +16,7 @@
 package eu.euregjug.site.web;
 
 import eu.euregjug.site.events.EventRepository;
+import eu.euregjug.site.events.RegistrationService;
 import eu.euregjug.site.links.LinkEntity;
 import eu.euregjug.site.links.LinkRepository;
 import eu.euregjug.site.posts.PostEntity;
@@ -40,6 +41,8 @@ import static java.util.stream.Collectors.toList;
 public class IndexController {
     private final EventRepository eventRepository;
     
+    private final RegistrationService registrationService;
+    
     private final LinkRepository linkRepository;
 
     private final PostRepository postRepository;
@@ -47,8 +50,15 @@ public class IndexController {
     private final PostRenderingService postRenderingService;
     
     @Autowired
-    public IndexController(EventRepository eventRepository, LinkRepository linkRepository, PostRepository postRepository, PostRenderingService postRenderingService) {
+    public IndexController(
+	    EventRepository eventRepository, 
+	    RegistrationService registrationService, 
+	    LinkRepository linkRepository, 
+	    PostRepository postRepository, 
+	    PostRenderingService postRenderingService
+    ) {
 	this.eventRepository = eventRepository;
+	this.registrationService = registrationService;
 	this.linkRepository = linkRepository;	
 	this.postRepository = postRepository;
 	this.postRenderingService = postRenderingService;	
