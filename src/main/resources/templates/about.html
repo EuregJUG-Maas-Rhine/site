@@ -7,7 +7,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
       th:lang="${#locale.language}">
-    <head th:replace="fragments/head :: head">
+    <head th:replace="fragments/head :: head (_pageTitle=#{aboutTitle})">
 	<title>index.html</title>
     </head>
     <body>

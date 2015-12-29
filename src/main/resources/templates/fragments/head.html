@@ -18,7 +18,7 @@ limitations under the License.
       xmlns:th="http://www.thymeleaf.org"
       th:lang="${#locale.language}">
     <head>
-	<title>Header and CSS Information</title>
+	<title th:text="(${_pageTitle} ? ${_pageTitle} + ' | ' : '') + #{siteTitle}">EuregJUG</title>
 	<meta charset="UTF-8" />	
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 	<!--[if lte IE 8]>
