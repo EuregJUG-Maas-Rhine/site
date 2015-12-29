@@ -97,11 +97,11 @@ public class IndexController {
 	String rv = "redirect:/";
 	try {
 	    final Date publishedOn = Date.from(LocalDate.of(year, month, day).atStartOfDay(ZoneId.systemDefault()).toInstant());	    
-	    final Optional<PostEntity> postEntity = this.postRepository.findByPublishedOnAndSlug(publishedOn, slug);
+	    final Optional<PostEntity> post = this.postRepository.findByPublishedOnAndSlug(publishedOn, slug);
 	    model
-		    .addAttribute("previousPost", this.postRepository.getPrevious(postEntity))
-		    .addAttribute("post", postEntity.map(postRenderingService::render).get())
-		    .addAttribute("nextPost", this.postRepository.getNext(postEntity))
+		    .addAttribute("previousPost", post.flatMap(this.postRepository::getPrevious))
+		    .addAttribute("post", post.map(postRenderingService::render).get())
+		    .addAttribute("nextPost", post.flatMap(this.postRepository::getNext))
 		    ;
 	    rv = "post";
 

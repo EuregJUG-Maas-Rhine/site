@@ -36,30 +36,28 @@ public class PostRepositoryImpl implements PostRepositoryExt {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<PostEntity> getPrevious(Optional<PostEntity> post) {
+    public Optional<PostEntity> getPrevious(PostEntity post) {
 	return getRelatedPost("PostEntity.getPrevious", post);
     }
     
     @Override
     @Transactional(readOnly = true)
-    public Optional<PostEntity> getNext(Optional<PostEntity> post) {
+    public Optional<PostEntity> getNext(PostEntity post) {
 	return getRelatedPost("PostEntity.getNext", post);
     }
     
-    Optional<PostEntity> getRelatedPost(final String query, Optional<PostEntity> post) {
-	return post.flatMap(postEntity -> {
-	    Optional<PostEntity> rv;
-	    try {
-		rv = Optional.of(
+    Optional<PostEntity> getRelatedPost(final String query, PostEntity post) {
+	Optional<PostEntity> rv;
+	try {
+	    rv = Optional.of(
 		    entityManager.createNamedQuery(query, PostEntity.class)
-			.setParameter("id", postEntity.getId())
-			.setMaxResults(1)
-			.getSingleResult()
+		    .setParameter("id", post.getId())
+		    .setMaxResults(1)
+		    .getSingleResult()
 	    );
-	    } catch(NoResultException e) {
-		rv = Optional.empty();
-	    }
-	    return rv;	    
-	});	
+	} catch (NoResultException e) {
+	    rv = Optional.empty();
+	}
+	return rv;
     }
 }
