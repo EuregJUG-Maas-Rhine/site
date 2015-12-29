@@ -45,3 +45,12 @@ limitations under the License.
 .ulist ul li p {
     margin-bottom: inherit;
 }
+
+.imageblock .content {
+    padding: 0;
+    border: none;
+}
+
+.imageblock.pull-right .content {
+    padding-left: 1em;    
+}
