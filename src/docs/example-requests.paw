@@ -5,12 +5,12 @@
     <databaseInfo>
         <version>134481920</version>
         <UUID>19C67A2A-3A8A-4007-B61C-C5E90FB933C5</UUID>
-        <nextObjectID>131</nextObjectID>
+        <nextObjectID>135</nextObjectID>
         <metadata>
             <plist version="1.0">
                 <dict>
                     <key>NSPersistenceFrameworkVersion</key>
-                    <integer>640</integer>
+                    <integer>641</integer>
                     <key>NSStoreModelVersionHashes</key>
                     <dict>
                         <key>LMCookieJar</key>
@@ -304,5 +304,51 @@
         <relationship name="parent" type="0/1" destination="LMREQUESTTREEITEM" idrefs="z128"></relationship>
         <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM"></relationship>
         <relationship name="headers" type="0/0" destination="LMKEYVALUE" idrefs="z130"></relationship>
+    </object>
+    <object type="LMREQUEST" id="z132">
+        <attribute name="uuid" type="string">69AB51DB-68E6-437C-ADE1-97E47F04CC21</attribute>
+        <attribute name="url" type="string">127.0.0.1:8080/api/assets</attribute>
+        <attribute name="storecookies" type="bool">1</attribute>
+        <attribute name="sendcookies" type="bool">1</attribute>
+        <attribute name="redirectmethod" type="bool">0</attribute>
+        <attribute name="redirectauthorization" type="bool">0</attribute>
+        <attribute name="method" type="string">POST</attribute>
+        <attribute name="followredirects" type="bool">0</attribute>
+        <attribute name="body" type="string">[{"data":{"keyValues":[[["assetData"],[{"data":{"bookmarkData":"Ym9vaxADAAAAAAQQMAAAABde82Mpu41mE7UTpor\\/CGg\\/q93oxcmA6jhMVp+3ZhzqDAIAAAQAAAADAwAAABgAKAUAAAABAQAAVXNlcnMAAAAHAAAAAQEAAG1zaW1vbnMACQAAAAEBAABEb3dubG9hZHMAAAAJAAAAAQEAAHRlbXBsYXRlcwAAAAMAAAABAQAAaW1nAA0AAAABAQAAVW5jbGVfU2FtLmpwZwAAABgAAAABBgAAEAAAACAAAAAwAAAARAAAAFgAAABkAAAACAAAAAQDAAAjwAAAAAAAAAgAAAAEAwAAgysFAAAAAAAIAAAABAMAAJdyBQAAAAAACAAAAAQDAAB7rIADAAAAAAgAAAAEAwAAoayAAwAAAAAIAAAABAMAALWsgAMAAAAAGAAAAAEGAACcAAAArAAAALwAAADMAAAA3AAAAOwAAAAIAAAAAAQAAEG6xMlcAAAAGAAAAAECAAABAAAAAAAAAA8AAAAAAAAAAAAAAAAAAAAIAAAABAMAAAQAAAAAAAAABAAAAAMDAAD1AQAACAAAAAEJAABmaWxlOi8vLwwAAAABAQAATWFjaW50b3NoIEhECAAAAAQDAAAAgJyt6AAAAAgAAAAABAAAQbRAFBgAAAAkAAAAAQEAADM5NkFFOURBLTAwODYtM0QxRC1CQkZBLTlFRTQwQjI0QUY5ORgAAAABAgAAgQAAAAEAAADvEwAAAQAAAAAAAAAAAAAAAQAAAAEBAAAvAAAAAAAAAAEFAADMAAAA\\/v\\/\\/\\/wEAAAAAAAAAEAAAAAQQAAB8AAAAAAAAAAUQAAD8AAAAAAAAABAQAAAsAQAAAAAAAEAQAAAcAQAAAAAAAAIgAAD4AQAAAAAAAAUgAABoAQAAAAAAABAgAAB4AQAAAAAAABEgAACsAQAAAAAAABIgAACMAQAAAAAAABMgAACcAQAAAAAAACAgAADYAQAAAAAAADAgAAAEAgAAAAAAAAHAAABMAQAAAAAAABHAAAAgAAAAAAAAABLAAABcAQAAAAAAABDQAAAEAAAAAAAAAA=="},"identifier":"com.luckymarmot.FileContentDynamicValue"}],true]]},"identifier":"com.luckymarmot.BodyMultipartFormDataDynamicValue"}]</attribute>
+        <attribute name="order" type="int64">0</attribute>
+        <attribute name="name" type="string">create</attribute>
+        <relationship name="parent" type="0/1" destination="LMREQUESTTREEITEM" idrefs="z133"></relationship>
+        <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM"></relationship>
+        <relationship name="headers" type="0/0" destination="LMKEYVALUE" idrefs="z135 z134"></relationship>
+    </object>
+    <object type="LMREQUESTGROUP" id="z133">
+        <attribute name="uuid" type="string">094AF8B4-61DD-40B4-B95A-E1AE0998E052</attribute>
+        <attribute name="order" type="int64">4</attribute>
+        <attribute name="name" type="string">Assets</attribute>
+        <relationship name="parent" type="0/1" destination="LMREQUESTTREEITEM"></relationship>
+        <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM" idrefs="z132"></relationship>
+        <relationship name="bodyparameters" type="0/0" destination="LMKEYVALUE"></relationship>
+        <relationship name="headers" type="0/0" destination="LMKEYVALUE"></relationship>
+        <relationship name="urlparameters" type="0/0" destination="LMKEYVALUE"></relationship>
+    </object>
+    <object type="LMKEYVALUE" id="z134">
+        <attribute name="value" type="string">[{"data":{"charset":"utf-8","username":["euregjug"],"password":["test"]},"identifier":"com.luckymarmot.BasicAuthDynamicValue"}]</attribute>
+        <attribute name="order" type="int64">0</attribute>
+        <attribute name="name" type="string">Authorization</attribute>
+        <attribute name="enabled" type="bool">1</attribute>
+        <relationship name="groupforbodyparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="groupforheaders" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="groupforurlparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="request" type="0/1" destination="LMREQUEST" idrefs="z132"></relationship>
+    </object>
+    <object type="LMKEYVALUE" id="z135">
+        <attribute name="value" type="string"></attribute>
+        <attribute name="order" type="int64">1</attribute>
+        <attribute name="name" type="string"></attribute>
+        <attribute name="enabled" type="bool">1</attribute>
+        <relationship name="groupforbodyparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="groupforheaders" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="groupforurlparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="request" type="0/1" destination="LMREQUEST" idrefs="z132"></relationship>
     </object>
 </database>
