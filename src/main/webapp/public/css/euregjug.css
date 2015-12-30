@@ -76,3 +76,20 @@ limitations under the License.
 .nav_next {
     text-align:right;
 }
+
+@media screen and (max-width: 736px) {
+    .nav_home {
+        display:none;
+    }
+}
+
+@media screen and (max-width: 480px) {
+
+    .nav_previous, .nav_next {
+        text-align:left;
+    }
+    
+    .nav_previous .button, .nav_next .button {
+        width:100%;
+    }
+}
