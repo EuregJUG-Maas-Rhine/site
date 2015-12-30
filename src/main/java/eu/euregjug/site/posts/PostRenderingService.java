@@ -21,6 +21,7 @@ import org.asciidoctor.Options;
 import org.asciidoctor.OptionsBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 /**
@@ -57,6 +58,7 @@ public class PostRenderingService {
     
     private final Renderer renderer = new AsciiDocRenderer();
 	        
+    @Cacheable(cacheNames = "renderedPosts", key = "#post.id")
     public Post render(final PostEntity post) {
 	String renderedContent = null;
 	if(post.getFormat() != Format.asciidoc) {
@@ -65,6 +67,7 @@ public class PostRenderingService {
 	    renderedContent = renderer.render(post.getContent());
 	}
 	
+
 	return new Post(post.getPublishedOn(), post.getSlug(), post.getTitle(), renderedContent);
     }
 }

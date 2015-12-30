@@ -15,6 +15,7 @@
  */
 package eu.euregjug.site.posts;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
@@ -22,7 +23,10 @@ import java.util.Date;
 /**
  * @author Michael J. Simons, 2015-12-28
  */
-public class Post {
+public class Post implements Serializable {
+
+    private static final long serialVersionUID = 5598037121835514804L;
+    
     private final LocalDate publishedOn;
     
     private final String slug;

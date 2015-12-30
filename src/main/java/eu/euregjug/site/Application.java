@@ -17,12 +17,14 @@ package eu.euregjug.site;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.PropertySource;
 
 /**
  * @author Michael J. Simons, 2015-12-26
  */
 @SpringBootApplication
+@EnableCaching
 @PropertySource("classpath:build.properties")
 public class Application {
 
