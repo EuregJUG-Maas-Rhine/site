@@ -19,6 +19,7 @@ import eu.euregjug.site.events.EventRepository;
 import eu.euregjug.site.events.RegistrationService;
 import eu.euregjug.site.links.LinkEntity;
 import eu.euregjug.site.links.LinkRepository;
+import eu.euregjug.site.posts.Post;
 import eu.euregjug.site.posts.PostEntity;
 import eu.euregjug.site.posts.PostRenderingService;
 import eu.euregjug.site.posts.PostRepository;
@@ -28,6 +29,7 @@ import java.time.ZoneId;
 import java.util.Date;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
@@ -108,5 +110,11 @@ class IndexController {
 	} catch (DateTimeException | NoSuchElementException e) {
 	}
 	return rv;
+    }
+    
+    @RequestMapping({"/archive", "/archives"})
+    public String archive(final Model model) {
+	model.addAttribute("posts", this.postRepository.findAll().stream().map(Post::new).collect(Collectors.groupingBy(post -> post.getPublishedOn().withDayOfMonth(1))));
+	return "archive";
     }
 }

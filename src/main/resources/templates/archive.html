@@ -1,0 +1,45 @@
+<!DOCTYPE HTML>
+<!--
+	Slate by Pixelarity
+	pixelarity.com @pixelarity
+	License: pixelarity.com/license
+-->
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      th:lang="${#locale.language}">
+    <head th:replace="fragments/head :: head (_pageTitle=#{archiveTitle})">
+	<title>index.html</title>
+    </head>
+    <body>
+	<header th:replace="fragments/header :: header" />
+
+	<!-- Main -->
+	<section id="main" class="wrapper">
+	    <div class="inner">
+
+		<header class="major">
+		    <h2 th:text="#{archiveTitle}">Page Title</h2>		    
+		</header>
+
+		<!-- Content -->
+		<div class="content">
+		    <section th:each="entry : ${posts.entrySet()}">
+			<h5 class="alt" th:text="${#temporals.format(entry.key, 'MMMM yyyy')}">Month</h5>
+			<ul>
+			    <li th:each="post : ${entry.value}">
+				<a href="#" th:href="@{/{date}/{slug}(date=${#temporals.format(post.publishedOn,'yyyy/MM/dd')},slug=${post.slug})}" th:text="${post.title}">Post</a>				
+			    </li>
+			</ul>
+		    </section>		    		    	    
+		</div>
+
+	    </div>
+	</section>
+
+	<section th:replace="fragments/contact :: #contact" />
+
+	<footer th:replace="fragments/footer :: footer" />
+
+	<div th:replace="fragments/scripts :: body/script" />
+    </body>
+</html>

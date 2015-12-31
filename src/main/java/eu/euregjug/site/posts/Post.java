@@ -42,6 +42,15 @@ public class Post implements Serializable {
 	this.content = content;
     }
 
+    /**
+     * Maps an entity to a post without rendering the content.
+     * 
+     * @param postEntity 
+     */
+    public Post(PostEntity postEntity) {
+	this(postEntity.getPublishedOn(), postEntity.getSlug(), postEntity.getTitle(), null);
+    }
+    
     public LocalDate getPublishedOn() {
 	return publishedOn;
     }
