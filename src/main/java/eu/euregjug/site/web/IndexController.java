@@ -43,7 +43,7 @@ import static java.util.stream.Collectors.groupingBy;
  * @author Michael J. Simons, 2015-12-27
  */
 @Controller
-public class IndexController {
+class IndexController {
     private final EventRepository eventRepository;
     
     private final RegistrationService registrationService;
@@ -69,7 +69,7 @@ public class IndexController {
 	this.postRenderingService = postRenderingService;	
     }
     
-    @RequestMapping({"", "/"})
+    @RequestMapping({"", "/", "/feed"})
     public String index(
 	    final @RequestParam(required = false, defaultValue = "0") Integer page,
 	    final Model model
