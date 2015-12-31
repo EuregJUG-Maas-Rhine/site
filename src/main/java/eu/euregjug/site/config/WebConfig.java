@@ -16,6 +16,7 @@
 package eu.euregjug.site.config;
 
 import eu.euregjug.site.support.thymeleaf.EuregJUGDialect;
+import java.util.Locale;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.LocaleResolver;
@@ -43,7 +44,9 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 
     @Bean
     public LocaleResolver localeResolver() {
-	return new CookieLocaleResolver();
+	final CookieLocaleResolver rv = new CookieLocaleResolver();
+	rv.setDefaultLocale(Locale.ENGLISH);
+	return rv;
     }
 
     @Override
