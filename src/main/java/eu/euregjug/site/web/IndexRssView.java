@@ -112,7 +112,7 @@ class IndexRssView extends AbstractRssFeedView {
 	    final Content content = new Content();
 	    content.setType(Content.HTML);
 	    content.setValue(post.getContent());
-	    final String link = getAbsoluteUrl(request, String.format("%s-%s", permalinkDateFormatter.format(post.getPublishedOn()), post.getSlug()));
+	    final String link = getAbsoluteUrl(request, String.format("%s/%s", permalinkDateFormatter.format(post.getPublishedOn()), post.getSlug()));
 
 	    rv.setAuthor("euregjug.eu");
 	    rv.setContent(content);
