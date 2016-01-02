@@ -88,6 +88,10 @@ limitations under the License.
     border-color: #faebcc;
 }
 
+.readMore {
+    display:block;
+}
+
 @media screen and (max-width: 736px) {
     .nav_home {
         display:none;

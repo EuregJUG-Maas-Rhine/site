@@ -17,6 +17,7 @@ package eu.euregjug.site.events;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import eu.euregjug.site.posts.PostEntity;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Objects;
@@ -24,9 +25,12 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
@@ -117,6 +121,11 @@ public class EventEntity implements Serializable {
     @Enumerated(EnumType.STRING)
     @NotNull
     private Type type = Type.talk;
+    
+    @ManyToOne(optional = true, fetch = FetchType.EAGER)
+    @JoinColumn(name = "post_id", referencedColumnName = "id")
+    @JsonIgnore
+    private PostEntity post;
 
     /**
      * Needed for Hibernate, not to be called by application code.
@@ -183,6 +192,15 @@ public class EventEntity implements Serializable {
 	this.type = type;
     }
 
+    public PostEntity getPost() {
+	return post;
+    }
+
+    @JsonProperty
+    public void setPost(PostEntity post) {
+	this.post = post;
+    }
+    
     @Override
     public int hashCode() {
 	int hash = 7;
