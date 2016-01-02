@@ -17,10 +17,12 @@ package eu.euregjug.site.events;
 
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author Michael J. Simons, 2015-12-26
  */
 public interface EventRepository extends JpaRepository<EventEntity, Integer> {
+    @Transactional(readOnly = true)
     List<EventEntity> findUpcomingEvents();
 }
