@@ -23,7 +23,12 @@ limitations under the License.
     margin-bottom: 2em;
 }
 
-#upcomingEvents ol li span.title {
+.eventDescription {
+    margin-bottom: 4em;
+}
+
+#upcomingEvents ol li span.title,
+.eventDescription span.title{
    font-weight:bold;
    display:block;
    margin-bottom: 0.5em;
@@ -90,6 +95,7 @@ limitations under the License.
 
 .readMore {
     display:block;
+    margin-top: 0.5em;
 }
 
 @media screen and (max-width: 736px) {

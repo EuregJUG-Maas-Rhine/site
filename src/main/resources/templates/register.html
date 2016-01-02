@@ -1,0 +1,70 @@
+<!DOCTYPE HTML>
+<!--
+	Slate by Pixelarity
+	pixelarity.com @pixelarity
+	License: pixelarity.com/license
+-->
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      th:lang="${#locale.language}">
+    <head th:replace="fragments/head :: head (_pageTitle=#{registerTitle(${event.name},${event.heldOn.time})})">
+	<title>index.html</title>
+    </head>
+    <body>
+	<header th:replace="fragments/header :: header" />
+
+	<!-- Main -->
+	<section id="main" class="wrapper">
+	    <div class="inner">
+
+		<header class="major">
+		    <h2 th:text="#{registerTitle(${event.name},${event.heldOn.time})}">Page Title</h2>	
+		    <p th:text="#{registrationExplanation}">Explain register</p>		    
+		</header>
+
+		<!-- Content -->
+		<div class="content">
+		    <div class="eventDescription">
+			<span class="title" th:utext="#{upcomingEvents.title(${event.heldOn.time},${event.name})}">27.12.2015 14:00 Some title:</span>
+				<span th:text="${event.description}">Sed tristique purus vitae volutpat commodo suscipit amet sed nibh. Proin a ullamcorper sed blandit. Sed tristique purus vitae volutpat commodo suscipit ullamcorper commodo suscipit amet sed nibh. Proin a ullamcorper sed blandit.</span>
+				<span class="readMore" th:if="${event.post}"><span th:text="#{readMore}">Read more</span> <a href="#" th:href="@{/{date}/{slug}(date=${#dates.format(event.post.publishedOn,'yyyy/MM/dd')},slug=${event.post.slug})}" th:text="${event.post.title}">Link</a></span>
+		    </div>
+			
+		    <form method="post" action="#">
+			<div class="row uniform">
+			    <div class="6u 12u$(small)">
+				<input type="text" name="firstName" id="firstName" value="" th:placeholder="#{registration.firstName}" />
+			    </div>
+			</div>
+			<div class="row uniform">
+			    <div class="6u 12u$(small)">
+				<input type="text" name="name" id="name" value="" th:placeholder="#{registration.name}" />
+			    </div>
+			</div>
+			<div class="row uniform">
+			    <div class="6u$ 12u$(small)">
+				<input type="email" name="email" id="email" value="" th:placeholder="#{registration.email}" />
+			    </div>			    
+			</div>
+			<div class="row uniform">
+			    <div class="12u$">
+				<ul class="actions">
+				    <li><input type="submit" value="Register" th:value="#{submitRegistration}" class="special" /></li>
+				    <li><input type="reset" value="Reset" th:value="#{reset}"/></li>
+				</ul>
+			    </div>
+			</div>
+		    </form>
+
+		</div>
+
+	    </div>
+	</section>
+
+	<section th:replace="fragments/contact :: #contact" />
+
+	<footer th:replace="fragments/footer :: footer" />
+
+	<div th:replace="fragments/scripts :: body/script" />
+    </body>
+</html>

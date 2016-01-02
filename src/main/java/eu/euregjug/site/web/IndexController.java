@@ -15,6 +15,7 @@
  */
 package eu.euregjug.site.web;
 
+import eu.euregjug.site.events.EventEntity;
 import eu.euregjug.site.events.EventRepository;
 import eu.euregjug.site.events.RegistrationService;
 import eu.euregjug.site.links.LinkEntity;
@@ -26,6 +27,7 @@ import eu.euregjug.site.posts.PostRepository;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -40,6 +42,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import static java.util.Comparator.reverseOrder;
 import static java.util.stream.Collectors.groupingBy;
@@ -130,5 +133,22 @@ class IndexController {
 			)
 	);
 	return "archive";
+    }
+    
+    @RequestMapping("/register/{id}")
+    public String register(
+	    final @PathVariable Integer id, 
+	    final Model model,
+	    final RedirectAttributes redirectAttributes
+    ) {
+	final EventEntity event = this.eventRepository.findOne(id);
+	String rv = "register";
+	if(event == null) {
+	    redirectAttributes.addFlashAttribute("alerts", Arrays.asList("invalidEvent"));
+	    rv = "redirect:/";
+	} else {
+	    model.addAttribute("event", event);
+	}
+	return rv;
     }
 }
