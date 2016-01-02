@@ -77,6 +77,17 @@ limitations under the License.
     text-align:right;
 }
 
+.alerts span {
+    display:block;
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    color: #8a6d3b;
+    background-color: #fcf8e3;
+    border-color: #faebcc;
+}
+
 @media screen and (max-width: 736px) {
     .nav_home {
         display:none;

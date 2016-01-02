@@ -22,8 +22,8 @@ import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 
-import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 /**
  * @author Michael J. Simons, 2015-12-27
@@ -46,8 +46,9 @@ public class SecurityConfig {
 		    .antMatchers("/**").permitAll()
 		    .and()
 		.sessionManagement()
-		    .sessionCreationPolicy(STATELESS)
-		    .and()
+		    .sessionCreationPolicy(SessionCreationPolicy.NEVER)		    
+		    .enableSessionUrlRewriting(false)
+		    .and()		   
 		.csrf()
 		    .disable();
 	}
