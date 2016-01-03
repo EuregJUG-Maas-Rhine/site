@@ -52,7 +52,7 @@ public class RegistrationService {
     }
     
     @Transactional
-    public RegistrationEntity register(final Integer eventId, final RegistrationEntity newRegistration) {
+    public RegistrationEntity register(final Integer eventId, final Registration newRegistration) {
 	final EventEntity event = this.eventRepository.findOne(eventId);
 	final String email = newRegistration.getEmail().toLowerCase();
 	if(event == null) {
@@ -62,7 +62,7 @@ public class RegistrationService {
 	} else if(!event.isOpen()) {
 	    throw new InvalidRegistrationException(String.format("Event %d doesn't isn't open", eventId), "eventNotOpen");
 	} else if(this.registrationRepository.findByEventAndEmail(event, email).isPresent())  {
-	    throw new InvalidRegistrationException(String.format("Guest '%s' already registered for event %d", email, eventId), "eventNotOpen");
+	    throw new InvalidRegistrationException(String.format("Guest '%s' already registered for event %d", email, eventId), "alreadyRegistered");
 	} else {
 	    return this.registrationRepository.save(new RegistrationEntity(event, email, newRegistration.getName(), newRegistration.getFirstName()));
 	}	
