@@ -18,6 +18,7 @@ package eu.euregjug.site.events;
 import eu.euregjug.site.posts.PostEntity;
 import eu.euregjug.site.posts.PostRepository;
 import eu.euregjug.site.support.ResourceNotFoundException;
+import java.util.List;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -43,11 +44,14 @@ class EventApiController {
     private final EventRepository eventRepository;
     
     private final PostRepository postRepository;
+    
+    private final RegistrationRepository registrationRepository;
 
     @Autowired
-    public EventApiController(EventRepository eventRepository, PostRepository postRepository) {
+    public EventApiController(EventRepository eventRepository, PostRepository postRepository, RegistrationRepository registrationRepository) {
 	this.eventRepository = eventRepository;
 	this.postRepository = postRepository;
+	this.registrationRepository = registrationRepository;
     }
 
     @RequestMapping(method = POST)
@@ -73,5 +77,11 @@ class EventApiController {
     @RequestMapping(method = GET)
     public Page<EventEntity> get(final Pageable pageable) {
 	return this.eventRepository.findAll(pageable);
+    }
+    
+    @RequestMapping(value = "/{eventId}/registrations", method = GET)
+    @PreAuthorize("isAuthenticated()")
+    public List<RegistrationEntity> getRegistrations(final @PathVariable Integer eventId) {
+	return this.registrationRepository.findAllByEventId(eventId);
     }
 }

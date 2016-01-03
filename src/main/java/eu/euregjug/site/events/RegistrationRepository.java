@@ -15,6 +15,7 @@
  */
 package eu.euregjug.site.events;
 
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -29,4 +30,6 @@ public interface RegistrationRepository extends JpaRepository<RegistrationEntity
      * @return A registration for a given event by a user.
      */
     public Optional<RegistrationEntity> findByEventAndEmail(final EventEntity event, final String email);
+
+    public List<RegistrationEntity> findAllByEventId(Integer eventId);
 }
