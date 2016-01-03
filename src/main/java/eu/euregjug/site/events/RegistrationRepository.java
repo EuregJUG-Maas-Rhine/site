@@ -18,6 +18,7 @@ package eu.euregjug.site.events;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author Michael J. Simons, 2015-12-26
@@ -31,5 +32,6 @@ public interface RegistrationRepository extends JpaRepository<RegistrationEntity
      */
     public Optional<RegistrationEntity> findByEventAndEmail(final EventEntity event, final String email);
 
+    @Transactional(readOnly = true)
     public List<RegistrationEntity> findAllByEventId(Integer eventId);
 }
