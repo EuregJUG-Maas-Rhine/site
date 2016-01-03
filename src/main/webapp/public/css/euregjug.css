@@ -93,9 +93,17 @@ limitations under the License.
     border-color: #faebcc;
 }
 
-.readMore {
+.readMore, .register {
     display:block;
     margin-top: 0.5em;
+}
+
+.has-error {
+    color: #a94442;
+}
+
+.has-error input {
+    border-color: #a94442;
 }
 
 @media screen and (max-width: 736px) {

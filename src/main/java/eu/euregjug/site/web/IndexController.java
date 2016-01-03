@@ -17,7 +17,10 @@ package eu.euregjug.site.web;
 
 import eu.euregjug.site.events.EventEntity;
 import eu.euregjug.site.events.EventRepository;
+import eu.euregjug.site.events.Registration;
+import eu.euregjug.site.events.RegistrationEntity;
 import eu.euregjug.site.events.RegistrationService;
+import eu.euregjug.site.events.RegistrationService.InvalidRegistrationException;
 import eu.euregjug.site.links.LinkEntity;
 import eu.euregjug.site.links.LinkRepository;
 import eu.euregjug.site.posts.Post;
@@ -33,12 +36,14 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.TreeMap;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -47,6 +52,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import static java.util.Comparator.reverseOrder;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
  * @author Michael J. Simons, 2015-12-27
@@ -135,19 +142,51 @@ class IndexController {
 	return "archive";
     }
     
-    @RequestMapping("/register/{id}")
+    @RequestMapping(value = "/register/{eventId}", method = GET)
     public String register(
-	    final @PathVariable Integer id, 
+	    final @PathVariable Integer eventId,
 	    final Model model,
 	    final RedirectAttributes redirectAttributes
     ) {
-	final EventEntity event = this.eventRepository.findOne(id);
-	String rv = "register";
-	if(event == null) {
+	final EventEntity event = this.eventRepository.findOne(eventId);
+	String rv;
+	if (event == null) {
 	    redirectAttributes.addFlashAttribute("alerts", Arrays.asList("invalidEvent"));
 	    rv = "redirect:/";
 	} else {
 	    model.addAttribute("event", event);
+	    if(!model.containsAttribute("registration")) {
+		model.addAttribute("registration", new Registration());
+	    }
+	    rv = "register";
+	}
+	return rv;
+    }
+    
+    @RequestMapping(value = "/register/{eventId}", method = POST)
+    public String register(
+	    final @PathVariable Integer eventId,
+	    final @Valid Registration registration,
+	    final BindingResult registrationBindingResult,
+	    final Model model,
+	    final RedirectAttributes redirectAttributes
+    ) {
+	String rv;
+	if (registrationBindingResult.hasErrors()) {
+	    model.addAttribute("alerts", Arrays.asList("invalidRegistration"));
+	    rv = register(eventId, model, redirectAttributes);
+	} else {
+	    try {
+		final RegistrationEntity registrationEntity = this.registrationService.register(eventId, registration);
+		model
+			.addAttribute("event", registrationEntity.getEvent())
+			.addAttribute("registered", true)
+			.addAttribute("alerts", Arrays.asList("registered"));
+		rv = "register";
+	    } catch (InvalidRegistrationException e) {
+		model.addAttribute("alerts", Arrays.asList(e.getLocalizedMessage()));
+		rv = register(eventId, model, redirectAttributes);
+	    }	    
 	}
 	return rv;
     }

@@ -19,45 +19,59 @@
 
 		<header class="major">
 		    <h2 th:text="#{registerTitle(${event.name},${event.heldOn.time})}">Page Title</h2>	
-		    <p th:text="#{registrationExplanation}">Explain register</p>		    
+		    <p th:text="#{registrationExplanation}">Explain register</p>		      
 		</header>
 
 		<!-- Content -->
 		<div class="content">
+		    <div th:if="${registered}">
+			<p th:text="#{registered}">Thanks</p>
+		    </div>
+		    
 		    <div class="eventDescription">
 			<span class="title" th:utext="#{upcomingEvents.title(${event.heldOn.time},${event.name})}">27.12.2015 14:00 Some title:</span>
-				<span th:text="${event.description}">Sed tristique purus vitae volutpat commodo suscipit amet sed nibh. Proin a ullamcorper sed blandit. Sed tristique purus vitae volutpat commodo suscipit ullamcorper commodo suscipit amet sed nibh. Proin a ullamcorper sed blandit.</span>
-				<span class="readMore" th:if="${event.post}"><span th:text="#{readMore}">Read more</span> <a href="#" th:href="@{/{date}/{slug}(date=${#dates.format(event.post.publishedOn,'yyyy/MM/dd')},slug=${event.post.slug})}" th:text="${event.post.title}">Link</a></span>
+			<span th:text="${event.description}">Sed tristique purus vitae volutpat commodo suscipit amet sed nibh. Proin a ullamcorper sed blandit. Sed tristique purus vitae volutpat commodo suscipit ullamcorper commodo suscipit amet sed nibh. Proin a ullamcorper sed blandit.</span>
+			<span class="readMore" th:if="${event.post}"><span th:text="#{readMore}">Read more</span> <a href="#" th:href="@{/{date}/{slug}(date=${#dates.format(event.post.publishedOn,'yyyy/MM/dd')},slug=${event.post.slug})}" th:text="${event.post.title}">Link</a></span>
 		    </div>
-			
-		    <form method="post" action="#">
-			<div class="row uniform">
-			    <div class="6u 12u$(small)">
-				<input type="text" name="firstName" id="firstName" value="" th:placeholder="#{registration.firstName}" />
-			    </div>
-			</div>
-			<div class="row uniform">
-			    <div class="6u 12u$(small)">
-				<input type="text" name="name" id="name" value="" th:placeholder="#{registration.name}" />
-			    </div>
-			</div>
-			<div class="row uniform">
-			    <div class="6u$ 12u$(small)">
-				<input type="email" name="email" id="email" value="" th:placeholder="#{registration.email}" />
-			    </div>			    
-			</div>
-			<div class="row uniform">
-			    <div class="12u$">
-				<ul class="actions">
-				    <li><input type="submit" value="Register" th:value="#{submitRegistration}" class="special" /></li>
-				    <li><input type="reset" value="Reset" th:value="#{reset}"/></li>
-				</ul>
-			    </div>
-			</div>
-		    </form>
 
+		    <div th:if="${registered}">
+			<p><a href="#" class="button" th:href="@{/}" th:text="#{homeLink}">Index</a></p>
+		    </div>		    
+		    <div th:unless="${registered}">
+			<div class="alerts" th:if="${alerts != null and alerts.size() > 0}" >			
+			    <span th:each="alert : ${alerts}" th:text="#{${alert}}">alert</span>			    			
+			</div> 		
+
+			<form method="post" action="#"  th:attr="action=@{/register/{eventId}(eventId=${event.id})}" th:object="${registration}">
+			    <div class="row uniform">
+				<div class="6u$ 12u$(small)" th:classappend="${#fields.hasErrors('firstName')} ? 'has-error'">
+				    <input type="text" th:field="*{firstName}" th:placeholder="#{registration.firstName}" />
+				    <p th:if="${#fields.hasErrors('firstName')}"><small class="help-block" th:errors="*{firstName}">Error</small></p>
+				</div>
+			    </div>
+			    <div class="row uniform">
+				<div class="6u$ 12u$(small)" th:classappend="${#fields.hasErrors('name')} ? 'has-error'">
+				    <input type="text" th:field="*{name}"  th:placeholder="#{registration.name}" />
+				    <p th:if="${#fields.hasErrors('name')}"><small class="help-block" th:errors="*{name}">Error</small></p>
+				</div>
+			    </div>
+			    <div class="row uniform">
+				<div class="6u$ 12u$(small)" th:classappend="${#fields.hasErrors('email')} ? 'has-error'">
+				    <input type="email" th:field="*{email}" th:placeholder="#{registration.email}" />
+				    <p th:if="${#fields.hasErrors('email')}"><small class="help-block" th:errors="*{email}">Error</small></p>
+				</div>			    
+			    </div>
+			    <div class="row uniform">
+				<div class="12u$">
+				    <ul class="actions">
+					<li><input type="submit" value="Register" th:value="#{submitRegistration}" class="special" /></li>
+					<li><input type="reset" value="Reset" th:value="#{reset}"/></li>
+				    </ul>
+				</div>
+			    </div>
+			</form>
+		    </div>
 		</div>
-
 	    </div>
 	</section>
 
