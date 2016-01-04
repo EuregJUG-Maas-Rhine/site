@@ -142,6 +142,12 @@ class IndexController {
 	return "archive";
     }
     
+    @RequestMapping(value = "/events", produces = "text/calendar")
+    public String events(final Model model) {
+	model.addAttribute("events", this.eventRepository.findUpcomingEvents());
+	return "events";
+    }
+    
     @RequestMapping(value = "/register/{eventId}", method = GET)
     public String register(
 	    final @PathVariable Integer eventId,

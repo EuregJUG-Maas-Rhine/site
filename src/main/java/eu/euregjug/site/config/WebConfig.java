@@ -19,7 +19,9 @@ import eu.euregjug.site.support.thymeleaf.EuregJUGDialect;
 import java.util.Locale;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.MediaType;
 import org.springframework.web.servlet.LocaleResolver;
+import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
@@ -50,9 +52,14 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     }
 
     @Override
-    public void addInterceptors(InterceptorRegistry registry) {	
+    public void addInterceptors(InterceptorRegistry registry) {
 	final LocaleChangeInterceptor localeChangeInterceptor = new LocaleChangeInterceptor();
 	localeChangeInterceptor.setParamName("lang");
 	registry.addInterceptor(localeChangeInterceptor);
+    }
+
+    @Override
+    public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
+	configurer.mediaType("ics", MediaType.valueOf("text/calendar"));
     }
 }
