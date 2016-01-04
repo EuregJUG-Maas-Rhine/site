@@ -25,6 +25,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;
@@ -61,7 +62,7 @@ public class EventsIcalView extends AbstractView {
 		w.write(String.format("UID:%d@euregjug.eu%s", event.getId(), br));
 		w.write("ORGANIZER:EuregJUG" + br);
 		w.write("DTSTART:" + tstampFormat.format(heldOn) + br);
-		w.write("DTEND:" + tstampFormat.format(heldOn.plusHours(2)) + br);
+		w.write("DTEND:" + tstampFormat.format(heldOn.plusMinutes(Optional.ofNullable(event.getDuration()).orElse(120))) + br);
 		w.write("SUMMARY:" + event.getName() + br);
 		w.write("DESCRIPTION:" + event.getDescription() + br);
 		w.write("END:VEVENT" + br);

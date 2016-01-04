@@ -16,6 +16,7 @@
 package eu.euregjug.site.events;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.euregjug.site.posts.PostEntity;
 import java.io.Serializable;
@@ -42,6 +43,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import org.hibernate.validator.constraints.NotBlank;
 
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
+
 /**
  * Represents events for the EuregJUG.
  *
@@ -64,6 +67,7 @@ import org.hibernate.validator.constraints.NotBlank;
 	    + "  order by e.heldOn asc "
     )
 })
+@JsonInclude(NON_NULL)
 public class EventEntity implements Serializable {
 
     private static final long serialVersionUID = 2005305860095134425L;
@@ -121,6 +125,12 @@ public class EventEntity implements Serializable {
     @Enumerated(EnumType.STRING)
     @NotNull
     private Type type = Type.talk;
+    
+    /**
+     * Optional duration in minutes.
+     */
+    @Column(name = "duration")
+    private Integer duration;
     
     @ManyToOne(optional = true, fetch = FetchType.EAGER)
     @JoinColumn(name = "post_id", referencedColumnName = "id")
@@ -192,6 +202,14 @@ public class EventEntity implements Serializable {
 	this.type = type;
     }
 
+    public Integer getDuration() {
+	return duration;
+    }
+
+    public void setDuration(Integer duration) {
+	this.duration = duration;
+    }
+    
     public PostEntity getPost() {
 	return post;
     }
