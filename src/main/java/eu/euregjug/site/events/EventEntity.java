@@ -34,6 +34,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -138,6 +140,14 @@ public class EventEntity implements Serializable {
     private PostEntity post;
 
     /**
+     * Creation date of this post.
+     */
+    @Column(name = "created_at", nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    @JsonIgnore
+    private Calendar createdAt;
+    
+    /**
      * Needed for Hibernate, not to be called by application code.
      */
     protected EventEntity() {
@@ -155,6 +165,14 @@ public class EventEntity implements Serializable {
 	this.heldOn = heldOn;
 	this.name = name;
 	this.description = description;
+    }
+    
+    @PrePersist
+    @PreUpdate
+    void prePersistAndUpdate() {
+	if (this.createdAt == null) {
+	    this.createdAt = Calendar.getInstance();
+	}
     }
 
     @JsonProperty
@@ -217,6 +235,10 @@ public class EventEntity implements Serializable {
     @JsonProperty
     public void setPost(PostEntity post) {
 	this.post = post;
+    }
+    
+    public Calendar getCreatedAt() {
+	return createdAt;
     }
     
     @Override

@@ -61,6 +61,7 @@ public class EventsIcalView extends AbstractView {
 		w.write("BEGIN:VEVENT" + br);
 		w.write(String.format("UID:%d@euregjug.eu%s", event.getId(), br));
 		w.write("ORGANIZER:EuregJUG" + br);
+		w.write("DTSTAMP:" + tstampFormat.format(event.getCreatedAt().toInstant().atZone(zoneId)) + br);
 		w.write("DTSTART:" + tstampFormat.format(heldOn) + br);
 		w.write("DTEND:" + tstampFormat.format(heldOn.plusMinutes(Optional.ofNullable(event.getDuration()).orElse(120))) + br);
 		w.write("SUMMARY:" + event.getName() + br);
