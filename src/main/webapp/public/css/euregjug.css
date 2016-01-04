@@ -21,6 +21,7 @@ limitations under the License.
 
 #upcomingEvents ol li {    
     margin-bottom: 2em;
+    padding-left: 0px;
 }
 
 .eventDescription {

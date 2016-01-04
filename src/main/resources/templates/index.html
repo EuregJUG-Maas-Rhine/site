@@ -76,7 +76,14 @@
 
 		<div class="sidebar">
 		    <section id="upcomingEvents" th:if="${upcomingEvents.size()}">
-			<h3 th:text="#{upcomingEvents}">Magna Feugiat</h3>
+			<header>
+			    <h3 th:text="#{upcomingEvents}">Magna Feugiat</h3>
+			    <p>
+				<i class="fa fa-calendar"></i>
+				<a href="#" th:href="@{/events.ics}" th:text="#{downloadEvents}">Download iCal / ics file</a>
+			    </p>
+			</header>
+
 			<ol>
 			    <li th:each="upcomingEvent : ${upcomingEvents}">
 				<span class="title" th:utext="#{upcomingEvents.title(${upcomingEvent.heldOn.time},${upcomingEvent.name})}">27.12.2015 14:00 Some title:</span>
@@ -86,7 +93,7 @@
 				    <a href="#" class="button  icon fa-send" th:href="@{/register/{eventId}(eventId=${upcomingEvent.id})}" th:text="#{registerHere}">Register here</a>				    
 				</span>
 			    </li>
-			</ol>
+			</ol>			    
 		    </section>
 
 		    <section id="profiles" class="links" th:if="${links.get(T(eu.euregjug.site.links.LinkEntity.Type).profile)}">
