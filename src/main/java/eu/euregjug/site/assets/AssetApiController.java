@@ -18,10 +18,6 @@ package eu.euregjug.site.assets;
 import com.mongodb.gridfs.GridFSDBFile;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.ByteBuffer;
-import java.nio.channels.Channels;
-import java.nio.channels.ReadableByteChannel;
-import java.nio.channels.WritableByteChannel;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import javax.servlet.http.HttpServletRequest;
@@ -106,23 +102,9 @@ public class AssetApiController {
 	    final int cacheForDays = 365;
 	    response.setHeader("Content-Type", file.getContentType());
 	    response.setHeader("Content-Disposition", String.format("inline; filename=\"%s\"", file.getFilename()));
-	    response.addHeader("Expires", now(of("UTC")).plusDays(cacheForDays).format(RFC_1123_DATE_TIME));
-	    response.addHeader("Cache-Control", String.format("max-age=%d, %s", TimeUnit.DAYS.toSeconds(cacheForDays), "public"));
-	    try (
-		    final ReadableByteChannel src = Channels.newChannel(file.getInputStream());
-		    final WritableByteChannel dest = Channels.newChannel(response.getOutputStream());
-	    ) {
-		final ByteBuffer buffer = ByteBuffer.allocateDirect(16 * 1024);
-		while (src.read(buffer) != -1) {
-		    buffer.flip();
-		    dest.write(buffer);
-		    buffer.compact();
-		}
-		buffer.flip();
-		while (buffer.hasRemaining()) {
-		    dest.write(buffer);
-		}
-	    }
+	    response.setHeader("Expires", now(of("UTC")).plusDays(cacheForDays).format(RFC_1123_DATE_TIME));
+	    response.setHeader("Cache-Control", String.format("max-age=%d, %s", TimeUnit.DAYS.toSeconds(cacheForDays), "public"));
+	    file.writeTo(response.getOutputStream());
 	    response.flushBuffer();
 	}
     }
