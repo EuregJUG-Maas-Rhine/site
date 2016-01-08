@@ -5,7 +5,7 @@
     <databaseInfo>
         <version>134481920</version>
         <UUID>19C67A2A-3A8A-4007-B61C-C5E90FB933C5</UUID>
-        <nextObjectID>141</nextObjectID>
+        <nextObjectID>146</nextObjectID>
         <metadata>
             <plist version="1.0">
                 <dict>
@@ -258,7 +258,7 @@
         <attribute name="order" type="int64">3</attribute>
         <attribute name="name" type="string">Posts</attribute>
         <relationship name="parent" type="0/1" destination="LMREQUESTTREEITEM"></relationship>
-        <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM" idrefs="z131 z129"></relationship>
+        <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM" idrefs="z131 z129 z144"></relationship>
         <relationship name="bodyparameters" type="0/0" destination="LMKEYVALUE"></relationship>
         <relationship name="headers" type="0/0" destination="LMKEYVALUE"></relationship>
         <relationship name="urlparameters" type="0/0" destination="LMKEYVALUE"></relationship>
@@ -421,5 +421,41 @@
         <relationship name="groupforheaders" type="0/1" destination="LMREQUESTGROUP"></relationship>
         <relationship name="groupforurlparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
         <relationship name="request" type="0/1" destination="LMREQUEST" idrefs="z139"></relationship>
+    </object>
+    <object type="LMREQUEST" id="z144">
+        <attribute name="uuid" type="string">BD319359-BE8D-4189-9800-5B982BA9787C</attribute>
+        <attribute name="url" type="string">127.0.0.1:8080/api/posts/2</attribute>
+        <attribute name="storecookies" type="bool">1</attribute>
+        <attribute name="sendcookies" type="bool">1</attribute>
+        <attribute name="redirectmethod" type="bool">0</attribute>
+        <attribute name="redirectauthorization" type="bool">0</attribute>
+        <attribute name="method" type="string">PUT</attribute>
+        <attribute name="followredirects" type="bool">0</attribute>
+        <attribute name="body" type="string">[{"data":{"json":"{\\"title\\":\\"We need support!\\",\\"publishedOn\\":\\"2016-09-21\\",\\"slug\\":\\"we-need-support\\",\\"content\\":\\"[{\\\\\\"data\\\\\\":{\\\\\\"bookmarkData\\\\\\":\\\\\\"Ym9va7gCAAAAAAQQMAAAAMd3mOR05uR+RMwzFRelE61qi8Zuaoqg+5wVPG61M33ztAEAAAQAAAADAwAAABgAKAUAAAABAQAAVXNlcnMAAAAHAAAAAQEAAG1zaW1vbnMABwAAAAEBAABEZXNrdG9wAAkAAAABAQAAcG9zdDMudHh0AAAAEAAAAAEGAAAQAAAAIAAAADAAAABAAAAACAAAAAQDAAD5ZgIAAAAAAAgAAAAEAwAAf\\\\\\\\\\\\\\/IbAAAAAAAIAAAABAMAAEFxHwAAAAAACAAAAAQDAABGJw0CAAAAABAAAAABBgAAbAAAAHwAAACMAAAAnAAAAAgAAAAABAAAQbw\\\\\\\\\\\\\\/2YwAAAAYAAAAAQIAAAEAAAAAAAAADwAAAAAAAAAAAAAAAAAAAAgAAAAEAwAAAgAAAAAAAAAEAAAAAwMAAPYBAAAIAAAAAQkAAGZpbGU6Ly8vDAAAAAEBAABNYWNpbnRvc2ggSEQIAAAABAMAAAAAADN0AAAACAAAAAAEAABBuV6xxgAAACQAAAABAQAAMDNCQUYxMEUtNDJBNS0zMkM4LThFQ0MtRUUyNTgxRkREMTNDGAAAAAECAACBAAAAAQAAAO8TAAABAAAAAAAAAAAAAAABAAAAAQEAAC8AAAAAAAAAAQUAAMwAAAD+\\\\\\\\\\\\\\/\\\\\\\\\\\\\\/\\\\\\\\\\\\\\/\\\\\\\\\\\\\\/AQAAAAAAAAAQAAAABBAAAFQAAAAAAAAABRAAAKwAAAAAAAAAEBAAANQAAAAAAAAAQBAAAMQAAAAAAAAAAiAAAKABAAAAAAAABSAAABABAAAAAAAAECAAACABAAAAAAAAESAAAFQBAAAAAAAAEiAAADQBAAAAAAAAEyAAAEQBAAAAAAAAICAAAIABAAAAAAAAMCAAAKwBAAAAAAAAAcAAAPQAAAAAAAAAEcAAACAAAAAAAAAAEsAAAAQBAAAAAAAAENAAAAQAAAAAAAAA\\\\\\"},\\\\\\"identifier\\\\\\":\\\\\\"com.luckymarmot.FileContentDynamicValue\\\\\\"}]\\"}"},"identifier":"com.luckymarmot.JSONDynamicValue"}]</attribute>
+        <attribute name="order" type="int64">2</attribute>
+        <attribute name="name" type="string">updatePost</attribute>
+        <relationship name="parent" type="0/1" destination="LMREQUESTTREEITEM" idrefs="z128"></relationship>
+        <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM"></relationship>
+        <relationship name="headers" type="0/0" destination="LMKEYVALUE" idrefs="z145 z146"></relationship>
+    </object>
+    <object type="LMKEYVALUE" id="z145">
+        <attribute name="value" type="string"></attribute>
+        <attribute name="order" type="int64">1</attribute>
+        <attribute name="name" type="string"></attribute>
+        <attribute name="enabled" type="bool">1</attribute>
+        <relationship name="groupforbodyparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="groupforheaders" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="groupforurlparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="request" type="0/1" destination="LMREQUEST" idrefs="z144"></relationship>
+    </object>
+    <object type="LMKEYVALUE" id="z146">
+        <attribute name="value" type="string">[{"data":{"charset":"utf-8","username":["euregjug"],"password":["test"]},"identifier":"com.luckymarmot.BasicAuthDynamicValue"}]</attribute>
+        <attribute name="order" type="int64">0</attribute>
+        <attribute name="name" type="string">Authorization</attribute>
+        <attribute name="enabled" type="bool">0</attribute>
+        <relationship name="groupforbodyparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="groupforheaders" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="groupforurlparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="request" type="0/1" destination="LMREQUEST" idrefs="z144"></relationship>
     </object>
 </database>
