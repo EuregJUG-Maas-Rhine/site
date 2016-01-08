@@ -18,6 +18,7 @@ package eu.euregjug.site.posts;
 import eu.euregjug.site.support.ResourceNotFoundException;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -59,6 +60,7 @@ class PostApiController {
     @RequestMapping(value = "/{id:\\d+}", method = PUT)
     @PreAuthorize("isAuthenticated()")
     @Transactional
+    @CacheEvict(cacheNames = "renderedPosts", key = "#a0")
     public PostEntity update(final @PathVariable Integer id, final @Valid @RequestBody PostEntity updatedPost) {
 	final PostEntity postEntity =  this.postRepository.findOne(id);
 	if(postEntity == null) {
