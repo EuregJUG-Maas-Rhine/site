@@ -23,7 +23,6 @@ import java.text.Normalizer.Form;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Objects;
-import java.util.Optional;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -178,7 +177,11 @@ public class PostEntity implements Serializable {
     }
 
     final String generateSlug(final String slug, final String title) {
-	return Optional.ofNullable(slug).orElseGet(() -> Normalizer.normalize(title.toLowerCase(), Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}|[^\\w\\s]", "").replaceAll("[\\s-]+", " ").trim().replaceAll("\\s", "-"));
+	String rv = slug;
+	if(rv == null || rv.trim().isEmpty()) {
+	    rv = Normalizer.normalize(title.toLowerCase(), Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}|[^\\w\\s]", "").replaceAll("[\\s-]+", " ").trim().replaceAll("\\s", "-");
+	}
+	return rv;
     }
 
     /**
