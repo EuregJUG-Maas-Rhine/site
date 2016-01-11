@@ -60,7 +60,7 @@ class PostApiController {
     @RequestMapping(value = "/{id:\\d+}", method = PUT)
     @PreAuthorize("isAuthenticated()")
     @Transactional
-    @CacheEvict(cacheNames = "renderedPosts", key = "#a0")
+    @CacheEvict(cacheNames = "renderedPosts", key = "#id")
     public PostEntity update(final @PathVariable Integer id, final @Valid @RequestBody PostEntity updatedPost) {
 	final PostEntity postEntity =  this.postRepository.findOne(id);
 	if(postEntity == null) {
