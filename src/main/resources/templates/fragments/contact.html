@@ -25,7 +25,7 @@ limitations under the License.
 	<section id="contact" class="wrapper split">
 	    <div class="inner">
 		<section>
-		    <h2 th:text="#{contactTitle}">Conctac</h2>
+		    <h2 th:text="#{contactTitle}">Contact</h2>
 		    <ul class="bulleted-icons">
 			<li>
 			    <span class="icon-wrapper"><span class="icon fa-envelope"></span></span>
@@ -43,7 +43,8 @@ limitations under the License.
 			    <p><a href="http://michael-simons.eu">Michael Simons</a></p>
 			</li>			
 		    </ul>
-		</section>		
+		</section>
+		<section th:replace="fragments/newsletter :: #newsletter" />		
 	    </div>
 	</section>
     </body>
