@@ -14,42 +14,36 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-<html xmlns="http://www.w3.org/1999/xhtml" 
+<html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
       th:lang="${#locale.language}">
     <head>
 	<title th:text="(${_pageTitle} ? ${_pageTitle} + ' | ' : '') + #{siteTitle}">EuregJUG</title>
-	<meta charset="UTF-8" />	
+	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 	<!--[if lte IE 8]>
-	<script src="../../../../test/resources/templates/js/html5shiv.min.js" 
+	<script src="../../../../test/resources/templates/js/html5shiv.min.js"
 		th:href="@{/webjars/html5shiv/{version}/html5shiv.min.js(version=${@environment.getProperty('info.versions.html5shiv')})}"></script>
-	<![endif]-->		  	
+	<![endif]-->
+	
 	<link rel="stylesheet"
-	      href="../../../../test/resources/templates/css/font-awesome.css"
-	      th:href="@{/webjars/font-awesome/{version}/css/font-awesome.min.css(version=${@environment.getProperty('info.versions.font-awesome')})}" />
-	<link rel="stylesheet"
-	      href="../../../../main/webapp/public/css/main.css"
-	      th:href="@{/css/main.css}"
+	      th:href="@{/owr/site.css}"
 	/>
-	<link rel="stylesheet"
-	      href="../../../../main/webapp/public/css/euregjug.css"
-	      th:href="@{/css/euregjug.css}"
-	/>
+	
 	<link rel="alternate"
 	      href="#"
 	      type="application/rss+xml"
 	      title="RSS Feed"
 	      th:title="#{rssLink}"
 	      th:href="@{/feed.rss}"
-	/>			
-	
+	/>
+
 	<!--[if lte IE 8]>
 	<link rel="stylesheet"
 	      href="../../../../main/webapp/public/css/ie8.css"
 	      th:href="@{/css/ie8.css}"
 	/>
-	<![endif]-->	
+	<![endif]-->
 	<!--[if lte IE 9]>
 	<link rel="stylesheet"
 	      href="../../../../main/webapp/public/css/ie9.css"
@@ -60,7 +54,7 @@ limitations under the License.
 	    <link rel="stylesheet"
 		href="../../../../main/webapp/public/css/noscript.css"
 		th:href="@{/css/noscript.css}"
-	    />	    
+	    />
 	</noscript>
     </head>
     <body />

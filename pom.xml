@@ -86,7 +86,7 @@
 	<dependency>
 	    <groupId>eu.michael-simons</groupId>
 	    <artifactId>spring-boot-starter-wro4j</artifactId>
-	    <version>0.0.1</version>	    
+	    <version>0.0.3</version>	    
 	</dependency>
 	<dependency>
 	    <groupId>org.springframework.boot</groupId>
@@ -238,6 +238,7 @@
 		<filtering>true</filtering>
 		<includes>
 		    <include>build.properties</include>
+		    <include>wro.xml</include>
 		</includes>
 	    </resource>
 	    <resource>

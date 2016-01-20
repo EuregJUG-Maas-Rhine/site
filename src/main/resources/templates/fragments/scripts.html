@@ -23,22 +23,10 @@ limitations under the License.
 	<meta charset="UTF-8" />	
     </head>
     <body>
-	<script src="../../../../test/resources/templates/js/jquery.js"                          
-		th:src="@{/webjars/jquery/{version}/jquery.min.js(version=${@environment.getProperty('info.versions.jquery')})}">		   
-	</script>		
-	<script src="../../../../main/webapp/public/js/jquery.dropotron.min.js" 
-	        th:src="@{/js/jquery.dropotron.min.js}"></script>
-	<script src="../../../../main/webapp/public/js/jquery.scrollex.min.js"  
-	        th:src="@{/js/jquery.scrollex.min.js}"></script>
-	<script src="../../../../main/webapp/public/js/skel.min.js"             
-	        th:src="@{/js/skel.min.js}"></script>
-	<script src="../../../../main/webapp/public/js/util.js"                 
-	        th:src="@{/js/util.js}"></script>
 	<!--[if lte IE 8]>
 	<script src="../../../../test/resources/templates/js/respond.min.js" 
 		th:href="@{/webjars/respond/{version}/desc/respond.min.js(version=${@environment.getProperty('info.versions.respond')})}"></script>	
 	<![endif]-->
-	<script src="../../../../main/webapp/public/js/main.js"                 
-	        th:src="@{/js/main.js}"></script>
+	<script th:src="@{/owr/site.js}"></script>
     </body>
 </html>
