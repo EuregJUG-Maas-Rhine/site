@@ -84,4 +84,19 @@ class EventApiController {
     public List<RegistrationEntity> getRegistrations(final @PathVariable Integer eventId) {
 	return this.registrationRepository.findAllByEventId(eventId);
     }
+    
+    @RequestMapping(value = "/{id:\\d+}", method = PUT)
+    @PreAuthorize("isAuthenticated()")
+    @Transactional    
+    public EventEntity update(final @PathVariable Integer id, final @Valid @RequestBody EventEntity updatedEvent) {
+	final EventEntity eventEntity =  this.eventRepository.findOne(id);
+	if(eventEntity == null) {
+	    throw new ResourceNotFoundException();
+	}
+	eventEntity.setDescription(updatedEvent.getDescription());
+	eventEntity.setDuration(updatedEvent.getDuration());
+	eventEntity.setNeedsRegistration(updatedEvent.isNeedsRegistration());
+	eventEntity.setType(updatedEvent.getType());	
+	return eventEntity;	
+    }
 }
