@@ -65,6 +65,10 @@ limitations under the License.
     padding-left: 1em;    
 }
 
+.imageblock.pull-left .content {
+    padding-right: 1em;    
+}
+
 .nav_previous {
     text-align:left;
 }
