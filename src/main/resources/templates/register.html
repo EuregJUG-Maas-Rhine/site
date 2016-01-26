@@ -42,7 +42,7 @@
 			    <span th:each="alert : ${alerts}" th:text="#{${alert}}">alert</span>			    			
 			</div> 		
 
-			<form method="post" action="#"  th:attr="action=@{/register/{eventId}(eventId=${event.id})}" th:object="${registration}">
+			<form method="post" class="registrationForm" action="#"  th:attr="action=@{/register/{eventId}(eventId=${event.id})}" th:object="${registration}">
 			    <div class="row uniform">
 				<div class="6u$ 12u$(small)" th:classappend="${#fields.hasErrors('firstName')} ? 'has-error'">
 				    <input type="text" th:field="*{firstName}" th:placeholder="#{registration.firstName}" />
@@ -59,6 +59,11 @@
 				<div class="6u$ 12u$(small)" th:classappend="${#fields.hasErrors('email')} ? 'has-error'">
 				    <input type="email" th:field="*{email}" th:placeholder="#{registration.email}" />
 				    <p th:if="${#fields.hasErrors('email')}"><small class="help-block" th:errors="*{email}">Error</small></p>
+				</div>			    
+			    </div>
+			    <div class="row uniform">
+				<div class="6u$ 12u$(small)">
+				    <textarea th:field="*{comment}" th:placeholder="#{registration.spamprotection}"></textarea>				    
 				</div>			    
 			    </div>
 			    <div class="row uniform">
