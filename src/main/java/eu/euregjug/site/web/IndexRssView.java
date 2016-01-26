@@ -21,7 +21,6 @@ import ac.simons.syndication.utils.SyndicationGuid;
 import ac.simons.syndication.utils.SyndicationLink;
 import com.rometools.rome.feed.rss.Channel;
 import com.rometools.rome.feed.rss.Content;
-import com.rometools.rome.feed.rss.Guid;
 import com.rometools.rome.feed.rss.Item;
 import eu.euregjug.site.posts.Post;
 import java.time.ZoneId;
