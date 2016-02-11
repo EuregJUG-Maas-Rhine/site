@@ -16,8 +16,6 @@
 package eu.euregjug.site.events;
 
 import java.io.Serializable;
-import java.util.Optional;
-import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.Size;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
@@ -43,18 +41,6 @@ public class Registration implements Serializable {
     @Email
     @Size(max = 1024)
     private String email;
-        
-    private String comment;
-
-    /**
-     * This is my super simple spam protection for registrations.
-     * 
-     * @return True if comment field is empty
-     */
-    @AssertTrue
-    public boolean isValid() {
-	return Optional.ofNullable(comment).orElse("").trim().isEmpty();
-    }
     
     public String getFirstName() {
 	return firstName;
@@ -78,13 +64,5 @@ public class Registration implements Serializable {
 
     public void setEmail(String email) {
 	this.email = email;
-    }
-
-    public String getComment() {
-	return comment;
-    }
-
-    public void setComment(String comment) {
-	this.comment = comment;
-    }
+    }  
 }
