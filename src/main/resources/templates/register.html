@@ -63,6 +63,9 @@
 			    </div>
 			    <div class="row uniform">
 				<div class="6u$ 12u$(small)">
+				    <!--<if request has 'showRecaptcha' query param>-->				    
+				    <div class="g-recaptcha" th:attr="data-sitekey=${@environment.getProperty('recaptcha.validation.siteKey')}" ></div>
+				    <!--</if>-->
 				</div>			    
 			    </div>
 			    <div class="row uniform">

@@ -15,6 +15,7 @@
  */
 package eu.euregjug.site.web;
 
+import com.github.mkopylec.recaptcha.validation.RecaptchaValidator;
 import eu.euregjug.site.events.EventEntity;
 import eu.euregjug.site.events.EventRepository;
 import eu.euregjug.site.events.Registration;
@@ -36,6 +37,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.TreeMap;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -69,6 +71,8 @@ class IndexController {
     private final PostRepository postRepository;
     
     private final PostRenderingService postRenderingService;
+          
+    private final RecaptchaValidator recaptchaValidator;
     
     @Autowired
     public IndexController(
@@ -76,13 +80,15 @@ class IndexController {
 	    RegistrationService registrationService, 
 	    LinkRepository linkRepository, 
 	    PostRepository postRepository, 
-	    PostRenderingService postRenderingService
+	    PostRenderingService postRenderingService,
+	    RecaptchaValidator recaptchaValidator
     ) {
 	this.eventRepository = eventRepository;
 	this.registrationService = registrationService;
 	this.linkRepository = linkRepository;	
 	this.postRepository = postRepository;
 	this.postRenderingService = postRenderingService;	
+	this.recaptchaValidator = recaptchaValidator;
     }
     
     @RequestMapping({"", "/", "/feed"})
@@ -174,11 +180,12 @@ class IndexController {
 	    final @PathVariable Integer eventId,
 	    final @Valid Registration registration,
 	    final BindingResult registrationBindingResult,
+	    final HttpServletRequest request,
 	    final Model model,
 	    final RedirectAttributes redirectAttributes
     ) {
 	String rv;
-	if (registrationBindingResult.hasErrors()) {
+	if (registrationBindingResult.hasErrors() || recaptchaValidator.validate(request).isFailure()) {
 	    model.addAttribute("alerts", Arrays.asList("invalidRegistration"));
 	    rv = register(eventId, model, redirectAttributes);
 	} else {
