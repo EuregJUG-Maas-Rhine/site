@@ -115,6 +115,10 @@ li p {
 	margin-bottom: 0px;
 }
 
+a.pivotal-link {
+    color: #026D63 !important;
+}
+
 .registrationForm div:nth-child(4) textarea {
     display:none;
 }
