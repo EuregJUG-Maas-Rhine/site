@@ -14,7 +14,7 @@
     <parent>
 	<groupId>org.springframework.boot</groupId>
 	<artifactId>spring-boot-starter-parent</artifactId>
-	<version>1.3.2.RELEASE</version>
+	<version>1.3.3.RELEASE</version>
 	<relativePath/> <!-- lookup parent from repository -->
     </parent>
     
@@ -51,7 +51,7 @@
 	<jquery.version>1.11.3</jquery.version>
 	<respond.version>1.4.2</respond.version>
 	<rometools.version>1.5.1</rometools.version>	
-	<tika.version>1.11</tika.version>
+	<tika.version>1.12</tika.version>
     </properties>
 
     <dependencies>
@@ -86,12 +86,12 @@
 	<dependency>
 	    <groupId>eu.michael-simons</groupId>
 	    <artifactId>wro4j-spring-boot-starter</artifactId>
-	    <version>0.0.7</version>	    
+	    <version>0.0.8</version>	    
 	</dependency>
 	<dependency>
 	    <groupId>com.github.mkopylec</groupId>
 	    <artifactId>recaptcha-spring-boot-starter</artifactId>
-	    <version>1.3.4</version>
+	    <version>1.3.5</version>
 	</dependency>
 	<dependency>
 	    <groupId>org.springframework.boot</groupId>
