@@ -64,7 +64,9 @@ public class RegistrationService {
 	} else if(this.registrationRepository.findByEventAndEmail(event, email).isPresent())  {
 	    throw new InvalidRegistrationException(String.format("Guest '%s' already registered for event %d", email, eventId), "alreadyRegistered");
 	} else {
-	    return this.registrationRepository.save(new RegistrationEntity(event, email, newRegistration.getName(), newRegistration.getFirstName()));
+	    final RegistrationEntity registrationEntity = new RegistrationEntity(event, email, newRegistration.getName(), newRegistration.getFirstName());
+	    registrationEntity.setSubscribeToNewsletter(newRegistration.isSubscribeToNewsletter());
+	    return this.registrationRepository.save(registrationEntity);
 	}	
     }
 }

@@ -16,6 +16,7 @@
 package eu.euregjug.site.events;
 
 import java.io.Serializable;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
@@ -42,6 +43,9 @@ public class Registration implements Serializable {
     @Size(max = 1024)
     private String email;
     
+    @NotNull
+    private boolean subscribeToNewsletter = false;
+    
     public String getFirstName() {
 	return firstName;
     }
@@ -65,4 +69,12 @@ public class Registration implements Serializable {
     public void setEmail(String email) {
 	this.email = email;
     }  
+
+    public boolean isSubscribeToNewsletter() {
+	return subscribeToNewsletter;
+    }
+
+    public void setSubscribeToNewsletter(boolean subscribeToNewsletter) {
+	this.subscribeToNewsletter = subscribeToNewsletter;
+    }
 }
