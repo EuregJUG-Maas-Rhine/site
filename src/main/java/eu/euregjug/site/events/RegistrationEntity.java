@@ -85,6 +85,13 @@ public class RegistrationEntity implements Serializable {
     private String firstName;
 
     /**
+     * A flag if the registered person also wants to subscribe to our newsletter. Defaults to  
+     * {@code false}.
+     */
+    @Column(name = "subscribe_to_newsletter", nullable = false)
+    private boolean subscribeToNewsletter = false;
+    
+    /**
      * Needed for Hibernate, not to be called by application code.
      */
     protected RegistrationEntity() {
@@ -124,6 +131,14 @@ public class RegistrationEntity implements Serializable {
 
     public void setFirstName(String firstName) {
 	this.firstName = firstName;
+    }
+
+    public boolean isSubscribeToNewsletter() {
+	return subscribeToNewsletter;
+    }
+
+    public void setSubscribeToNewsletter(boolean subscribeToNewsletter) {
+	this.subscribeToNewsletter = subscribeToNewsletter;
     }
 
     @Override
