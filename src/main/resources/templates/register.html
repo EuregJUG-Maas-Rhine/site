@@ -62,6 +62,10 @@
 				</div>			    
 			    </div>
 			    <div class="row uniform">
+				<div class="6u 12u$(small)">
+				<input id="subscribeToNewsletter" name="subscribeToNewsletter" type="checkbox" th:checked="*{subscribeToNewsletter}"/><label for="subscribeToNewsletter" th:text="#{registration.subscribeToNewsletter}">subscribeToNewsletter</label></div>
+			    </div>
+			    <div class="row uniform">
 				<div class="6u$ 12u$(small)">
 				    <!--<if request has 'showRecaptcha' query param>-->				    
 				    <div class="g-recaptcha" th:attr="data-sitekey=${@environment.getProperty('recaptcha.validation.siteKey')}" ></div>
