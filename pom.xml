@@ -168,7 +168,7 @@
 	<dependency>
 	    <groupId>eu.michael-simons</groupId>
 	    <artifactId>java-syndication</artifactId>
-	    <version>0.1.4</version>
+	    <version>0.2.1</version>
 	</dependency>
 			
 	<!-- Webjars -->
