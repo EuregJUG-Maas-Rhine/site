@@ -15,21 +15,23 @@
  */
 package eu.euregjug.site.web;
 
-import ac.simons.syndication.modules.atom.AtomContent;
-import ac.simons.syndication.modules.atom.AtomModuleImpl;
 import ac.simons.syndication.utils.SyndicationGuid;
 import ac.simons.syndication.utils.SyndicationLink;
+import com.rometools.modules.atom.modules.AtomLinkModuleImpl;
+import com.rometools.rome.feed.atom.Link;
 import com.rometools.rome.feed.rss.Channel;
 import com.rometools.rome.feed.rss.Content;
 import com.rometools.rome.feed.rss.Item;
 import eu.euregjug.site.posts.Post;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,10 +83,10 @@ class IndexRssView extends AbstractRssFeedView {
 	feed.setGenerator("https://github.com/EuregJUG-Maas-Rhine/site");
 
 	final String self = getAbsoluteUrl(request, "/feed.rss");
-	final AtomContent atomContent = new AtomContent();
-	atomContent.addLink(new SyndicationLink().withRel("previous").withType(super.getContentType()).withHref(self).getLink());
+	final List<Link> atomLinks = new ArrayList<>();
+	atomLinks.add(new SyndicationLink().withRel("previous").withType(super.getContentType()).withHref(self).getLink());
 	if (posts.hasPrevious()) {
-	    atomContent.addLink(new SyndicationLink()
+	    atomLinks.add(new SyndicationLink()
 		    .withRel("previous")
 		    .withType(super.getContentType())
 		    .withHref(String.format("%s?page=%d", self, posts.previousPageable().getPageNumber()))
@@ -92,14 +94,18 @@ class IndexRssView extends AbstractRssFeedView {
 	    );
 	}
 	if (posts.hasNext()) {
-	    atomContent.addLink(new SyndicationLink()
+	    atomLinks.add(new SyndicationLink()
 		    .withRel("next")
 		    .withType(super.getContentType())
 		    .withHref(String.format("%s?page=%d", self, posts.nextPageable().getPageNumber()))
 		    .getLink()
 	    );
 	}
-	feed.getModules().add(new AtomModuleImpl(atomContent));
+	feed.getModules().addAll(atomLinks.stream().map(l -> {
+			final AtomLinkModuleImpl rv = new AtomLinkModuleImpl();
+			rv.setLink(l);
+			return rv;
+	}).collect(Collectors.toList()));	
     }
 
     @Override
