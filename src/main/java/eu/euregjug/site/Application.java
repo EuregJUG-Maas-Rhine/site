@@ -15,11 +15,14 @@
  */
 package eu.euregjug.site;
 
+import java.util.concurrent.Executor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 /**
  * @author Michael J. Simons, 2015-12-26
@@ -29,6 +32,11 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @EnableAsync
 @PropertySource("classpath:build.properties")
 public class Application {
+
+    @Bean
+    public Executor threadPoolTaskExecutor() {
+        return new ThreadPoolTaskExecutor();
+    }
 
     public static void main(String[] args) {
 	SpringApplication.run(Application.class, args);
