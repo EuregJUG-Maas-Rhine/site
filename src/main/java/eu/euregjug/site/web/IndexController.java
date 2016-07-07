@@ -34,6 +34,7 @@ import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.TreeMap;
@@ -180,6 +181,7 @@ class IndexController {
 	    final @PathVariable Integer eventId,
 	    final @Valid Registration registration,
 	    final BindingResult registrationBindingResult,
+	    final Locale locale,
 	    final HttpServletRequest request,
 	    final Model model,
 	    final RedirectAttributes redirectAttributes
@@ -190,7 +192,7 @@ class IndexController {
 	    rv = register(eventId, model, redirectAttributes);
 	} else {
 	    try {
-		final RegistrationEntity registrationEntity = this.registrationService.register(eventId, registration);
+		final RegistrationEntity registrationEntity = this.registrationService.register(eventId, registration, locale);
 		model
 			.addAttribute("event", registrationEntity.getEvent())
 			.addAttribute("registered", true)
