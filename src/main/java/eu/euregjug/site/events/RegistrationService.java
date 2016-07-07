@@ -19,7 +19,6 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.util.Locale;
-import java.util.concurrent.CompletableFuture;
 import java.util.regex.Pattern;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -32,6 +31,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
+import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -108,7 +108,7 @@ public class RegistrationService {
     }
     
     @Transactional
-    public RegistrationEntity register(final Integer eventId, final Registration newRegistration, final Locale locale) {
+    public RegistrationEntity register(final Integer eventId, final Registration newRegistration) {
 	final EventEntity event = this.eventRepository.findOne(eventId);
 	final String email = newRegistration.getEmail().toLowerCase();
 	if(event == null) {
@@ -120,38 +120,33 @@ public class RegistrationService {
 	} else if(this.registrationRepository.findByEventAndEmail(event, email).isPresent())  {
 	    throw new InvalidRegistrationException(String.format("Guest '%s' already registered for event %d", email, eventId), "alreadyRegistered");
 	} else {
-	    final RegistrationEntity registrationEntity = this.registrationRepository.save(
+	    return this.registrationRepository.save(
 		    new RegistrationEntity(event, email, newRegistration.getName(), newRegistration.getFirstName(), newRegistration.isSubscribeToNewsletter())
 	    );
-	    sendMail(registrationEntity, locale);	    
-	    return registrationEntity;
 	}	
     }
     
     @Async
-    public CompletableFuture<Void> sendMail(final RegistrationEntity registrationEntity, final Locale locale) {
-	return CompletableFuture.runAsync(() -> {
-	    final Context context = new Context();
-	    context.setLocale(locale);
-	    context.setVariable("registration", registrationEntity);
-	    final Writer w = new StringWriter();
-	    templateEngine.process("registered", context, w);
-	    final String htmlText = w.toString();
-		    
-	    mailSender.send(mimeMessage -> {
-		final MimeMessageHelper message = new MimeMessageHelper(mimeMessage, true, StandardCharsets.UTF_8.name());		
-		message.setFrom(mailFrom);
-		message.setTo(registrationEntity.getEmail());
-		message.setSubject(messageSource.getMessage("registrationConfirmationSubject", new Object[] {registrationEntity.getEvent().getName()}, locale));		
-		message.setText(htmlTextToPlainText(htmlText), htmlText);	
-		
-	    });	
-	}).exceptionally(e -> {
-	    LOGGER.warn("Could not send an email to {} for event '{}': {}", registrationEntity.getEmail(), registrationEntity.getEvent().getName(), e.getMessage());
-	    return null;
-	}).thenRun(() -> {
-	    LOGGER.info("Sent confirmation email for '{}' to '{}'.", registrationEntity.getEvent().getName(), registrationEntity.getEmail());
-	});
+    public void sendConfirmationMail(final RegistrationEntity registrationEntity, final Locale locale) {
+        try {
+            final Context context = new Context();
+            context.setLocale(locale);
+            context.setVariable("registration", registrationEntity);
+            final Writer w = new StringWriter();
+            templateEngine.process("registered", context, w);
+            final String htmlText = w.toString();            
+            mailSender.send(mimeMessage -> {
+                final MimeMessageHelper message = new MimeMessageHelper(mimeMessage, true, StandardCharsets.UTF_8.name());
+                message.setFrom(mailFrom);
+                message.setTo(registrationEntity.getEmail());
+                message.setSubject(messageSource.getMessage("registrationConfirmationSubject", new Object[]{registrationEntity.getEvent().getName()}, locale));
+                message.setText(htmlTextToPlainText(htmlText), htmlText);
+
+            });
+            LOGGER.info("Sent confirmation email for '{}' to '{}'.", registrationEntity.getEvent().getName(), registrationEntity.getEmail());
+        } catch (MailException e) {
+            LOGGER.warn("Could not send an email to {} for event '{}': {}", registrationEntity.getEmail(), registrationEntity.getEvent().getName(), e.getMessage());
+        }
     }
     
     /**

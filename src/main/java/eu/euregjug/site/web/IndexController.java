@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 EuregJUG.
+ * Copyright 2015-2016 EuregJUG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,6 +57,7 @@ import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import static java.util.stream.Collectors.groupingBy;
 
 /**
  * @author Michael J. Simons, 2015-12-27
@@ -192,7 +193,8 @@ class IndexController {
 	    rv = register(eventId, model, redirectAttributes);
 	} else {
 	    try {
-		final RegistrationEntity registrationEntity = this.registrationService.register(eventId, registration, locale);
+		final RegistrationEntity registrationEntity = this.registrationService.register(eventId, registration);
+                this.registrationService.sendConfirmationMail(registrationEntity, locale);
 		redirectAttributes
 			.addFlashAttribute("event", registrationEntity.getEvent())
 			.addFlashAttribute("registered", true)
