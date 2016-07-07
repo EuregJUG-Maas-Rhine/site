@@ -34,7 +34,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 public class Application {
 
     @Bean
-    public Executor threadPoolTaskExecutor() {
+    public Executor taskExecutor() {
         return new ThreadPoolTaskExecutor();
     }
 
