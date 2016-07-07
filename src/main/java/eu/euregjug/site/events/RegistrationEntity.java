@@ -97,11 +97,12 @@ public class RegistrationEntity implements Serializable {
     protected RegistrationEntity() {
     }
         
-    public RegistrationEntity(EventEntity event, String email, String name, String firstName) {
+    public RegistrationEntity(EventEntity event, String email, String name, String firstName, boolean subscribeToNewsletter) {
 	this.event = event;
 	this.email = email;
 	this.name = name;
 	this.firstName = firstName;
+	this.subscribeToNewsletter = subscribeToNewsletter;
     }
 
     @JsonProperty
