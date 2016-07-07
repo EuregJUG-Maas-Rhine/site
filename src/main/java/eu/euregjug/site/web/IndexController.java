@@ -193,11 +193,11 @@ class IndexController {
 	} else {
 	    try {
 		final RegistrationEntity registrationEntity = this.registrationService.register(eventId, registration, locale);
-		model
-			.addAttribute("event", registrationEntity.getEvent())
-			.addAttribute("registered", true)
-			.addAttribute("alerts", Arrays.asList("registered"));
-		rv = "register";
+		redirectAttributes
+			.addFlashAttribute("event", registrationEntity.getEvent())
+			.addFlashAttribute("registered", true)
+			.addFlashAttribute("alerts", Arrays.asList("registered"));                
+		rv = "redirect:/register/" + eventId;
 	    } catch (InvalidRegistrationException e) {
 		model.addAttribute("alerts", Arrays.asList(e.getLocalizedMessage()));
 		rv = register(eventId, model, redirectAttributes);
