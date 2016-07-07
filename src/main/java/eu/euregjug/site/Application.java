@@ -18,7 +18,12 @@ package eu.euregjug.site;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.EnableLoadTimeWeaving;
+import org.springframework.context.annotation.EnableLoadTimeWeaving.AspectJWeaving;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.instrument.classloading.InstrumentationLoadTimeWeaver;
+import org.springframework.instrument.classloading.LoadTimeWeaver;
 import org.springframework.scheduling.annotation.EnableAsync;
 
 /**
@@ -27,8 +32,14 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @SpringBootApplication
 @EnableCaching
 @EnableAsync
+@EnableLoadTimeWeaving(aspectjWeaving = AspectJWeaving.ENABLED)
 @PropertySource("classpath:build.properties")
 public class Application {
+
+    @Bean
+    public LoadTimeWeaver loadTimeWeaver() {
+	return new InstrumentationLoadTimeWeaver();
+    }
 
     public static void main(String[] args) {
 	SpringApplication.run(Application.class, args);
