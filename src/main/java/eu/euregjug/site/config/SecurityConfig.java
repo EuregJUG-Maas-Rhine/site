@@ -32,9 +32,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
-    private SecurityConfig() {
-    }
-
     @Configuration
     @Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
     @ConditionalOnBean(SecurityConfig.class)
