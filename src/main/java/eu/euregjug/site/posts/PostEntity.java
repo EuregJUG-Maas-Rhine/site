@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 EuregJUG.
+ * Copyright 2015-2016 EuregJUG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,8 @@
 package eu.euregjug.site.posts;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
 import java.text.Normalizer;
@@ -84,6 +86,7 @@ import org.hibernate.validator.constraints.NotBlank;
 		+ " order by p1.publishedOn asc, p1.createdAt asc "
 	)
 })
+@JsonInclude(Include.NON_EMPTY)
 public class PostEntity implements Serializable {
 
     private static final long serialVersionUID = -2488354242899068540L;
