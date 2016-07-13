@@ -107,11 +107,11 @@ public class RegistrationService {
     
     @Transactional
     public RegistrationEntity register(final Integer eventId, final Registration newRegistration) {
-	final EventEntity event = this.eventRepository.findOne(eventId);
+	final EventEntity event = this.eventRepository
+                .findOne(eventId)
+                .orElseThrow(() -> new InvalidRegistrationException(String.format("No event with the id %d", eventId), "invalidEvent"));
 	final String email = newRegistration.getEmail().toLowerCase();
-	if(event == null) {
-	    throw new InvalidRegistrationException(String.format("No event with the id %d", eventId), "invalidEvent");
-	} else if(!event.isNeedsRegistration()) {
+	if(!event.isNeedsRegistration()) {
 	    throw new InvalidRegistrationException(String.format("Event %d doesn't need a registration", eventId), "eventNeedNoRegistration");
 	} else if(!event.isOpen()) {
 	    throw new InvalidRegistrationException(String.format("Event %d doesn't isn't open", eventId), "eventNotOpen");

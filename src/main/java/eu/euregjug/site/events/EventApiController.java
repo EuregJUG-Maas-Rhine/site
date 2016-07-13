@@ -63,8 +63,8 @@ class EventApiController {
     @PreAuthorize("isAuthenticated()")
     @Transactional
     public EventEntity addPost(final @PathVariable Integer id, final @PathVariable Integer postId) {
-	final EventEntity eventEntity = this.eventRepository.findOne(id);
-	final PostEntity postEntity =  this.postRepository.findOne(postId);
+	final EventEntity eventEntity = this.eventRepository.findOne(id).orElse(null);
+	final PostEntity postEntity =  this.postRepository.findOne(postId).orElse(null);
 	if(eventEntity == null || postEntity == null) {
 	    throw new ResourceNotFoundException();
 	}
@@ -87,10 +87,7 @@ class EventApiController {
     @PreAuthorize("isAuthenticated()")
     @Transactional    
     public EventEntity update(final @PathVariable Integer id, final @Valid @RequestBody EventEntity updatedEvent) {
-	final EventEntity eventEntity =  this.eventRepository.findOne(id);
-	if(eventEntity == null) {
-	    throw new ResourceNotFoundException();
-	}
+	final EventEntity eventEntity =  this.eventRepository.findOne(id).orElseThrow(() -> new ResourceNotFoundException());	
 	eventEntity.setDescription(updatedEvent.getDescription());
 	eventEntity.setDuration(updatedEvent.getDuration());
 	eventEntity.setNeedsRegistration(updatedEvent.isNeedsRegistration());

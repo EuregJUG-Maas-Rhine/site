@@ -60,10 +60,7 @@ class PostApiController {
     @Transactional
     @CacheEvict(cacheNames = "renderedPosts", key = "#id")
     public PostEntity update(final @PathVariable Integer id, final @Valid @RequestBody PostEntity updatedPost) {
-	final PostEntity postEntity =  this.postRepository.findOne(id);
-	if(postEntity == null) {
-	    throw new ResourceNotFoundException();
-	}
+	final PostEntity postEntity =  this.postRepository.findOne(id).orElseThrow(() -> new ResourceNotFoundException());	
 	postEntity.setContent(updatedPost.getContent());
 	postEntity.setFormat(updatedPost.getFormat());
 	postEntity.setTitle(updatedPost.getTitle());

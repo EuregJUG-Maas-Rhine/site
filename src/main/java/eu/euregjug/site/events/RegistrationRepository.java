@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 EuregJUG.
+ * Copyright 2015-2016 EuregJUG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,21 +17,29 @@ package eu.euregjug.site.events;
 
 import java.util.List;
 import java.util.Optional;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author Michael J. Simons, 2015-12-26
  */
-public interface RegistrationRepository extends JpaRepository<RegistrationEntity, Integer> {
+public interface RegistrationRepository extends Repository<RegistrationEntity, Integer> {
 
+    /**
+     * Saves the given registration.
+     *
+     * @param entity
+     * @return Persisted registration
+     */
+    RegistrationEntity save(RegistrationEntity entity);
+    
     /**
      * @param event
      * @param email
      * @return A registration for a given event by a user.
      */
-    public Optional<RegistrationEntity> findByEventAndEmail(final EventEntity event, final String email);
+    Optional<RegistrationEntity> findByEventAndEmail(final EventEntity event, final String email);
 
     @Transactional(readOnly = true)
-    public List<RegistrationEntity> findAllByEventId(Integer eventId);
+    List<RegistrationEntity> findAllByEventId(Integer eventId);       
 }
