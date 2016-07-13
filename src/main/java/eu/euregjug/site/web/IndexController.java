@@ -40,6 +40,8 @@ import java.util.Optional;
 import java.util.TreeMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
@@ -62,6 +64,9 @@ import static java.util.stream.Collectors.groupingBy;
  */
 @Controller
 class IndexController {
+    
+    public static final Logger LOGGER = LoggerFactory.getLogger(IndexController.class.getPackage().getName());
+    
     private final EventRepository eventRepository;
     
     private final RegistrationService registrationService;
@@ -127,6 +132,7 @@ class IndexController {
 	    rv = "post";
 
 	} catch (DateTimeException | NoSuchElementException e) {
+            LOGGER.debug("Invalid request for post", e);
 	}
 	return rv;
     }
@@ -198,6 +204,7 @@ class IndexController {
 			.addFlashAttribute("alerts", Arrays.asList("registered"));                
 		rv = "redirect:/register/" + eventId;
 	    } catch (InvalidRegistrationException e) {
+                LOGGER.debug("Invalid registration request", e);
 		model.addAttribute("alerts", Arrays.asList(e.getLocalizedMessage()));
 		rv = register(eventId, model, redirectAttributes);
 	    }	    
