@@ -49,7 +49,7 @@ import static java.time.ZonedDateTime.now;
  */
 @Controller
 @RequestMapping("/api/assets")
-final class AssetApiController {
+class AssetApiController {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(AssetApiController.class.getPackage().getName());
 
