@@ -150,7 +150,7 @@ public class EventEntity implements Serializable {
      * @param name Name for the new event.
      * @param description Description for the new event.
      */
-    public EventEntity(Calendar heldOn, String name, String description) {
+    public EventEntity(final Calendar heldOn, final String name, final String description) {
         this.heldOn = heldOn;
         this.name = name;
         this.description = description;
@@ -181,7 +181,7 @@ public class EventEntity implements Serializable {
         return description;
     }
 
-    public void setDescription(String description) {
+    public void setDescription(final String description) {
         this.description = description;
     }
 
@@ -189,7 +189,7 @@ public class EventEntity implements Serializable {
         return needsRegistration;
     }
 
-    public void setNeedsRegistration(boolean needsRegistration) {
+    public void setNeedsRegistration(final boolean needsRegistration) {
         this.needsRegistration = needsRegistration;
     }
 
@@ -205,7 +205,7 @@ public class EventEntity implements Serializable {
         return type;
     }
 
-    public void setType(Type type) {
+    public void setType(final Type type) {
         this.type = type;
     }
 
@@ -213,7 +213,7 @@ public class EventEntity implements Serializable {
         return duration;
     }
 
-    public void setDuration(Integer duration) {
+    public void setDuration(final Integer duration) {
         this.duration = duration;
     }
 
@@ -222,7 +222,7 @@ public class EventEntity implements Serializable {
     }
 
     @JsonProperty
-    public void setPost(PostEntity post) {
+    public void setPost(final PostEntity post) {
         this.post = post;
     }
 
@@ -239,7 +239,7 @@ public class EventEntity implements Serializable {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (this == obj) {
             return true;
         }

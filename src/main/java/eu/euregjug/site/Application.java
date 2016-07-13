@@ -31,6 +31,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 @EnableCaching
 @EnableAsync
 @PropertySource("classpath:build.properties")
+@SuppressWarnings({"checkstyle:designforextension"})
 public class Application {
 
     @Bean
@@ -38,7 +39,7 @@ public class Application {
         return new ThreadPoolTaskExecutor();
     }
 
-    public static void main(String[] args) {
+    public static void main(final String... args) {
         SpringApplication.run(Application.class, args);
     }
 }

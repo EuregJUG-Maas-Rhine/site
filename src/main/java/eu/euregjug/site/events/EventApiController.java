@@ -46,7 +46,7 @@ class EventApiController {
 
     private final RegistrationRepository registrationRepository;
 
-    public EventApiController(EventRepository eventRepository, PostRepository postRepository, RegistrationRepository registrationRepository) {
+    EventApiController(final EventRepository eventRepository, final PostRepository postRepository, final RegistrationRepository registrationRepository) {
         this.eventRepository = eventRepository;
         this.postRepository = postRepository;
         this.registrationRepository = registrationRepository;
@@ -54,7 +54,7 @@ class EventApiController {
 
     @RequestMapping(method = POST)
     @PreAuthorize("isAuthenticated()")
-    public EventEntity create(final @Valid @RequestBody EventEntity newEvent) {
+    public EventEntity create(@Valid @RequestBody final EventEntity newEvent) {
         return this.eventRepository.save(newEvent);
     }
 
@@ -62,10 +62,10 @@ class EventApiController {
     @RequestMapping(value = "/{id:\\d+}/post/{postId:\\d+}", method = PUT)
     @PreAuthorize("isAuthenticated()")
     @Transactional
-    public EventEntity addPost(final @PathVariable Integer id, final @PathVariable Integer postId) {
+    public EventEntity addPost(@PathVariable final Integer id, @PathVariable final Integer postId) {
         final EventEntity eventEntity = this.eventRepository.findOne(id).orElse(null);
-        final PostEntity postEntity =  this.postRepository.findOne(postId).orElse(null);
-        if(eventEntity == null || postEntity == null) {
+        final PostEntity postEntity = this.postRepository.findOne(postId).orElse(null);
+        if (eventEntity == null || postEntity == null) {
             throw new ResourceNotFoundException();
         }
         eventEntity.setPost(postEntity);
@@ -79,15 +79,15 @@ class EventApiController {
 
     @RequestMapping(value = "/{eventId}/registrations", method = GET)
     @PreAuthorize("isAuthenticated()")
-    public List<RegistrationEntity> getRegistrations(final @PathVariable Integer eventId) {
+    public List<RegistrationEntity> getRegistrations(@PathVariable final Integer eventId) {
         return this.registrationRepository.findAllByEventId(eventId);
     }
 
     @RequestMapping(value = "/{id:\\d+}", method = PUT)
     @PreAuthorize("isAuthenticated()")
     @Transactional
-    public EventEntity update(final @PathVariable Integer id, final @Valid @RequestBody EventEntity updatedEvent) {
-        final EventEntity eventEntity =  this.eventRepository.findOne(id).orElseThrow(() -> new ResourceNotFoundException());
+    public EventEntity update(@PathVariable final Integer id, @Valid @RequestBody final EventEntity updatedEvent) {
+        final EventEntity eventEntity = this.eventRepository.findOne(id).orElseThrow(ResourceNotFoundException::new);
         eventEntity.setDescription(updatedEvent.getDescription());
         eventEntity.setDuration(updatedEvent.getDuration());
         eventEntity.setNeedsRegistration(updatedEvent.isNeedsRegistration());

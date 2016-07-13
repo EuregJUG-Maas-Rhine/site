@@ -52,7 +52,7 @@ public interface PostRepository extends Repository<PostEntity, Integer>, PostRep
      * @return
      */
     @Transactional(readOnly = true)
-    public Optional<PostEntity> findByPublishedOnAndSlug(final Date publishedOn, final String slug);
+    Optional<PostEntity> findByPublishedOnAndSlug(final Date publishedOn, final String slug);
 
     /**
      * Selects a "page" of posts.

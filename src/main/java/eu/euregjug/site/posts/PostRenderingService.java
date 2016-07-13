@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 EuregJUG.
+ * Copyright 2015-2016 EuregJUG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,24 +32,26 @@ import org.springframework.stereotype.Service;
 @Service
 public class PostRenderingService {
 
-    public static final Logger logger = LoggerFactory.getLogger(PostRenderingService.class.getPackage().getName());
+    public static final Logger LOGGER = LoggerFactory.getLogger(PostRenderingService.class.getPackage().getName());
 
     @FunctionalInterface
     interface Renderer {
-        public String render(final String content);
+
+        String render(final String content);
     }
 
     static class AsciiDocRenderer implements Renderer {
+
         private final Asciidoctor asciidoctor = Asciidoctor.Factory.create();
         private final Options options = OptionsBuilder.options().inPlace(false).get();
 
         @Override
-        public String render(String content) {
+        public String render(final String content) {
             String rv;
             try {
                 rv = asciidoctor.render(content, options);
-            } catch(Exception e) {
-                logger.error("Could not render AsciiDoc content!", e);
+            } catch (Exception e) {
+                LOGGER.error("Could not render AsciiDoc content!", e);
                 rv = "<strong>Could not render content.</strong>";
             }
             return rv;
@@ -61,12 +63,11 @@ public class PostRenderingService {
     @Cacheable(cacheNames = "renderedPosts", key = "#post.id")
     public Post render(final PostEntity post) {
         String renderedContent = null;
-        if(post.getFormat() != Format.asciidoc) {
+        if (post.getFormat() != Format.asciidoc) {
             renderedContent = "<strong>Could not render content.</strong>";
         } else {
             renderedContent = renderer.render(post.getContent());
         }
-
 
         return new Post(post.getPublishedOn(), post.getSlug(), post.getTitle(), renderedContent);
     }

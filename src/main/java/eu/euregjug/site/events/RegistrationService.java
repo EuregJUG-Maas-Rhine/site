@@ -39,7 +39,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring4.SpringTemplateEngine;
 
-
 /**
  * @author Michael J. Simons, 2015-12-29
  */
@@ -54,7 +53,7 @@ public class RegistrationService {
 
         private final String localizedMessage;
 
-        public InvalidRegistrationException(String message, final String localizedMessage) {
+        public InvalidRegistrationException(final String message, final String localizedMessage) {
             super(message);
             this.localizedMessage = localizedMessage;
         }
@@ -75,7 +74,8 @@ public class RegistrationService {
     private final SpringTemplateEngine templateEngine;
 
     /**
-     * Sender address for confirmation emails, taken from <code>spring.mail.properties.mail.smtp.from</code>
+     * Sender address for confirmation emails, taken from
+     * <code>spring.mail.properties.mail.smtp.from</code>
      */
     private final String mailFrom;
 
@@ -95,7 +95,7 @@ public class RegistrationService {
             final JavaMailSender mailSender,
             final SpringTemplateEngine templateEngine,
             final MessageSource messageSource,
-            final @Value("${spring.mail.properties.mail.smtp.from}") String mailFrom
+            @Value("${spring.mail.properties.mail.smtp.from}") final String mailFrom
     ) {
         this.eventRepository = eventRepository;
         this.registrationRepository = registrationRepository;
@@ -111,11 +111,11 @@ public class RegistrationService {
                 .findOne(eventId)
                 .orElseThrow(() -> new InvalidRegistrationException(String.format("No event with the id %d", eventId), "invalidEvent"));
         final String email = newRegistration.getEmail().toLowerCase();
-        if(!event.isNeedsRegistration()) {
+        if (!event.isNeedsRegistration()) {
             throw new InvalidRegistrationException(String.format("Event %d doesn't need a registration", eventId), "eventNeedNoRegistration");
-        } else if(!event.isOpen()) {
+        } else if (!event.isOpen()) {
             throw new InvalidRegistrationException(String.format("Event %d doesn't isn't open", eventId), "eventNotOpen");
-        } else if(this.registrationRepository.findByEventAndEmail(event, email).isPresent())  {
+        } else if (this.registrationRepository.findByEventAndEmail(event, email).isPresent()) {
             throw new InvalidRegistrationException(String.format("Guest '%s' already registered for event %d", email, eventId), "alreadyRegistered");
         } else {
             return this.registrationRepository.save(

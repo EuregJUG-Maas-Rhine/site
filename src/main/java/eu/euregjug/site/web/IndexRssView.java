@@ -49,7 +49,7 @@ class IndexRssView extends AbstractRssFeedView {
 
     private final DateTimeFormatter permalinkDateFormatter;
 
-    public IndexRssView(MessageSource messageSource) {
+    IndexRssView(final MessageSource messageSource) {
         this.messageSource = messageSource;
         this.permalinkDateFormatter = DateTimeFormatter.ofPattern("/y/M/d", Locale.ENGLISH);
     }
@@ -65,7 +65,7 @@ class IndexRssView extends AbstractRssFeedView {
     }
 
     @Override
-    protected void buildFeedMetadata(Map<String, Object> model, Channel feed, HttpServletRequest request) {
+    protected void buildFeedMetadata(final Map<String, Object> model, final Channel feed, final HttpServletRequest request) {
         final Page<Post> posts = (Page<Post>) model.get("posts");
 
         final Locale locale = request.getLocale();
@@ -100,14 +100,14 @@ class IndexRssView extends AbstractRssFeedView {
             );
         }
         feed.getModules().addAll(atomLinks.stream().map(l -> {
-                        final AtomLinkModuleImpl rv = new AtomLinkModuleImpl();
-                        rv.setLink(l);
-                        return rv;
+            final AtomLinkModuleImpl rv = new AtomLinkModuleImpl();
+            rv.setLink(l);
+            return rv;
         }).collect(Collectors.toList()));
     }
 
     @Override
-    protected List<Item> buildFeedItems(Map<String, Object> model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    protected List<Item> buildFeedItems(final Map<String, Object> model, final HttpServletRequest request, final HttpServletResponse response) throws Exception {
         final Page<Post> posts = (Page<Post>) model.get("posts");
 
         return posts.map(post -> {

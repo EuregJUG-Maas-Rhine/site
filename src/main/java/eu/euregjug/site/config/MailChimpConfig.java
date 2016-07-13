@@ -39,7 +39,7 @@ public class MailChimpConfig {
         return enabled;
     }
 
-    public void setEnabled(boolean enabled) {
+    public void setEnabled(final boolean enabled) {
         this.enabled = enabled;
     }
 
@@ -47,7 +47,7 @@ public class MailChimpConfig {
         return registrationUrl;
     }
 
-    public void setRegistrationUrl(String registrationUrl) {
+    public void setRegistrationUrl(final String registrationUrl) {
         this.registrationUrl = registrationUrl;
     }
 }

@@ -27,7 +27,7 @@ import org.hibernate.validator.constraints.NotBlank;
  *
  * @author Michael J. Simons, 2016-01-03
  */
-public class Registration implements Serializable {
+public final class Registration implements Serializable {
 
     private static final long serialVersionUID = 770264014400800147L;
 
@@ -50,7 +50,7 @@ public class Registration implements Serializable {
         return firstName;
     }
 
-    public void setFirstName(String firstName) {
+    public void setFirstName(final String firstName) {
         this.firstName = firstName;
     }
 
@@ -58,7 +58,7 @@ public class Registration implements Serializable {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
 
@@ -66,7 +66,7 @@ public class Registration implements Serializable {
         return email;
     }
 
-    public void setEmail(String email) {
+    public void setEmail(final String email) {
         this.email = email;
     }
 
@@ -74,7 +74,7 @@ public class Registration implements Serializable {
         return subscribeToNewsletter;
     }
 
-    public void setSubscribeToNewsletter(boolean subscribeToNewsletter) {
+    public void setSubscribeToNewsletter(final boolean subscribeToNewsletter) {
         this.subscribeToNewsletter = subscribeToNewsletter;
     }
 }

@@ -28,23 +28,23 @@ public class PostRepositoryImpl implements PostRepositoryExt {
 
     private final EntityManager entityManager;
 
-    public PostRepositoryImpl(EntityManager entityManager) {
+    public PostRepositoryImpl(final EntityManager entityManager) {
         this.entityManager = entityManager;
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<PostEntity> getPrevious(PostEntity post) {
+    public Optional<PostEntity> getPrevious(final PostEntity post) {
         return getRelatedPost("PostEntity.getPrevious", post);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<PostEntity> getNext(PostEntity post) {
+    public Optional<PostEntity> getNext(final PostEntity post) {
         return getRelatedPost("PostEntity.getNext", post);
     }
 
-    Optional<PostEntity> getRelatedPost(final String query, PostEntity post) {
+    Optional<PostEntity> getRelatedPost(final String query, final PostEntity post) {
         Optional<PostEntity> rv;
         try {
             rv = Optional.of(

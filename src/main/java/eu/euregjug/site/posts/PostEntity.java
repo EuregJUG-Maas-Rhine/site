@@ -94,7 +94,7 @@ public class PostEntity implements Serializable {
     /**
      * Textformat of a post.
      */
-    public static enum Format {
+    public enum Format {
 
         asciidoc, markdown
     }
@@ -172,7 +172,7 @@ public class PostEntity implements Serializable {
     protected PostEntity() {
     }
 
-    public PostEntity(Date publishedOn, String slug, String title, String content) {
+    public PostEntity(final Date publishedOn, final String slug, final String title, final String content) {
         this.publishedOn = publishedOn;
         this.slug = slug;
         this.title = title;
@@ -180,10 +180,10 @@ public class PostEntity implements Serializable {
         this.createdAt = Calendar.getInstance();
     }
 
-    final String generateSlug(final String slug, final String title) {
-        String rv = slug;
-        if(rv == null || rv.trim().isEmpty()) {
-            rv = Normalizer.normalize(title.toLowerCase(), Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}|[^\\w\\s]", "").replaceAll("[\\s-]+", " ").trim().replaceAll("\\s", "-");
+    final String generateSlug(final String suggestedSlug, final String newTitle) {
+        String rv = suggestedSlug;
+        if (rv == null || rv.trim().isEmpty()) {
+            rv = Normalizer.normalize(newTitle.toLowerCase(), Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}|[^\\w\\s]", "").replaceAll("[\\s-]+", " ").trim().replaceAll("\\s", "-");
         }
         return rv;
     }
@@ -218,7 +218,7 @@ public class PostEntity implements Serializable {
         return title;
     }
 
-    public void setTitle(String title) {
+    public void setTitle(final String title) {
         this.title = title;
     }
 
@@ -226,7 +226,7 @@ public class PostEntity implements Serializable {
         return content;
     }
 
-    public void setContent(String content) {
+    public void setContent(final String content) {
         this.content = content;
     }
 
@@ -234,7 +234,7 @@ public class PostEntity implements Serializable {
         return format;
     }
 
-    public void setFormat(Format format) {
+    public void setFormat(final Format format) {
         this.format = format;
     }
 
@@ -255,7 +255,7 @@ public class PostEntity implements Serializable {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (this == obj) {
             return true;
         }

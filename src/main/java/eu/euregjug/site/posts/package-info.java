@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 EuregJUG.
+ * Copyright 2016 EuregJUG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,15 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.euregjug.site.posts;
-
-import java.util.Optional;
-
 /**
- * @author Michael J. Simons, 2015-12-29
+ * Contains the small blogging system.
  */
-public interface PostRepositoryExt {
-    Optional<PostEntity> getPrevious(final PostEntity post);
-
-    Optional<PostEntity> getNext(final PostEntity post);
-}
+package eu.euregjug.site.posts;

@@ -37,18 +37,18 @@ import org.springframework.web.servlet.view.AbstractView;
  * @author Michael J. Simons, 2016-01-04
  */
 @Component("events.ics")
-public class EventsIcalView extends AbstractView {
+final class EventsIcalView extends AbstractView {
 
     private final DateTimeFormatter tstampFormat = DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss'Z'", Locale.ENGLISH).withZone(ZoneId.of("UTC"));
     private final ZoneId zoneId = ZoneId.systemDefault();
     private final String br = "\r\n";
 
-    public EventsIcalView() {
+    EventsIcalView() {
         super.setContentType("text/calendar");
     }
 
     @Override
-    protected void renderMergedOutputModel(Map<String, Object> model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    protected void renderMergedOutputModel(final Map<String, Object> model, final HttpServletRequest request, final HttpServletResponse response) throws Exception {
         final List<EventEntity> events = (List<EventEntity>) model.get("events");
         super.setResponseContentType(request, response);
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());

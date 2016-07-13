@@ -44,7 +44,7 @@ public class LinkEntity implements Serializable {
     /**
      * Types of links
      */
-    public static enum Type {
+    public enum Type {
 
         generic, profile, sponsor
     }
@@ -106,7 +106,7 @@ public class LinkEntity implements Serializable {
     protected LinkEntity() {
     }
 
-    public LinkEntity(String target, String title) {
+    public LinkEntity(final String target, final String title) {
         this.target = target;
         this.title = title;
     }
@@ -120,7 +120,7 @@ public class LinkEntity implements Serializable {
         return type;
     }
 
-    public void setType(Type type) {
+    public void setType(final Type type) {
         this.type = type;
     }
 
@@ -132,7 +132,7 @@ public class LinkEntity implements Serializable {
         return title;
     }
 
-    public void setTitle(String title) {
+    public void setTitle(final String title) {
         this.title = title;
     }
 
@@ -140,7 +140,7 @@ public class LinkEntity implements Serializable {
         return sortCol;
     }
 
-    public void setSortCol(Integer sortCol) {
+    public void setSortCol(final Integer sortCol) {
         this.sortCol = sortCol;
     }
 
@@ -148,7 +148,7 @@ public class LinkEntity implements Serializable {
         return icon;
     }
 
-    public void setIcon(String icon) {
+    public void setIcon(final String icon) {
         this.icon = icon;
     }
 
@@ -156,7 +156,7 @@ public class LinkEntity implements Serializable {
         return localImageResource;
     }
 
-    public void setLocalImageResource(String localImageResource) {
+    public void setLocalImageResource(final String localImageResource) {
         this.localImageResource = localImageResource;
     }
 
@@ -168,7 +168,7 @@ public class LinkEntity implements Serializable {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (this == obj) {
             return true;
         }

@@ -42,7 +42,7 @@ class PostApiController {
 
     private final PostRepository postRepository;
 
-    public PostApiController(PostRepository postRepository) {
+    PostApiController(final PostRepository postRepository) {
         this.postRepository = postRepository;
     }
 

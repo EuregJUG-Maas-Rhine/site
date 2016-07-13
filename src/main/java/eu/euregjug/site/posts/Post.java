@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 EuregJUG.
+ * Copyright 2015-2016 EuregJUG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import java.util.Date;
 /**
  * @author Michael J. Simons, 2015-12-28
  */
-public class Post implements Serializable {
+public final class Post implements Serializable {
 
     private static final long serialVersionUID = 5598037121835514804L;
 
@@ -35,8 +35,8 @@ public class Post implements Serializable {
 
     private final String content;
 
-    public Post(final Date publishedOn, String slug, String title, String content) {
-        this.publishedOn = publishedOn instanceof java.sql.Date? ((java.sql.Date)publishedOn).toLocalDate() : publishedOn.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+    public Post(final Date publishedOn, final String slug, final String title, final String content) {
+        this.publishedOn = publishedOn instanceof java.sql.Date ? ((java.sql.Date) publishedOn).toLocalDate() : publishedOn.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         this.slug = slug;
         this.title = title;
         this.content = content;
@@ -47,7 +47,7 @@ public class Post implements Serializable {
      *
      * @param postEntity
      */
-    public Post(PostEntity postEntity) {
+    public Post(final PostEntity postEntity) {
         this(postEntity.getPublishedOn(), postEntity.getSlug(), postEntity.getTitle(), null);
     }
 

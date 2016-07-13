@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 EuregJUG.
+ * Copyright 2015-2016 EuregJUG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -98,7 +98,7 @@ public class RegistrationEntity implements Serializable {
     protected RegistrationEntity() {
     }
 
-    public RegistrationEntity(EventEntity event, String email, String name, String firstName, boolean subscribeToNewsletter) {
+    public RegistrationEntity(final EventEntity event, final String email, final String name, final String firstName, final boolean subscribeToNewsletter) {
         this.event = event;
         this.email = email;
         this.name = name;
@@ -123,7 +123,7 @@ public class RegistrationEntity implements Serializable {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
 
@@ -131,7 +131,7 @@ public class RegistrationEntity implements Serializable {
         return firstName;
     }
 
-    public void setFirstName(String firstName) {
+    public void setFirstName(final String firstName) {
         this.firstName = firstName;
     }
 
@@ -139,7 +139,7 @@ public class RegistrationEntity implements Serializable {
         return subscribeToNewsletter;
     }
 
-    public void setSubscribeToNewsletter(boolean subscribeToNewsletter) {
+    public void setSubscribeToNewsletter(final boolean subscribeToNewsletter) {
         this.subscribeToNewsletter = subscribeToNewsletter;
     }
 
@@ -152,7 +152,7 @@ public class RegistrationEntity implements Serializable {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (this == obj) {
             return true;
         }

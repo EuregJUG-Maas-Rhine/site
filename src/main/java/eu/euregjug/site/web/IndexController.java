@@ -79,13 +79,13 @@ class IndexController {
 
     private final RecaptchaValidator recaptchaValidator;
 
-    public IndexController(
-            EventRepository eventRepository,
-            RegistrationService registrationService,
-            LinkRepository linkRepository,
-            PostRepository postRepository,
-            PostRenderingService postRenderingService,
-            RecaptchaValidator recaptchaValidator
+    IndexController(
+            final EventRepository eventRepository,
+            final RegistrationService registrationService,
+            final LinkRepository linkRepository,
+            final PostRepository postRepository,
+            final PostRenderingService postRenderingService,
+            final RecaptchaValidator recaptchaValidator
     ) {
         this.eventRepository = eventRepository;
         this.registrationService = registrationService;
@@ -97,14 +97,13 @@ class IndexController {
 
     @RequestMapping({"", "/", "/feed"})
     public String index(
-            final @RequestParam(required = false, defaultValue = "0") Integer page,
+            @RequestParam(required = false, defaultValue = "0") final Integer page,
             final Model model
     ) {
         model
                 .addAttribute("upcomingEvents", this.eventRepository.findUpcomingEvents())
                 .addAttribute("links", this.linkRepository.findAllByOrderByTypeAscSortColAscTitleAsc().stream().collect(groupingBy(LinkEntity::getType)))
-                .addAttribute("posts", this.postRepository.findAll(new PageRequest(page, 5, Direction.DESC, "publishedOn", "createdAt")).map(postRenderingService::render))
-                ;
+                .addAttribute("posts", this.postRepository.findAll(new PageRequest(page, 5, Direction.DESC, "publishedOn", "createdAt")).map(postRenderingService::render));
         return "index";
     }
 
@@ -113,10 +112,10 @@ class IndexController {
         "/posts/{year:\\d+}-{month:\\d+}-{day:\\d+}-{slug}"
     })
     public String post(
-            final @PathVariable Integer year,
-            final @PathVariable Integer month,
-            final @PathVariable Integer day,
-            final @PathVariable String slug,
+            @PathVariable final Integer year,
+            @PathVariable final Integer month,
+            @PathVariable final Integer day,
+            @PathVariable final String slug,
             final Model model
     ) {
 
@@ -127,8 +126,7 @@ class IndexController {
             model
                     .addAttribute("previousPost", post.flatMap(this.postRepository::getPrevious))
                     .addAttribute("post", post.map(postRenderingService::render).get())
-                    .addAttribute("nextPost", post.flatMap(this.postRepository::getNext))
-                    ;
+                    .addAttribute("nextPost", post.flatMap(this.postRepository::getNext));
             rv = "post";
 
         } catch (DateTimeException | NoSuchElementException e) {
@@ -141,14 +139,14 @@ class IndexController {
     public String archive(final Model model) {
         model.addAttribute("posts",
                 this.postRepository
-                        .findAll(new Sort(Direction.DESC, "publishedOn")).stream()
-                        .map(Post::new)
-                        .collect(groupingBy(
-                                    post -> post.getPublishedOn().withDayOfMonth(1),
-                                    () -> new TreeMap<LocalDate, List<Post>>(reverseOrder()),
-                                    toList()
-                                )
-                        )
+                .findAll(new Sort(Direction.DESC, "publishedOn")).stream()
+                .map(Post::new)
+                .collect(groupingBy(
+                        post -> post.getPublishedOn().withDayOfMonth(1),
+                        () -> new TreeMap<LocalDate, List<Post>>(reverseOrder()),
+                        toList()
+                )
+                )
         );
         return "archive";
     }
@@ -161,7 +159,7 @@ class IndexController {
 
     @RequestMapping(value = "/register/{eventId}", method = GET)
     public String register(
-            final @PathVariable Integer eventId,
+            @PathVariable final Integer eventId,
             final Model model,
             final RedirectAttributes redirectAttributes
     ) {
@@ -172,7 +170,7 @@ class IndexController {
             rv = "redirect:/";
         } else {
             model.addAttribute("event", event);
-            if(!model.containsAttribute("registration")) {
+            if (!model.containsAttribute("registration")) {
                 model.addAttribute("registration", new Registration());
             }
             rv = "register";
@@ -182,8 +180,8 @@ class IndexController {
 
     @RequestMapping(value = "/register/{eventId}", method = POST)
     public String register(
-            final @PathVariable Integer eventId,
-            final @Valid Registration registration,
+            @PathVariable final Integer eventId,
+            @Valid final Registration registration,
             final BindingResult registrationBindingResult,
             final Locale locale,
             final HttpServletRequest request,

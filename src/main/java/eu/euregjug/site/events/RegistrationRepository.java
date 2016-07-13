@@ -31,7 +31,7 @@ public interface RegistrationRepository extends Repository<RegistrationEntity, I
      * @param entity
      * @return Persisted registration
      */
-    RegistrationEntity save(RegistrationEntity entity);
+    RegistrationEntity save(final RegistrationEntity entity);
 
     /**
      * @param event
