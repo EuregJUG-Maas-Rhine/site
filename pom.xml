@@ -245,6 +245,12 @@
             <artifactId>spring-restdocs-mockmvc</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>joor</artifactId>
+            <version>0.9.5</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 	
     <build>
