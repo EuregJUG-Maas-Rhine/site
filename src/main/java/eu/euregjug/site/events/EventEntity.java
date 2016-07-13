@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 EuregJUG.
+ * Copyright 2015-2016 EuregJUG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,8 +32,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.SequenceGenerator;
@@ -59,16 +57,6 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 	    @UniqueConstraint(name = "events_uk", columnNames = {"held_on", "name"})
 	}
 )
-@NamedQueries({
-    @NamedQuery(
-	    name = "EventEntity.findUpcomingEvents",
-	    query
-	    = " Select e"
-	    + "   from EventEntity e"
-	    + "  where e.heldOn > current_date()"
-	    + "  order by e.heldOn asc "
-    )
-})
 @JsonInclude(NON_NULL)
 public class EventEntity implements Serializable {
 
