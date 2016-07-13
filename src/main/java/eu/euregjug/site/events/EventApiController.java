@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 EuregJUG.
+ * Copyright 2015-2016 EuregJUG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ import eu.euregjug.site.posts.PostRepository;
 import eu.euregjug.site.support.ResourceNotFoundException;
 import java.util.List;
 import javax.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -47,7 +46,6 @@ class EventApiController {
     
     private final RegistrationRepository registrationRepository;
 
-    @Autowired
     public EventApiController(EventRepository eventRepository, PostRepository postRepository, RegistrationRepository registrationRepository) {
 	this.eventRepository = eventRepository;
 	this.postRepository = postRepository;

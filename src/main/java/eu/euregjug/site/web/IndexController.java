@@ -40,7 +40,6 @@ import java.util.Optional;
 import java.util.TreeMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
@@ -53,7 +52,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import static java.util.Comparator.reverseOrder;
-import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -76,7 +74,6 @@ class IndexController {
           
     private final RecaptchaValidator recaptchaValidator;
     
-    @Autowired
     public IndexController(
 	    EventRepository eventRepository, 
 	    RegistrationService registrationService, 

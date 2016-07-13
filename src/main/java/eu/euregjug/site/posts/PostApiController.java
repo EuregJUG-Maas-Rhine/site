@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 EuregJUG.
+ * Copyright 2015-2016 EuregJUG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@ package eu.euregjug.site.posts;
 
 import eu.euregjug.site.support.ResourceNotFoundException;
 import javax.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -41,7 +40,6 @@ class PostApiController {
 
     private final PostRepository postRepository;
 
-    @Autowired
     public PostApiController(PostRepository postRepository) {
 	this.postRepository = postRepository;
     }

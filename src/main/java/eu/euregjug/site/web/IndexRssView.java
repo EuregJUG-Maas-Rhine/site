@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 EuregJUG.
+ * Copyright 2015-2016 EuregJUG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
@@ -50,7 +49,6 @@ class IndexRssView extends AbstractRssFeedView {
 
     private final DateTimeFormatter permalinkDateFormatter;
 
-    @Autowired
     public IndexRssView(MessageSource messageSource) {
 	this.messageSource = messageSource;
 	this.permalinkDateFormatter = DateTimeFormatter.ofPattern("/y/M/d", Locale.ENGLISH);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 EuregJUG.
+ * Copyright 2015-2016 EuregJUG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@ package eu.euregjug.site.posts;
 import java.util.Optional;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -29,7 +28,6 @@ public class PostRepositoryImpl implements PostRepositoryExt {
 
     private final EntityManager entityManager;
 
-    @Autowired
     public PostRepositoryImpl(EntityManager entityManager) {
 	this.entityManager = entityManager;
     }
