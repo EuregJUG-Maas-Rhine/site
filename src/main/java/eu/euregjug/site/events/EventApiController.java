@@ -58,7 +58,7 @@ class EventApiController {
 	return this.eventRepository.save(newEvent);
     }
     
-    // TODO: Choose wether to create a completly new posts or not. For the time being: just select on
+    // TODO: Choose wether to create a completly new posts or not. For the time being: just select one
     @RequestMapping(value = "/{id:\\d+}/post/{postId:\\d+}", method = PUT)
     @PreAuthorize("isAuthenticated()")
     @Transactional
