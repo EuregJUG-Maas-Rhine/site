@@ -58,52 +58,52 @@ public class AssetApiController {
     private final GridFsTemplate gridFs;
 
     public AssetApiController(GridFsTemplate gridFs) {
-	this.tika = new Tika();
-	this.gridFs = gridFs;
+        this.tika = new Tika();
+        this.gridFs = gridFs;
     }
 
     @RequestMapping(method = POST)
     @PreAuthorize("isAuthenticated()")
     public @ResponseBody
     String create(
-	    final @RequestParam("assetData") MultipartFile assetData
+            final @RequestParam("assetData") MultipartFile assetData
     ) throws IOException {
 
-	// Check duplicates
-	final GridFSDBFile file = this.gridFs.findOne(Query.query(Criteria.where("filename").is(assetData.getOriginalFilename())));
-	if(file != null) {
-	    throw new DataIntegrityViolationException(String.format("Asset with name '%s' already exists", assetData.getOriginalFilename()));
-	} else {
-	    try (InputStream _in = TikaInputStream.get(assetData.getInputStream())) {
-		MediaType mediaType = null;
-		try {
-		    mediaType = MediaType.parse(tika.detect(_in, assetData.getOriginalFilename()));
-		} catch (IOException e) {
-		    logger.warn("Could not detect content type", e);
-		}
-		this.gridFs.store(assetData.getInputStream(), assetData.getOriginalFilename(), Optional.ofNullable(mediaType).map(MediaType::toString).orElse(null));
-		return assetData.getOriginalFilename();
-	    }
-	}
+        // Check duplicates
+        final GridFSDBFile file = this.gridFs.findOne(Query.query(Criteria.where("filename").is(assetData.getOriginalFilename())));
+        if(file != null) {
+            throw new DataIntegrityViolationException(String.format("Asset with name '%s' already exists", assetData.getOriginalFilename()));
+        } else {
+            try (InputStream _in = TikaInputStream.get(assetData.getInputStream())) {
+                MediaType mediaType = null;
+                try {
+                    mediaType = MediaType.parse(tika.detect(_in, assetData.getOriginalFilename()));
+                } catch (IOException e) {
+                    logger.warn("Could not detect content type", e);
+                }
+                this.gridFs.store(assetData.getInputStream(), assetData.getOriginalFilename(), Optional.ofNullable(mediaType).map(MediaType::toString).orElse(null));
+                return assetData.getOriginalFilename();
+            }
+        }
     }
 
     @RequestMapping({"/{filename:.+}"})
     public void get(
-	    final @PathVariable String filename,
-	    final HttpServletRequest request,
-	    final HttpServletResponse response
+            final @PathVariable String filename,
+            final HttpServletRequest request,
+            final HttpServletResponse response
     ) throws IOException {
-	final GridFSDBFile file = this.gridFs.findOne(Query.query(Criteria.where("filename").is(filename)));
-	if (file == null) {
-	    response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-	} else {
-	    final int cacheForDays = 365;
-	    response.setHeader("Content-Type", file.getContentType());
-	    response.setHeader("Content-Disposition", String.format("inline; filename=\"%s\"", file.getFilename()));
-	    response.setHeader("Expires", now(of("UTC")).plusDays(cacheForDays).format(RFC_1123_DATE_TIME));
-	    response.setHeader("Cache-Control", String.format("max-age=%d, %s", TimeUnit.DAYS.toSeconds(cacheForDays), "public"));
-	    file.writeTo(response.getOutputStream());
-	    response.flushBuffer();
-	}
+        final GridFSDBFile file = this.gridFs.findOne(Query.query(Criteria.where("filename").is(filename)));
+        if (file == null) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        } else {
+            final int cacheForDays = 365;
+            response.setHeader("Content-Type", file.getContentType());
+            response.setHeader("Content-Disposition", String.format("inline; filename=\"%s\"", file.getFilename()));
+            response.setHeader("Expires", now(of("UTC")).plusDays(cacheForDays).format(RFC_1123_DATE_TIME));
+            response.setHeader("Cache-Control", String.format("max-age=%d, %s", TimeUnit.DAYS.toSeconds(cacheForDays), "public"));
+            file.writeTo(response.getOutputStream());
+            response.flushBuffer();
+        }
     }
 }

@@ -39,7 +39,7 @@ public final class Temporals {
      * @param locale The locale of this instance
      */
     public Temporals(Locale locale) {
-	this.locale = locale;
+        this.locale = locale;
     }
 
     /**
@@ -52,7 +52,7 @@ public final class Temporals {
      * @return Formatted object
      */
     public String formatDateTime(TemporalAccessor temporal, FormatStyle dateStyle, FormatStyle timeStyle) {
-	return DateTimeFormatter.ofLocalizedDateTime(dateStyle, timeStyle).withLocale(this.locale).format(temporal);
+        return DateTimeFormatter.ofLocalizedDateTime(dateStyle, timeStyle).withLocale(this.locale).format(temporal);
     }
 
     /**
@@ -64,7 +64,7 @@ public final class Temporals {
      * @return Formatted object
      */
     public String formatDate(TemporalAccessor temporal, FormatStyle dateStyle) {
-	return DateTimeFormatter.ofLocalizedDate(dateStyle).withLocale(this.locale).format(temporal);
+        return DateTimeFormatter.ofLocalizedDate(dateStyle).withLocale(this.locale).format(temporal);
     }
 
     /**
@@ -75,6 +75,6 @@ public final class Temporals {
      * @return Formatted object
      */
     public String format(TemporalAccessor temporal, String pattern) {
-	return DateTimeFormatter.ofPattern(pattern, locale).format(temporal);
-    }    
+        return DateTimeFormatter.ofPattern(pattern, locale).format(temporal);
+    }
 }

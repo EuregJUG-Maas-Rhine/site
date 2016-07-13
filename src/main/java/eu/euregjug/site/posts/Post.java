@@ -26,44 +26,44 @@ import java.util.Date;
 public class Post implements Serializable {
 
     private static final long serialVersionUID = 5598037121835514804L;
-    
+
     private final LocalDate publishedOn;
-    
+
     private final String slug;
-    
+
     private final String title;
-    
+
     private final String content;
 
     public Post(final Date publishedOn, String slug, String title, String content) {
-	this.publishedOn = publishedOn instanceof java.sql.Date? ((java.sql.Date)publishedOn).toLocalDate() : publishedOn.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-	this.slug = slug;
-	this.title = title;
-	this.content = content;
+        this.publishedOn = publishedOn instanceof java.sql.Date? ((java.sql.Date)publishedOn).toLocalDate() : publishedOn.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        this.slug = slug;
+        this.title = title;
+        this.content = content;
     }
 
     /**
      * Maps an entity to a post without rendering the content.
-     * 
-     * @param postEntity 
+     *
+     * @param postEntity
      */
     public Post(PostEntity postEntity) {
-	this(postEntity.getPublishedOn(), postEntity.getSlug(), postEntity.getTitle(), null);
+        this(postEntity.getPublishedOn(), postEntity.getSlug(), postEntity.getTitle(), null);
     }
-    
+
     public LocalDate getPublishedOn() {
-	return publishedOn;
+        return publishedOn;
     }
 
     public String getSlug() {
-	return slug;
+        return slug;
     }
-    
+
     public String getTitle() {
-	return title;
+        return title;
     }
 
     public String getContent() {
-	return content;
+        return content;
     }
 }

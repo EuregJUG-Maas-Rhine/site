@@ -32,13 +32,13 @@ public class EuregJUGDialect extends AbstractDialect implements IExpressionEnhan
 
     @Override
     public String getPrefix() {
-	return "eur";
+        return "eur";
     }
 
     @Override
     public Map<String, Object> getAdditionalExpressionObjects(IProcessingContext processingContext) {
-	final Map<String, Object> expressionObjects = new HashMap<>();
-	expressionObjects.put("temporals", new Temporals(processingContext.getContext().getLocale()));
-	return expressionObjects;
+        final Map<String, Object> expressionObjects = new HashMap<>();
+        expressionObjects.put("temporals", new Temporals(processingContext.getContext().getLocale()));
+        return expressionObjects;
     }
 }

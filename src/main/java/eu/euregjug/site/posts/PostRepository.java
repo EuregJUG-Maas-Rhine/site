@@ -36,24 +36,24 @@ public interface PostRepository extends Repository<PostEntity, Integer>, PostRep
      * @return Persisted post
      */
     PostEntity save(PostEntity entity);
-    
+
     /**
      * @param id
      * @return Post with the given Id or an empty optional
      */
     @Transactional(readOnly = true)
     Optional<PostEntity> findOne(final Integer id);
-    
+
     /**
      * Selects a post by date and slug.
-     * 
+     *
      * @param publishedOn
      * @param slug
-     * @return 
+     * @return
      */
     @Transactional(readOnly = true)
     public Optional<PostEntity> findByPublishedOnAndSlug(final Date publishedOn, final String slug);
-    
+
     /**
      * Selects a "page" of posts.
      *
@@ -62,7 +62,7 @@ public interface PostRepository extends Repository<PostEntity, Integer>, PostRep
      */
     @Transactional(readOnly = true)
     Page<PostEntity> findAll(Pageable pageable);
-    
+
     /**
      * Selects all posts sorted by the specified sort.
      *

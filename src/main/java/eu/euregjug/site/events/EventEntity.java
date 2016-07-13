@@ -52,10 +52,10 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
  */
 @Entity
 @Table(
-	name = "events",
-	uniqueConstraints = {
-	    @UniqueConstraint(name = "events_uk", columnNames = {"held_on", "name"})
-	}
+        name = "events",
+        uniqueConstraints = {
+            @UniqueConstraint(name = "events_uk", columnNames = {"held_on", "name"})
+        }
 )
 @JsonInclude(NON_NULL)
 public class EventEntity implements Serializable {
@@ -67,7 +67,7 @@ public class EventEntity implements Serializable {
      */
     public enum Type {
 
-	talk, meetup
+        talk, meetup
     }
 
     /**
@@ -115,13 +115,13 @@ public class EventEntity implements Serializable {
     @Enumerated(EnumType.STRING)
     @NotNull
     private Type type = Type.talk;
-    
+
     /**
      * Optional duration in minutes.
      */
     @Column(name = "duration")
     private Integer duration;
-    
+
     @ManyToOne(optional = true, fetch = FetchType.EAGER)
     @JoinColumn(name = "post_id", referencedColumnName = "id")
     @JsonIgnore
@@ -134,7 +134,7 @@ public class EventEntity implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     @JsonIgnore
     private Calendar createdAt;
-    
+
     /**
      * Needed for Hibernate, not to be called by application code.
      */
@@ -151,108 +151,108 @@ public class EventEntity implements Serializable {
      * @param description Description for the new event.
      */
     public EventEntity(Calendar heldOn, String name, String description) {
-	this.heldOn = heldOn;
-	this.name = name;
-	this.description = description;
+        this.heldOn = heldOn;
+        this.name = name;
+        this.description = description;
     }
-    
+
     @PrePersist
     @PreUpdate
     void prePersistAndUpdate() {
-	if (this.createdAt == null) {
-	    this.createdAt = Calendar.getInstance();
-	}
+        if (this.createdAt == null) {
+            this.createdAt = Calendar.getInstance();
+        }
     }
 
     @JsonProperty
     public Integer getId() {
-	return id;
+        return id;
     }
 
     public Calendar getHeldOn() {
-	return heldOn;
+        return heldOn;
     }
 
     public String getName() {
-	return name;
+        return name;
     }
 
     public String getDescription() {
-	return description;
+        return description;
     }
 
     public void setDescription(String description) {
-	this.description = description;
+        this.description = description;
     }
 
     public boolean isNeedsRegistration() {
-	return needsRegistration;
+        return needsRegistration;
     }
 
     public void setNeedsRegistration(boolean needsRegistration) {
-	this.needsRegistration = needsRegistration;
+        this.needsRegistration = needsRegistration;
     }
-    
+
     /**
      * @return True if the event is still open for registration
      */
     @JsonIgnore
     public boolean isOpen() {
-	return this.heldOn.after(Calendar.getInstance());
+        return this.heldOn.after(Calendar.getInstance());
     }
 
     public Type getType() {
-	return type;
+        return type;
     }
 
     public void setType(Type type) {
-	this.type = type;
+        this.type = type;
     }
 
     public Integer getDuration() {
-	return duration;
+        return duration;
     }
 
     public void setDuration(Integer duration) {
-	this.duration = duration;
+        this.duration = duration;
     }
-    
+
     public PostEntity getPost() {
-	return post;
+        return post;
     }
 
     @JsonProperty
     public void setPost(PostEntity post) {
-	this.post = post;
+        this.post = post;
     }
-    
+
     public Calendar getCreatedAt() {
-	return createdAt;
+        return createdAt;
     }
-    
+
     @Override
     public int hashCode() {
-	int hash = 7;
-	hash = 29 * hash + Objects.hashCode(this.heldOn);
-	hash = 29 * hash + Objects.hashCode(this.name);
-	return hash;
+        int hash = 7;
+        hash = 29 * hash + Objects.hashCode(this.heldOn);
+        hash = 29 * hash + Objects.hashCode(this.name);
+        return hash;
     }
 
     @Override
     public boolean equals(Object obj) {
-	if (this == obj) {
-	    return true;
-	}
-	if (obj == null) {
-	    return false;
-	}
-	if (getClass() != obj.getClass()) {
-	    return false;
-	}
-	final EventEntity other = (EventEntity) obj;
-	if (!Objects.equals(this.name, other.name)) {
-	    return false;
-	}
-	return Objects.equals(this.heldOn, other.heldOn);
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final EventEntity other = (EventEntity) obj;
+        if (!Objects.equals(this.name, other.name)) {
+            return false;
+        }
+        return Objects.equals(this.heldOn, other.heldOn);
     }
 }

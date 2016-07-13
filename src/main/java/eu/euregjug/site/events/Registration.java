@@ -42,39 +42,39 @@ public class Registration implements Serializable {
     @Email
     @Size(max = 1024)
     private String email;
-    
+
     @NotNull
     private boolean subscribeToNewsletter = false;
-    
+
     public String getFirstName() {
-	return firstName;
+        return firstName;
     }
 
     public void setFirstName(String firstName) {
-	this.firstName = firstName;
+        this.firstName = firstName;
     }
 
     public String getName() {
-	return name;
+        return name;
     }
 
     public void setName(String name) {
-	this.name = name;
+        this.name = name;
     }
 
     public String getEmail() {
-	return email;
+        return email;
     }
 
     public void setEmail(String email) {
-	this.email = email;
-    }  
+        this.email = email;
+    }
 
     public boolean isSubscribeToNewsletter() {
-	return subscribeToNewsletter;
+        return subscribeToNewsletter;
     }
 
     public void setSubscribeToNewsletter(boolean subscribeToNewsletter) {
-	this.subscribeToNewsletter = subscribeToNewsletter;
+        this.subscribeToNewsletter = subscribeToNewsletter;
     }
 }

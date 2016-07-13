@@ -39,10 +39,10 @@ import javax.persistence.UniqueConstraint;
  */
 @Entity
 @Table(
-	name = "registrations",
-	uniqueConstraints = {
-	    @UniqueConstraint(name = "registrations_uk", columnNames = {"event_id", "email"})
-	}
+        name = "registrations",
+        uniqueConstraints = {
+            @UniqueConstraint(name = "registrations_uk", columnNames = {"event_id", "email"})
+        }
 )
 public class RegistrationEntity implements Serializable {
 
@@ -85,87 +85,87 @@ public class RegistrationEntity implements Serializable {
     private String firstName;
 
     /**
-     * A flag if the registered person also wants to subscribe to our newsletter. Defaults to  
+     * A flag if the registered person also wants to subscribe to our newsletter. Defaults to
      * {@code false}.
      */
     @Column(name = "subscribe_to_newsletter", nullable = false)
     private boolean subscribeToNewsletter = false;
-    
+
     /**
      * Needed for Hibernate, not to be called by application code.
      */
     @SuppressWarnings({"squid:S2637"})
     protected RegistrationEntity() {
     }
-        
+
     public RegistrationEntity(EventEntity event, String email, String name, String firstName, boolean subscribeToNewsletter) {
-	this.event = event;
-	this.email = email;
-	this.name = name;
-	this.firstName = firstName;
-	this.subscribeToNewsletter = subscribeToNewsletter;
+        this.event = event;
+        this.email = email;
+        this.name = name;
+        this.firstName = firstName;
+        this.subscribeToNewsletter = subscribeToNewsletter;
     }
 
     @JsonProperty
     public Integer getId() {
-	return id;
+        return id;
     }
 
     public EventEntity getEvent() {
-	return event;
+        return event;
     }
 
     public String getEmail() {
-	return email;
+        return email;
     }
 
     public String getName() {
-	return name;
+        return name;
     }
 
     public void setName(String name) {
-	this.name = name;
+        this.name = name;
     }
 
     public String getFirstName() {
-	return firstName;
+        return firstName;
     }
 
     public void setFirstName(String firstName) {
-	this.firstName = firstName;
+        this.firstName = firstName;
     }
 
     public boolean isSubscribeToNewsletter() {
-	return subscribeToNewsletter;
+        return subscribeToNewsletter;
     }
 
     public void setSubscribeToNewsletter(boolean subscribeToNewsletter) {
-	this.subscribeToNewsletter = subscribeToNewsletter;
+        this.subscribeToNewsletter = subscribeToNewsletter;
     }
 
     @Override
     public int hashCode() {
-	int hash = 5;
-	hash = 29 * hash + Objects.hashCode(this.event);
-	hash = 29 * hash + Objects.hashCode(this.email);
-	return hash;
+        int hash = 5;
+        hash = 29 * hash + Objects.hashCode(this.event);
+        hash = 29 * hash + Objects.hashCode(this.email);
+        return hash;
     }
 
     @Override
     public boolean equals(Object obj) {
-	if (this == obj) {
-	    return true;
-	}
-	if (obj == null) {
-	    return false;
-	}
-	if (getClass() != obj.getClass()) {
-	    return false;
-	}
-	final RegistrationEntity other = (RegistrationEntity) obj;
-	if (!Objects.equals(this.email, other.email)) {
-	    return false;
-	}
-	return Objects.equals(this.event, other.event);
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final RegistrationEntity other = (RegistrationEntity) obj;
+        if (!Objects.equals(this.email, other.email)) {
+            return false;
+        }
+        return Objects.equals(this.event, other.event);
     }
 }

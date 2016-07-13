@@ -50,80 +50,80 @@ class IndexRssView extends AbstractRssFeedView {
     private final DateTimeFormatter permalinkDateFormatter;
 
     public IndexRssView(MessageSource messageSource) {
-	this.messageSource = messageSource;
-	this.permalinkDateFormatter = DateTimeFormatter.ofPattern("/y/M/d", Locale.ENGLISH);
+        this.messageSource = messageSource;
+        this.permalinkDateFormatter = DateTimeFormatter.ofPattern("/y/M/d", Locale.ENGLISH);
     }
 
     String getAbsoluteUrl(final HttpServletRequest request, final String relativeUrl) {
-	final int port = request.getServerPort();
-	final String hostWithPort = String.format("%s://%s%s",
-		(request.isSecure() ? "https" : "http"),
-		request.getServerName(),
-		(Arrays.asList(80, 443).contains(port) ? "" : String.format(":%d", port))
-	);
-	return String.format("%s%s%s", hostWithPort, request.getContextPath(), relativeUrl);
+        final int port = request.getServerPort();
+        final String hostWithPort = String.format("%s://%s%s",
+                (request.isSecure() ? "https" : "http"),
+                request.getServerName(),
+                (Arrays.asList(80, 443).contains(port) ? "" : String.format(":%d", port))
+        );
+        return String.format("%s%s%s", hostWithPort, request.getContextPath(), relativeUrl);
     }
 
     @Override
     protected void buildFeedMetadata(Map<String, Object> model, Channel feed, HttpServletRequest request) {
-	final Page<Post> posts = (Page<Post>) model.get("posts");
+        final Page<Post> posts = (Page<Post>) model.get("posts");
 
-	final Locale locale = request.getLocale();
-	feed.setEncoding("UTF-8");
-	feed.setTitle(String.format("%s - %s", messageSource.getMessage("siteTitle", null, locale), messageSource.getMessage("siteSubTitle", null, locale)));
-	feed.setDescription(messageSource.getMessage("feedDescription", null, locale));
-	feed.setLink(getAbsoluteUrl(request, ""));
-	if (posts.hasContent()) {
-	    final Date pubDate = Date.from(posts.getContent().get(0).getPublishedOn().atStartOfDay(ZoneId.systemDefault()).toInstant());
-	    feed.setLastBuildDate(pubDate);
-	    feed.setPubDate(pubDate);
-	}
-	feed.setGenerator("https://github.com/EuregJUG-Maas-Rhine/site");
+        final Locale locale = request.getLocale();
+        feed.setEncoding("UTF-8");
+        feed.setTitle(String.format("%s - %s", messageSource.getMessage("siteTitle", null, locale), messageSource.getMessage("siteSubTitle", null, locale)));
+        feed.setDescription(messageSource.getMessage("feedDescription", null, locale));
+        feed.setLink(getAbsoluteUrl(request, ""));
+        if (posts.hasContent()) {
+            final Date pubDate = Date.from(posts.getContent().get(0).getPublishedOn().atStartOfDay(ZoneId.systemDefault()).toInstant());
+            feed.setLastBuildDate(pubDate);
+            feed.setPubDate(pubDate);
+        }
+        feed.setGenerator("https://github.com/EuregJUG-Maas-Rhine/site");
 
-	final String self = getAbsoluteUrl(request, "/feed.rss");
-	final List<Link> atomLinks = new ArrayList<>();
-	atomLinks.add(new SyndicationLink().withRel("previous").withType(super.getContentType()).withHref(self).getLink());
-	if (posts.hasPrevious()) {
-	    atomLinks.add(new SyndicationLink()
-		    .withRel("previous")
-		    .withType(super.getContentType())
-		    .withHref(String.format("%s?page=%d", self, posts.previousPageable().getPageNumber()))
-		    .getLink()
-	    );
-	}
-	if (posts.hasNext()) {
-	    atomLinks.add(new SyndicationLink()
-		    .withRel("next")
-		    .withType(super.getContentType())
-		    .withHref(String.format("%s?page=%d", self, posts.nextPageable().getPageNumber()))
-		    .getLink()
-	    );
-	}
-	feed.getModules().addAll(atomLinks.stream().map(l -> {
-			final AtomLinkModuleImpl rv = new AtomLinkModuleImpl();
-			rv.setLink(l);
-			return rv;
-	}).collect(Collectors.toList()));	
+        final String self = getAbsoluteUrl(request, "/feed.rss");
+        final List<Link> atomLinks = new ArrayList<>();
+        atomLinks.add(new SyndicationLink().withRel("previous").withType(super.getContentType()).withHref(self).getLink());
+        if (posts.hasPrevious()) {
+            atomLinks.add(new SyndicationLink()
+                    .withRel("previous")
+                    .withType(super.getContentType())
+                    .withHref(String.format("%s?page=%d", self, posts.previousPageable().getPageNumber()))
+                    .getLink()
+            );
+        }
+        if (posts.hasNext()) {
+            atomLinks.add(new SyndicationLink()
+                    .withRel("next")
+                    .withType(super.getContentType())
+                    .withHref(String.format("%s?page=%d", self, posts.nextPageable().getPageNumber()))
+                    .getLink()
+            );
+        }
+        feed.getModules().addAll(atomLinks.stream().map(l -> {
+                        final AtomLinkModuleImpl rv = new AtomLinkModuleImpl();
+                        rv.setLink(l);
+                        return rv;
+        }).collect(Collectors.toList()));
     }
 
     @Override
     protected List<Item> buildFeedItems(Map<String, Object> model, HttpServletRequest request, HttpServletResponse response) throws Exception {
-	final Page<Post> posts = (Page<Post>) model.get("posts");
+        final Page<Post> posts = (Page<Post>) model.get("posts");
 
-	return posts.map(post -> {
-	    final Item rv = new Item();
-	    final Content content = new Content();
-	    content.setType(Content.HTML);
-	    content.setValue(post.getContent());
-	    final String link = getAbsoluteUrl(request, String.format("%s/%s", permalinkDateFormatter.format(post.getPublishedOn()), post.getSlug()));
+        return posts.map(post -> {
+            final Item rv = new Item();
+            final Content content = new Content();
+            content.setType(Content.HTML);
+            content.setValue(post.getContent());
+            final String link = getAbsoluteUrl(request, String.format("%s/%s", permalinkDateFormatter.format(post.getPublishedOn()), post.getSlug()));
 
-	    rv.setAuthor("euregjug.eu");
-	    rv.setContent(content);
-	    rv.setGuid(new SyndicationGuid().withPermaLink(true).withValue(link).getGuid());
-	    rv.setLink(link);
-	    rv.setPubDate(Date.from(post.getPublishedOn().atStartOfDay(ZoneId.systemDefault()).toInstant()));
-	    rv.setTitle(post.getTitle());	    
-	    return rv;
-	}).getContent();
+            rv.setAuthor("euregjug.eu");
+            rv.setContent(content);
+            rv.setGuid(new SyndicationGuid().withPermaLink(true).withValue(link).getGuid());
+            rv.setLink(link);
+            rv.setPubDate(Date.from(post.getPublishedOn().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+            rv.setTitle(post.getTitle());
+            return rv;
+        }).getContent();
     }
 }

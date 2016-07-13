@@ -36,30 +36,30 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-	registry.addViewController("/about").setViewName("about");
+        registry.addViewController("/about").setViewName("about");
     }
 
     @Bean
     public EuregJUGDialect enSupplyDialect() {
-	return new EuregJUGDialect();
+        return new EuregJUGDialect();
     }
 
     @Bean
     public LocaleResolver localeResolver() {
-	final CookieLocaleResolver rv = new CookieLocaleResolver();
-	rv.setDefaultLocale(Locale.ENGLISH);
-	return rv;
+        final CookieLocaleResolver rv = new CookieLocaleResolver();
+        rv.setDefaultLocale(Locale.ENGLISH);
+        return rv;
     }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-	final LocaleChangeInterceptor localeChangeInterceptor = new LocaleChangeInterceptor();
-	localeChangeInterceptor.setParamName("lang");
-	registry.addInterceptor(localeChangeInterceptor);
+        final LocaleChangeInterceptor localeChangeInterceptor = new LocaleChangeInterceptor();
+        localeChangeInterceptor.setParamName("lang");
+        registry.addInterceptor(localeChangeInterceptor);
     }
 
     @Override
     public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
-	configurer.mediaType("ics", MediaType.valueOf("text/calendar"));
+        configurer.mediaType("ics", MediaType.valueOf("text/calendar"));
     }
 }

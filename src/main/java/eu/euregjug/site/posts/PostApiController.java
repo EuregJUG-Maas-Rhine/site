@@ -43,30 +43,30 @@ class PostApiController {
     private final PostRepository postRepository;
 
     public PostApiController(PostRepository postRepository) {
-	this.postRepository = postRepository;
+        this.postRepository = postRepository;
     }
 
     @RequestMapping(method = POST)
     @PreAuthorize("isAuthenticated()")
     @ResponseStatus(CREATED)
     public PostEntity create(@Valid @RequestBody final PostEntity newPost) {
-	return this.postRepository.save(newPost);
+        return this.postRepository.save(newPost);
     }
 
     @RequestMapping(method = GET)
     public Page<PostEntity> get(final Pageable pageable) {
-	return this.postRepository.findAll(pageable);
+        return this.postRepository.findAll(pageable);
     }
-    
+
     @RequestMapping(value = "/{id:\\d+}", method = PUT)
     @PreAuthorize("isAuthenticated()")
     @Transactional
     @CacheEvict(cacheNames = "renderedPosts", key = "#id")
     public PostEntity update(@PathVariable final Integer id, @Valid @RequestBody final PostEntity updatedPost) {
-	final PostEntity postEntity =  this.postRepository.findOne(id).orElseThrow(() -> new ResourceNotFoundException());	
-	postEntity.setContent(updatedPost.getContent());
-	postEntity.setFormat(updatedPost.getFormat());
-	postEntity.setTitle(updatedPost.getTitle());
-	return postEntity;	
+        final PostEntity postEntity =  this.postRepository.findOne(id).orElseThrow(ResourceNotFoundException::new);
+        postEntity.setContent(updatedPost.getContent());
+        postEntity.setFormat(updatedPost.getFormat());
+        postEntity.setTitle(updatedPost.getTitle());
+        return postEntity;
     }
 }

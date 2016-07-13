@@ -64,151 +64,151 @@ import static java.util.stream.Collectors.groupingBy;
  */
 @Controller
 class IndexController {
-    
+
     public static final Logger LOGGER = LoggerFactory.getLogger(IndexController.class.getPackage().getName());
-    
+
     private final EventRepository eventRepository;
-    
+
     private final RegistrationService registrationService;
-    
+
     private final LinkRepository linkRepository;
 
     private final PostRepository postRepository;
-    
+
     private final PostRenderingService postRenderingService;
-          
+
     private final RecaptchaValidator recaptchaValidator;
-    
+
     public IndexController(
-	    EventRepository eventRepository, 
-	    RegistrationService registrationService, 
-	    LinkRepository linkRepository, 
-	    PostRepository postRepository, 
-	    PostRenderingService postRenderingService,
-	    RecaptchaValidator recaptchaValidator
+            EventRepository eventRepository,
+            RegistrationService registrationService,
+            LinkRepository linkRepository,
+            PostRepository postRepository,
+            PostRenderingService postRenderingService,
+            RecaptchaValidator recaptchaValidator
     ) {
-	this.eventRepository = eventRepository;
-	this.registrationService = registrationService;
-	this.linkRepository = linkRepository;	
-	this.postRepository = postRepository;
-	this.postRenderingService = postRenderingService;	
-	this.recaptchaValidator = recaptchaValidator;
+        this.eventRepository = eventRepository;
+        this.registrationService = registrationService;
+        this.linkRepository = linkRepository;
+        this.postRepository = postRepository;
+        this.postRenderingService = postRenderingService;
+        this.recaptchaValidator = recaptchaValidator;
     }
-    
+
     @RequestMapping({"", "/", "/feed"})
     public String index(
-	    final @RequestParam(required = false, defaultValue = "0") Integer page,
-	    final Model model
+            final @RequestParam(required = false, defaultValue = "0") Integer page,
+            final Model model
     ) {
-	model
-		.addAttribute("upcomingEvents", this.eventRepository.findUpcomingEvents())
-		.addAttribute("links", this.linkRepository.findAllByOrderByTypeAscSortColAscTitleAsc().stream().collect(groupingBy(LinkEntity::getType)))
-		.addAttribute("posts", this.postRepository.findAll(new PageRequest(page, 5, Direction.DESC, "publishedOn", "createdAt")).map(postRenderingService::render))	
-		;
-	return "index";
-    }   
-    
+        model
+                .addAttribute("upcomingEvents", this.eventRepository.findUpcomingEvents())
+                .addAttribute("links", this.linkRepository.findAllByOrderByTypeAscSortColAscTitleAsc().stream().collect(groupingBy(LinkEntity::getType)))
+                .addAttribute("posts", this.postRepository.findAll(new PageRequest(page, 5, Direction.DESC, "publishedOn", "createdAt")).map(postRenderingService::render))
+                ;
+        return "index";
+    }
+
     @RequestMapping({
-	"/{year:\\d+}/{month:\\d+}/{day:\\d+}/{slug}",
-	"/posts/{year:\\d+}-{month:\\d+}-{day:\\d+}-{slug}"
+        "/{year:\\d+}/{month:\\d+}/{day:\\d+}/{slug}",
+        "/posts/{year:\\d+}-{month:\\d+}-{day:\\d+}-{slug}"
     })
     public String post(
-	    final @PathVariable Integer year,
-	    final @PathVariable Integer month,
-	    final @PathVariable Integer day,
-	    final @PathVariable String slug,
-	    final Model model
+            final @PathVariable Integer year,
+            final @PathVariable Integer month,
+            final @PathVariable Integer day,
+            final @PathVariable String slug,
+            final Model model
     ) {
 
-	String rv = "redirect:/";
-	try {
-	    final Date publishedOn = Date.from(LocalDate.of(year, month, day).atStartOfDay(ZoneId.systemDefault()).toInstant());	    
-	    final Optional<PostEntity> post = this.postRepository.findByPublishedOnAndSlug(publishedOn, slug);
-	    model
-		    .addAttribute("previousPost", post.flatMap(this.postRepository::getPrevious))
-		    .addAttribute("post", post.map(postRenderingService::render).get())
-		    .addAttribute("nextPost", post.flatMap(this.postRepository::getNext))
-		    ;
-	    rv = "post";
+        String rv = "redirect:/";
+        try {
+            final Date publishedOn = Date.from(LocalDate.of(year, month, day).atStartOfDay(ZoneId.systemDefault()).toInstant());
+            final Optional<PostEntity> post = this.postRepository.findByPublishedOnAndSlug(publishedOn, slug);
+            model
+                    .addAttribute("previousPost", post.flatMap(this.postRepository::getPrevious))
+                    .addAttribute("post", post.map(postRenderingService::render).get())
+                    .addAttribute("nextPost", post.flatMap(this.postRepository::getNext))
+                    ;
+            rv = "post";
 
-	} catch (DateTimeException | NoSuchElementException e) {
+        } catch (DateTimeException | NoSuchElementException e) {
             LOGGER.debug("Invalid request for post", e);
-	}
-	return rv;
+        }
+        return rv;
     }
-    
+
     @RequestMapping({"/archive", "/archives"})
-    public String archive(final Model model) {	
-	model.addAttribute("posts", 
-		this.postRepository
-			.findAll(new Sort(Direction.DESC, "publishedOn")).stream()
-			.map(Post::new)
-			.collect(groupingBy(
-				    post -> post.getPublishedOn().withDayOfMonth(1), 
-				    () -> new TreeMap<LocalDate, List<Post>>(reverseOrder()), 
-				    toList()
-				)
-			)
-	);
-	return "archive";
+    public String archive(final Model model) {
+        model.addAttribute("posts",
+                this.postRepository
+                        .findAll(new Sort(Direction.DESC, "publishedOn")).stream()
+                        .map(Post::new)
+                        .collect(groupingBy(
+                                    post -> post.getPublishedOn().withDayOfMonth(1),
+                                    () -> new TreeMap<LocalDate, List<Post>>(reverseOrder()),
+                                    toList()
+                                )
+                        )
+        );
+        return "archive";
     }
-    
+
     @RequestMapping(value = "/events", produces = "text/calendar")
     public String events(final Model model) {
-	model.addAttribute("events", this.eventRepository.findUpcomingEvents());
-	return "events";
+        model.addAttribute("events", this.eventRepository.findUpcomingEvents());
+        return "events";
     }
-    
+
     @RequestMapping(value = "/register/{eventId}", method = GET)
     public String register(
-	    final @PathVariable Integer eventId,
-	    final Model model,
-	    final RedirectAttributes redirectAttributes
+            final @PathVariable Integer eventId,
+            final Model model,
+            final RedirectAttributes redirectAttributes
     ) {
-	final EventEntity event = this.eventRepository.findOne(eventId).orElse(null);
-	String rv;
-	if (event == null) {
-	    redirectAttributes.addFlashAttribute("alerts", Arrays.asList("invalidEvent"));
-	    rv = "redirect:/";
-	} else {
-	    model.addAttribute("event", event);
-	    if(!model.containsAttribute("registration")) {
-		model.addAttribute("registration", new Registration());
-	    }
-	    rv = "register";
-	}
-	return rv;
+        final EventEntity event = this.eventRepository.findOne(eventId).orElse(null);
+        String rv;
+        if (event == null) {
+            redirectAttributes.addFlashAttribute("alerts", Arrays.asList("invalidEvent"));
+            rv = "redirect:/";
+        } else {
+            model.addAttribute("event", event);
+            if(!model.containsAttribute("registration")) {
+                model.addAttribute("registration", new Registration());
+            }
+            rv = "register";
+        }
+        return rv;
     }
-    
+
     @RequestMapping(value = "/register/{eventId}", method = POST)
     public String register(
-	    final @PathVariable Integer eventId,
-	    final @Valid Registration registration,
-	    final BindingResult registrationBindingResult,
-	    final Locale locale,
-	    final HttpServletRequest request,
-	    final Model model,
-	    final RedirectAttributes redirectAttributes
+            final @PathVariable Integer eventId,
+            final @Valid Registration registration,
+            final BindingResult registrationBindingResult,
+            final Locale locale,
+            final HttpServletRequest request,
+            final Model model,
+            final RedirectAttributes redirectAttributes
     ) {
-	String rv;
-	if (registrationBindingResult.hasErrors() || recaptchaValidator.validate(request).isFailure()) {
-	    model.addAttribute("alerts", Arrays.asList("invalidRegistration"));
-	    rv = register(eventId, model, redirectAttributes);
-	} else {
-	    try {
-		final RegistrationEntity registrationEntity = this.registrationService.register(eventId, registration);
+        String rv;
+        if (registrationBindingResult.hasErrors() || recaptchaValidator.validate(request).isFailure()) {
+            model.addAttribute("alerts", Arrays.asList("invalidRegistration"));
+            rv = register(eventId, model, redirectAttributes);
+        } else {
+            try {
+                final RegistrationEntity registrationEntity = this.registrationService.register(eventId, registration);
                 this.registrationService.sendConfirmationMail(registrationEntity, locale);
-		redirectAttributes
-			.addFlashAttribute("event", registrationEntity.getEvent())
-			.addFlashAttribute("registered", true)
-			.addFlashAttribute("alerts", Arrays.asList("registered"));                
-		rv = "redirect:/register/" + eventId;
-	    } catch (InvalidRegistrationException e) {
+                redirectAttributes
+                        .addFlashAttribute("event", registrationEntity.getEvent())
+                        .addFlashAttribute("registered", true)
+                        .addFlashAttribute("alerts", Arrays.asList("registered"));
+                rv = "redirect:/register/" + eventId;
+            } catch (InvalidRegistrationException e) {
                 LOGGER.debug("Invalid registration request", e);
-		model.addAttribute("alerts", Arrays.asList(e.getLocalizedMessage()));
-		rv = register(eventId, model, redirectAttributes);
-	    }	    
-	}
-	return rv;
+                model.addAttribute("alerts", Arrays.asList(e.getLocalizedMessage()));
+                rv = register(eventId, model, redirectAttributes);
+            }
+        }
+        return rv;
     }
 }

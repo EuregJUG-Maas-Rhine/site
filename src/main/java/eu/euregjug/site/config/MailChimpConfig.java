@@ -36,18 +36,18 @@ public class MailChimpConfig {
     private String registrationUrl;
 
     public boolean isEnabled() {
-	return enabled;
+        return enabled;
     }
 
     public void setEnabled(boolean enabled) {
-	this.enabled = enabled;
+        this.enabled = enabled;
     }
 
     public String getRegistrationUrl() {
-	return registrationUrl;
+        return registrationUrl;
     }
 
     public void setRegistrationUrl(String registrationUrl) {
-	this.registrationUrl = registrationUrl;
+        this.registrationUrl = registrationUrl;
     }
 }

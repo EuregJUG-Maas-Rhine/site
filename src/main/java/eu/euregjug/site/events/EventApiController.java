@@ -41,57 +41,57 @@ import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 class EventApiController {
 
     private final EventRepository eventRepository;
-    
+
     private final PostRepository postRepository;
-    
+
     private final RegistrationRepository registrationRepository;
 
     public EventApiController(EventRepository eventRepository, PostRepository postRepository, RegistrationRepository registrationRepository) {
-	this.eventRepository = eventRepository;
-	this.postRepository = postRepository;
-	this.registrationRepository = registrationRepository;
+        this.eventRepository = eventRepository;
+        this.postRepository = postRepository;
+        this.registrationRepository = registrationRepository;
     }
 
     @RequestMapping(method = POST)
     @PreAuthorize("isAuthenticated()")
-    public EventEntity create(final @Valid @RequestBody EventEntity newEvent) {	
-	return this.eventRepository.save(newEvent);
+    public EventEntity create(final @Valid @RequestBody EventEntity newEvent) {
+        return this.eventRepository.save(newEvent);
     }
-    
+
     // TODO: Choose wether to create a completly new posts or not. For the time being: just select one
     @RequestMapping(value = "/{id:\\d+}/post/{postId:\\d+}", method = PUT)
     @PreAuthorize("isAuthenticated()")
     @Transactional
     public EventEntity addPost(final @PathVariable Integer id, final @PathVariable Integer postId) {
-	final EventEntity eventEntity = this.eventRepository.findOne(id).orElse(null);
-	final PostEntity postEntity =  this.postRepository.findOne(postId).orElse(null);
-	if(eventEntity == null || postEntity == null) {
-	    throw new ResourceNotFoundException();
-	}
-	eventEntity.setPost(postEntity);
-	return eventEntity;
+        final EventEntity eventEntity = this.eventRepository.findOne(id).orElse(null);
+        final PostEntity postEntity =  this.postRepository.findOne(postId).orElse(null);
+        if(eventEntity == null || postEntity == null) {
+            throw new ResourceNotFoundException();
+        }
+        eventEntity.setPost(postEntity);
+        return eventEntity;
     }
 
     @RequestMapping(method = GET)
     public Page<EventEntity> get(final Pageable pageable) {
-	return this.eventRepository.findAll(pageable);
+        return this.eventRepository.findAll(pageable);
     }
-    
+
     @RequestMapping(value = "/{eventId}/registrations", method = GET)
     @PreAuthorize("isAuthenticated()")
     public List<RegistrationEntity> getRegistrations(final @PathVariable Integer eventId) {
-	return this.registrationRepository.findAllByEventId(eventId);
+        return this.registrationRepository.findAllByEventId(eventId);
     }
-    
+
     @RequestMapping(value = "/{id:\\d+}", method = PUT)
     @PreAuthorize("isAuthenticated()")
-    @Transactional    
+    @Transactional
     public EventEntity update(final @PathVariable Integer id, final @Valid @RequestBody EventEntity updatedEvent) {
-	final EventEntity eventEntity =  this.eventRepository.findOne(id).orElseThrow(() -> new ResourceNotFoundException());	
-	eventEntity.setDescription(updatedEvent.getDescription());
-	eventEntity.setDuration(updatedEvent.getDuration());
-	eventEntity.setNeedsRegistration(updatedEvent.isNeedsRegistration());
-	eventEntity.setType(updatedEvent.getType());	
-	return eventEntity;	
+        final EventEntity eventEntity =  this.eventRepository.findOne(id).orElseThrow(() -> new ResourceNotFoundException());
+        eventEntity.setDescription(updatedEvent.getDescription());
+        eventEntity.setDuration(updatedEvent.getDuration());
+        eventEntity.setNeedsRegistration(updatedEvent.isNeedsRegistration());
+        eventEntity.setType(updatedEvent.getType());
+        return eventEntity;
     }
 }

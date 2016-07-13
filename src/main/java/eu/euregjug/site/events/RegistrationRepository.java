@@ -32,7 +32,7 @@ public interface RegistrationRepository extends Repository<RegistrationEntity, I
      * @return Persisted registration
      */
     RegistrationEntity save(RegistrationEntity entity);
-    
+
     /**
      * @param event
      * @param email
@@ -41,5 +41,5 @@ public interface RegistrationRepository extends Repository<RegistrationEntity, I
     Optional<RegistrationEntity> findByEventAndEmail(final EventEntity event, final String email);
 
     @Transactional(readOnly = true)
-    List<RegistrationEntity> findAllByEventId(Integer eventId);       
+    List<RegistrationEntity> findAllByEventId(Integer eventId);
 }
