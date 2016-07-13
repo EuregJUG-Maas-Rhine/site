@@ -94,6 +94,7 @@ public class RegistrationEntity implements Serializable {
     /**
      * Needed for Hibernate, not to be called by application code.
      */
+    @SuppressWarnings({"squid:S2637"})
     protected RegistrationEntity() {
     }
         

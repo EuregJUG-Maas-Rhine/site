@@ -65,7 +65,7 @@ public class EventEntity implements Serializable {
     /**
      * Types of events
      */
-    public static enum Type {
+    public enum Type {
 
 	talk, meetup
     }
@@ -138,6 +138,7 @@ public class EventEntity implements Serializable {
     /**
      * Needed for Hibernate, not to be called by application code.
      */
+    @SuppressWarnings({"squid:S2637"})
     protected EventEntity() {
     }
 
