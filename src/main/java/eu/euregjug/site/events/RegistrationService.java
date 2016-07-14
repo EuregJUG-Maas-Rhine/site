@@ -144,6 +144,7 @@ public class RegistrationService {
             LOGGER.info("Sent confirmation email for '{}' to '{}'.", registrationEntity.getEvent().getName(), registrationEntity.getEmail());
         } catch (MailException e) {
             LOGGER.warn("Could not send an email to {} for event '{}': {}", registrationEntity.getEmail(), registrationEntity.getEvent().getName(), e.getMessage());
+            LOGGER.debug("Full error", e);
         }
     }
 
