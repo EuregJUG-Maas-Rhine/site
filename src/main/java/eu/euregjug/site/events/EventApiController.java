@@ -22,6 +22,7 @@ import java.util.List;
 import javax.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import static org.springframework.http.HttpStatus.CREATED;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,6 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import static org.springframework.web.bind.annotation.RequestMethod.PUT;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 /**
  * @author Michael J. Simons, 2015-12-27
@@ -54,6 +56,7 @@ class EventApiController {
 
     @RequestMapping(method = POST)
     @PreAuthorize("isAuthenticated()")
+    @ResponseStatus(CREATED)
     public EventEntity create(@Valid @RequestBody final EventEntity newEvent) {
         return this.eventRepository.save(newEvent);
     }
