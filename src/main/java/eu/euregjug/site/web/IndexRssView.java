@@ -57,9 +57,9 @@ class IndexRssView extends AbstractRssFeedView {
     String getAbsoluteUrl(final HttpServletRequest request, final String relativeUrl) {
         final int port = request.getServerPort();
         final String hostWithPort = String.format("%s://%s%s",
-                (request.isSecure() ? "https" : "http"),
+                request.isSecure() ? "https" : "http",
                 request.getServerName(),
-                (Arrays.asList(80, 443).contains(port) ? "" : String.format(":%d", port))
+                Arrays.asList(80, 443).contains(port) ? "" : String.format(":%d", port)
         );
         return String.format("%s%s%s", hostWithPort, request.getContextPath(), relativeUrl);
     }
