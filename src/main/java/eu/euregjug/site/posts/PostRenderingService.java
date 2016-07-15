@@ -62,7 +62,7 @@ public class PostRenderingService {
 
     @Cacheable(cacheNames = "renderedPosts", key = "#post.id")
     public Post render(final PostEntity post) {
-        String renderedContent = null;
+        String renderedContent;
         if (post.getFormat() != Format.asciidoc) {
             renderedContent = "<strong>Could not render content.</strong>";
         } else {
