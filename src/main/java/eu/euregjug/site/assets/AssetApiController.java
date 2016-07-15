@@ -74,10 +74,10 @@ class AssetApiController {
         if (file != null) {
             throw new DataIntegrityViolationException(String.format("Asset with name '%s' already exists", assetData.getOriginalFilename()));
         } else {
-            try (InputStream _in = TikaInputStream.get(assetData.getInputStream())) {
+            try (InputStream usedStream = TikaInputStream.get(assetData.getInputStream())) {
                 MediaType mediaType = null;
                 try {
-                    mediaType = MediaType.parse(tika.detect(_in, assetData.getOriginalFilename()));
+                    mediaType = MediaType.parse(tika.detect(usedStream, assetData.getOriginalFilename()));
                 } catch (IOException e) {
                     LOGGER.warn("Could not detect content type", e);
                 }
