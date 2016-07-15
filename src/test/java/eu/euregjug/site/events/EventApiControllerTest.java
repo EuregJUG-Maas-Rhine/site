@@ -21,6 +21,8 @@ import eu.euregjug.site.events.EventEntity.Type;
 import eu.euregjug.site.posts.PostEntity;
 import eu.euregjug.site.posts.PostRepository;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Optional;
 import static org.hamcrest.Matchers.equalTo;
 import org.joor.Reflect;
 import org.junit.Before;
@@ -46,6 +48,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -115,6 +118,59 @@ public class EventApiControllerTest {
                 ));
 
         verify(this.eventRepository).save(any(EventEntity.class));
+        verifyNoMoreInteractions(this.eventRepository, this.postRepository, this.registrationRepository);
+    }
+    
+    @Test
+    public void updateShouldShouldWork() throws Exception {
+        final EventEntity updateEntity = new EventEntity(Calendar.getInstance(), "NewName", "NewDescription");
+        updateEntity.setDuration(90);
+        updateEntity.setNeedsRegistration(true);
+        updateEntity.setType(Type.talk);
+        final EventEntity oldEntity = Reflect.on(
+                new EventEntity(Calendar.getInstance(), "Mark Paluch - Hallo, ich bin Redis", "Mark spricht in diesem Vortrag über den Open Source NoSQL Data Store Redis. Der Vortrag ist eine Einführung in Redis und veranschaulicht mit Hilfe von Code-Beispielen, wie Redis mit Spring Data, Hibernate OGM und plain Java verwendet werden kann. Der Vortrag findet bei Thinking Networks in Aachen statt.")
+        ).set("id", 42).get();
+        oldEntity.setDuration(60);
+        oldEntity.setNeedsRegistration(false);
+        oldEntity.setType(Type.meetup);
+        
+        when(this.eventRepository.findOne(23)).thenReturn(Optional.empty());
+        when(this.eventRepository.findOne(42)).thenReturn(Optional.of(oldEntity));
+
+        this.mvc
+                .perform(
+                        put("/api/events/{id}", 23)
+                        .content(this.json.write(updateEntity).getJson())
+                        .contentType(APPLICATION_JSON)
+                        .principal(() -> "euregjug")
+                )
+                .andExpect(status().isNotFound())
+                .andDo(document("api/events/update/notfound",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint())
+                ));
+
+        this.mvc
+                .perform(
+                        put("/api/events/{id}", 42)
+                        .content(this.json.write(updateEntity).getJson())
+                        .contentType(APPLICATION_JSON)
+                        .principal(() -> "euregjug")
+                )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", equalTo(42)))
+                .andExpect(jsonPath("$.name", equalTo(oldEntity.getName())))
+                .andExpect(jsonPath("$.description", equalTo(updateEntity.getDescription())))
+                .andExpect(jsonPath("$.duration", equalTo(updateEntity.getDuration())))
+                .andExpect(jsonPath("$.needsRegistration", equalTo(true)))
+                .andExpect(jsonPath("$.type", equalTo("talk")))
+                .andDo(document("api/events/update/updated",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint())
+                ));
+
+        verify(this.eventRepository).findOne(23);
+        verify(this.eventRepository).findOne(42);
         verifyNoMoreInteractions(this.eventRepository, this.postRepository, this.registrationRepository);
     }
 }
