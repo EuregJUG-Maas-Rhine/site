@@ -23,12 +23,6 @@ import org.apache.tika.Tika;
 import org.joor.Reflect;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.isNull;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +34,6 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.mock.web.MockMultipartFile;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
@@ -48,7 +41,6 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.fileUpload;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.mockito.Matchers.any;
@@ -59,6 +51,7 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.fileUpload;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 /**
  * @author Michael J. Simons, 2016-07-15
@@ -77,7 +70,7 @@ public class AssetApiControllerTest {
 
     @Autowired
     private MockMvc mvc;
-    
+
     @Autowired
     private AssetApiController controller;
 
@@ -123,7 +116,7 @@ public class AssetApiControllerTest {
         verify(this.gridFsTemplate).store(any(InputStream.class), eq("asset.png"), eq("image/png"));
         verifyNoMoreInteractions(this.gridFsTemplate);
     }
-    
+
     @Test
     @DirtiesContext
     public void failedMimetypeDetectionShouldWork() throws Exception {
@@ -133,8 +126,8 @@ public class AssetApiControllerTest {
         tika = spy(tika);
         when(tika.detect(any(InputStream.class), any(String.class))).thenThrow(IOException.class);
         controllerReflect.set("tika", tika);
-        
-        final MockMultipartFile multipartFile = new MockMultipartFile("assetData", "asset.png", null, this.getClass().getResourceAsStream("/eu/euregjug/site/assets/asset.png"));        
+
+        final MockMultipartFile multipartFile = new MockMultipartFile("assetData", "asset.png", null, this.getClass().getResourceAsStream("/eu/euregjug/site/assets/asset.png"));
         when(this.gridFsTemplate.findOne(any(Query.class))).thenReturn(null);
 
         mvc
@@ -143,10 +136,22 @@ public class AssetApiControllerTest {
                         .file(multipartFile)
                 )
                 .andExpect(status().isCreated())
-                .andExpect(content().string("asset.png"));                
+                .andExpect(content().string("asset.png"));
 
         verify(this.gridFsTemplate).findOne(any(Query.class));
         verify(this.gridFsTemplate).store(any(InputStream.class), eq("asset.png"), isNull(String.class));
+        verifyNoMoreInteractions(this.gridFsTemplate);
+    }
+
+    @Test
+    public void getShouldThrowException() throws Exception {
+        when(this.gridFsTemplate.findOne(any(Query.class))).thenReturn(null);
+
+        mvc
+                .perform(get("/api/assets/notthere.jpg"))
+                .andExpect(status().isNotFound());
+
+        verify(this.gridFsTemplate).findOne(any(Query.class));
         verifyNoMoreInteractions(this.gridFsTemplate);
     }
 }
