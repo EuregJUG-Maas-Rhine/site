@@ -39,6 +39,7 @@ public class Application {
         return new ThreadPoolTaskExecutor();
     }
 
+    @SuppressWarnings({"squid:S2095"}) // Ignore 'Close this "ConfigurableApplicationContext".'
     public static void main(final String... args) {
         SpringApplication.run(Application.class, args);
     }
