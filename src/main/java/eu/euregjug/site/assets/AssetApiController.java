@@ -43,7 +43,6 @@ import static java.time.format.DateTimeFormatter.RFC_1123_DATE_TIME;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import static java.time.ZoneId.of;
 import static java.time.ZonedDateTime.now;
-import org.springframework.http.HttpStatus;
 import static org.springframework.http.HttpStatus.CREATED;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
