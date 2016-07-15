@@ -53,7 +53,11 @@ public class PostRepositoryImpl implements PostRepositoryExt {
                     .setMaxResults(1)
                     .getSingleResult()
             );
-        } catch (NoResultException e) {
+        } catch (@SuppressWarnings({"squid:S1166"}) NoResultException e) {
+            // The only reason the query call is implemented manually
+            // is the fact the I cannot use @Query and limiting
+            // the result set in a database agnostic way
+            // (for example through the method name (findXXX) or an annotation)
             rv = Optional.empty();
         }
         return rv;
