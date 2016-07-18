@@ -24,7 +24,10 @@ import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import static java.util.stream.Collectors.toList;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import org.joor.Reflect;
@@ -91,6 +94,24 @@ public class EventApiControllerTest {
 
     private JacksonTester<EventEntity> json;
 
+    private final List<EventEntity> events;
+
+    public EventApiControllerTest() {
+        ZonedDateTime eventDate;
+        eventDate = ZonedDateTime.of(2016, 9, 14, 18, 0, 0, 0, ZoneId.of("Europe/Berlin"));
+        final EventEntity event1 = Reflect.on(
+                new EventEntity(GregorianCalendar.from(eventDate), "name-1", "description-1")
+        ).set("id", 42).get();
+        event1.setDuration(60);
+
+        eventDate = ZonedDateTime.of(2016, 11, 22, 18, 0, 0, 0, ZoneId.of("Europe/Berlin"));
+        final EventEntity event2 = Reflect.on(
+                new EventEntity(GregorianCalendar.from(eventDate), "name-2", "description-2")
+        ).set("id", 23).get();
+        event2.setDuration(90);
+        this.events = Arrays.asList(event1, event2);
+    }
+
     @Before
     public void setup() {
         JacksonTester.initFields(this, objectMapper);
@@ -129,20 +150,7 @@ public class EventApiControllerTest {
 
     @Test
     public void getShouldWork() throws Exception {
-        ZonedDateTime eventDate;
-        eventDate = ZonedDateTime.of(2016, 9, 14, 18, 0, 0, 0, ZoneId.of("Europe/Berlin"));
-        final EventEntity event1 = Reflect.on(
-                new EventEntity(GregorianCalendar.from(eventDate), "name-1", "description-1")
-        ).set("id", 42).get();
-        event1.setDuration(60);
-
-        eventDate = ZonedDateTime.of(2016, 11, 22, 18, 0, 0, 0, ZoneId.of("Europe/Berlin"));
-        final EventEntity event2 = Reflect.on(
-                new EventEntity(GregorianCalendar.from(eventDate), "name-2", "description-2")
-        ).set("id", 23).get();
-        event1.setDuration(90);
-
-        final PageImpl page = new PageImpl(Arrays.asList(event1, event2));
+        final PageImpl page = new PageImpl(this.events);
 
         when(this.eventRepository.findAll(any(Pageable.class))).thenReturn(page);
 
@@ -158,14 +166,44 @@ public class EventApiControllerTest {
                 .andExpect(jsonPath("$.content", hasSize(2)))
                 .andExpect(jsonPath("$.content[0].name", equalTo("name-1")))
                 .andExpect(jsonPath("$.content[0].description", equalTo("description-1")))
+                .andExpect(jsonPath("$.content[0].duration", equalTo(60)))
                 .andExpect(jsonPath("$.content[1].name", equalTo("name-2")))
                 .andExpect(jsonPath("$.content[1].description", equalTo("description-2")))
+                .andExpect(jsonPath("$.content[1].duration", equalTo(90)))
                 .andDo(document("api/events/get",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint())
                 ));
 
         verify(this.eventRepository).findAll(any(Pageable.class));
+        verifyNoMoreInteractions(this.eventRepository, this.postRepository, this.registrationRepository);
+    }
+
+    @Test
+    public void getRegistrationsShouldWork() throws Exception {
+        final List<RegistrationEntity> registrations = this.events.stream()
+                .filter(event -> event.getId() == 42)
+                .map(event -> new RegistrationEntity(event, "mail" + event.getId() + "@euregjug.eu", "name "+ event.getId(), "vorname " + event.getId(), event.getId() == 42))
+                .collect(toList());
+
+        when(this.registrationRepository.findAllByEventId(42)).thenReturn(registrations);
+
+        this.mvc
+                .perform(
+                        get("/api/events/{id}/registrations", 42)
+                        .principal(() -> "euregjug")
+                )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.[0].email", equalTo("mail42@euregjug.eu")))
+                .andExpect(jsonPath("$.[0].name", equalTo("name 42")))
+                .andExpect(jsonPath("$.[0].firstName", equalTo("vorname 42")))
+                .andExpect(jsonPath("$.[0].subscribeToNewsletter", equalTo(true)))
+                .andDo(document("api/events/registrations",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint())
+                ));
+
+        verify(this.registrationRepository).findAllByEventId(42);
         verifyNoMoreInteractions(this.eventRepository, this.postRepository, this.registrationRepository);
     }
 
