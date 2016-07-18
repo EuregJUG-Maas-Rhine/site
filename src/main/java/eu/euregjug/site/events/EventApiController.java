@@ -61,7 +61,16 @@ class EventApiController {
         return this.eventRepository.save(newEvent);
     }
 
-    // TODO: Choose wether to create a completly new posts or not. For the time being: just select one
+    /**
+     * Selects the event with the id {@code id}, the post with the id
+     * {@code postId} and links them together. If the event is linked to another
+     * post, this link is dropped. Returns a 404 if either event or post is not
+     * found.
+     *
+     * @param id The id of the event to link a post to
+     * @param postId The id of the post to link to the event
+     * @return The event with the linked post
+     */
     @RequestMapping(value = "/{id:\\d+}/post/{postId:\\d+}", method = PUT)
     @PreAuthorize("isAuthenticated()")
     @Transactional

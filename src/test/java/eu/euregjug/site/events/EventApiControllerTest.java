@@ -18,15 +18,16 @@ package eu.euregjug.site.events;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.euregjug.site.config.SecurityTestConfig;
 import eu.euregjug.site.events.EventEntity.Type;
+import eu.euregjug.site.posts.PostEntity;
 import eu.euregjug.site.posts.PostRepository;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import static java.util.stream.Collectors.toList;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
@@ -35,6 +36,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -149,6 +151,57 @@ public class EventApiControllerTest {
     }
 
     @Test
+    public void addPostShouldWork() throws Exception {
+        final ZonedDateTime eventDate = ZonedDateTime.of(2016, 9, 14, 18, 0, 0, 0, ZoneId.of("Europe/Berlin"));
+        final EventEntity event = Reflect.on(
+                new EventEntity(GregorianCalendar.from(eventDate), "name-1", "description-1")
+        ).set("id", 42).get();
+        final PostEntity post = Reflect.on(
+                new PostEntity(new Date(), "ruckblick-zum-aim42-vortrag-mit-gernot-starke", "Rückblick zum aim42 Vortrag mit Gernot Starke", "Am 7. April lud die Euregio JUG zusammen mit der http://www.inside-online.de/de/[inside Unternehmensgruppe] zu einem Vortrag von Gernot Starke zum Thema _aim42 - software architecture improvement_ ein.")
+        ).call("updateUpdatedAt").set("id", 23).get();
+
+        when(this.eventRepository.findOne(1)).thenReturn(Optional.empty());
+        when(this.eventRepository.findOne(42)).thenReturn(Optional.of(event));
+        when(this.postRepository.findOne(2)).thenReturn(Optional.empty());
+        when(this.postRepository.findOne(23)).thenReturn(Optional.of(post));
+
+        this.mvc.perform(
+                put("/api/events/{id}/post/{postId}", 1, 2)
+                .principal(() -> "euregjug")
+        ).andExpect(status().isNotFound());
+
+        this.mvc.perform(
+                put("/api/events/{id}/post/{postId}", 42, 2)
+                .principal(() -> "euregjug")
+        ).andExpect(status().isNotFound());
+
+        this.mvc.perform(
+                put("/api/events/{id}/post/{postId}", 1, 23)
+                .principal(() -> "euregjug")
+        ).andExpect(status().isNotFound());
+
+        this.mvc.perform(
+                put("/api/events/{id}/post/{postId}", 42, 23)
+                .principal(() -> "euregjug")
+        ).andExpect(status().isOk())
+                .andExpect(jsonPath("$.name", equalTo("name-1")))
+                .andExpect(jsonPath("$.description", equalTo("description-1")))
+                .andExpect(jsonPath("$.post.slug", equalTo(post.getSlug())))
+                .andExpect(jsonPath("$.post.title", equalTo(post.getTitle())))
+                .andExpect(jsonPath("$.post.content", equalTo(post.getContent())))
+                .andDo(document("api/events/-id-/post/-postId-",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint())
+                ));
+
+        verify(this.eventRepository, times(2)).findOne(1);
+        verify(this.eventRepository, times(2)).findOne(42);
+        verify(this.postRepository, times(2)).findOne(2);
+        verify(this.postRepository, times(2)).findOne(23);
+        verifyNoMoreInteractions(this.eventRepository, this.postRepository, this.registrationRepository);
+    }
+
+    @Test
     public void getShouldWork() throws Exception {
         final PageImpl page = new PageImpl(this.events);
 
@@ -183,7 +236,7 @@ public class EventApiControllerTest {
     public void getRegistrationsShouldWork() throws Exception {
         final List<RegistrationEntity> registrations = this.events.stream()
                 .filter(event -> event.getId() == 42)
-                .map(event -> new RegistrationEntity(event, "mail" + event.getId() + "@euregjug.eu", "name "+ event.getId(), "vorname " + event.getId(), event.getId() == 42))
+                .map(event -> new RegistrationEntity(event, "mail" + event.getId() + "@euregjug.eu", "name " + event.getId(), "vorname " + event.getId(), event.getId() == 42))
                 .collect(toList());
 
         when(this.registrationRepository.findAllByEventId(42)).thenReturn(registrations);
@@ -198,7 +251,7 @@ public class EventApiControllerTest {
                 .andExpect(jsonPath("$.[0].name", equalTo("name 42")))
                 .andExpect(jsonPath("$.[0].firstName", equalTo("vorname 42")))
                 .andExpect(jsonPath("$.[0].subscribeToNewsletter", equalTo(true)))
-                .andDo(document("api/events/registrations",
+                .andDo(document("api/events/-id-/registrations",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint())
                 ));
