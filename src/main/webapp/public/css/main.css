@@ -2695,7 +2695,7 @@
 			width: 100%;
 		}
 
-			.post .image img {
+			.post .image:not(a) img {
 				width: 100%;
 			}
 
