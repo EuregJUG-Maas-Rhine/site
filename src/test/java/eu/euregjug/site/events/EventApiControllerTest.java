@@ -18,12 +18,15 @@ package eu.euregjug.site.events;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.euregjug.site.config.SecurityTestConfig;
 import eu.euregjug.site.events.EventEntity.Type;
-import eu.euregjug.site.posts.PostEntity;
 import eu.euregjug.site.posts.PostRepository;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Optional;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
 import org.joor.Reflect;
 import org.junit.Before;
 import org.junit.Test;
@@ -38,6 +41,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -47,6 +52,7 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.pr
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -120,7 +126,49 @@ public class EventApiControllerTest {
         verify(this.eventRepository).save(any(EventEntity.class));
         verifyNoMoreInteractions(this.eventRepository, this.postRepository, this.registrationRepository);
     }
-    
+
+    @Test
+    public void getShouldWork() throws Exception {
+        ZonedDateTime eventDate;
+        eventDate = ZonedDateTime.of(2016, 9, 14, 18, 0, 0, 0, ZoneId.of("Europe/Berlin"));
+        final EventEntity event1 = Reflect.on(
+                new EventEntity(GregorianCalendar.from(eventDate), "name-1", "description-1")
+        ).set("id", 42).get();
+        event1.setDuration(60);
+
+        eventDate = ZonedDateTime.of(2016, 11, 22, 18, 0, 0, 0, ZoneId.of("Europe/Berlin"));
+        final EventEntity event2 = Reflect.on(
+                new EventEntity(GregorianCalendar.from(eventDate), "name-2", "description-2")
+        ).set("id", 23).get();
+        event1.setDuration(90);
+
+        final PageImpl page = new PageImpl(Arrays.asList(event1, event2));
+
+        when(this.eventRepository.findAll(any(Pageable.class))).thenReturn(page);
+
+        this.mvc
+                .perform(
+                        get("/api/events")
+                        .principal(() -> "euregjug")
+                )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.numberOfElements", equalTo(2)))
+                .andExpect(jsonPath("$.totalElements", equalTo(2)))
+                .andExpect(jsonPath("$.totalPages", equalTo(1)))
+                .andExpect(jsonPath("$.content", hasSize(2)))
+                .andExpect(jsonPath("$.content[0].name", equalTo("name-1")))
+                .andExpect(jsonPath("$.content[0].description", equalTo("description-1")))
+                .andExpect(jsonPath("$.content[1].name", equalTo("name-2")))
+                .andExpect(jsonPath("$.content[1].description", equalTo("description-2")))
+                .andDo(document("api/events/get",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint())
+                ));
+
+        verify(this.eventRepository).findAll(any(Pageable.class));
+        verifyNoMoreInteractions(this.eventRepository, this.postRepository, this.registrationRepository);
+    }
+
     @Test
     public void updateShouldShouldWork() throws Exception {
         final EventEntity updateEntity = new EventEntity(Calendar.getInstance(), "NewName", "NewDescription");
@@ -133,7 +181,7 @@ public class EventApiControllerTest {
         oldEntity.setDuration(60);
         oldEntity.setNeedsRegistration(false);
         oldEntity.setType(Type.meetup);
-        
+
         when(this.eventRepository.findOne(23)).thenReturn(Optional.empty());
         when(this.eventRepository.findOne(42)).thenReturn(Optional.of(oldEntity));
 
