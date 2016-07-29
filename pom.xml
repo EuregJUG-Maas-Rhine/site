@@ -54,7 +54,7 @@
     <java.version>1.8</java.version>
     <jquery.version>1.11.3</jquery.version>
     <respond.version>1.4.2</respond.version>
-    <rometools.version>1.6.0</rometools.version>
+    <rometools.version>1.7.0</rometools.version>
     <tika.version>1.12</tika.version>
   </properties>
 
@@ -187,7 +187,7 @@
     <dependency>
       <groupId>eu.michael-simons</groupId>
       <artifactId>java-syndication</artifactId>
-      <version>0.2.1</version>
+      <version>0.2.3</version>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
