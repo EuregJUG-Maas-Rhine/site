@@ -122,6 +122,13 @@ public class EventEntity implements Serializable {
     @Column(name = "duration")
     private Integer duration;
 
+    /**
+     * The speaker on that event (Optional).
+     */
+    @Column(name = "speaker", length = 256, nullable = true)
+    @Size(max = 256)
+    private String speaker;
+
     @ManyToOne(optional = true, fetch = FetchType.EAGER)
     @JoinColumn(name = "post_id", referencedColumnName = "id")
     @JsonIgnore
@@ -215,6 +222,14 @@ public class EventEntity implements Serializable {
 
     public void setDuration(final Integer duration) {
         this.duration = duration;
+    }
+
+    public String getSpeaker() {
+        return speaker;
+    }
+
+    public void setSpeaker(final String speaker) {
+        this.speaker = speaker;
     }
 
     public PostEntity getPost() {

@@ -60,6 +60,11 @@ final class EventsIcalView extends AbstractView {
             w.write("VERSION:2.0" + br);
             w.write("PRODID:http://www.euregjug.eu/events" + br);
             for (EventEntity event : events) {
+                final StringBuilder summaryBuilder = new StringBuilder(event.getName());
+                if (event.getSpeaker() != null) {
+                    summaryBuilder.append(" (").append(event.getSpeaker()).append(")");
+                }
+
                 final ZonedDateTime heldOn = event.getHeldOn().toInstant().atZone(zoneId);
                 w.write("BEGIN:VEVENT" + br);
                 w.write(String.format("UID:%d@euregjug.eu%s", event.getId(), br));
@@ -67,7 +72,7 @@ final class EventsIcalView extends AbstractView {
                 w.write("DTSTAMP:" + tstampFormat.format(event.getCreatedAt().toInstant().atZone(zoneId)) + br);
                 w.write("DTSTART:" + tstampFormat.format(heldOn) + br);
                 w.write("DTEND:" + tstampFormat.format(heldOn.plusMinutes(Optional.ofNullable(event.getDuration()).orElse(120))) + br);
-                w.write("SUMMARY:" + event.getName() + br);
+                w.write("SUMMARY:" + summaryBuilder.toString() + br);
                 w.write("DESCRIPTION:" + event.getDescription() + br);
                 w.write("URL:" + UriComponentsBuilder.fromHttpRequest(new ServletServerHttpRequest(request)).replacePath("/register/{eventId}").buildAndExpand(event.getId()) + br);
                 w.write("END:VEVENT" + br);

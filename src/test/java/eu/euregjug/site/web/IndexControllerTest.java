@@ -88,6 +88,7 @@ public class IndexControllerTest {
                 new EventEntity(GregorianCalendar.from(eventDate), "name-1", "desc-1")
         ).set("id", 23).set("createdAt", GregorianCalendar.from(eventDate)).get();
         event1.setDuration(60);
+        event1.setSpeaker("Farin Urlaub");
 
         final ZonedDateTime eventDate2 = ZonedDateTime.of(2016, 11, 22, 18, 0, 0, 0, ZoneId.of("Europe/Berlin"));
         final EventEntity event2 = Reflect.on(
@@ -114,7 +115,7 @@ public class IndexControllerTest {
                         + "DTSTAMP:20160707T170000Z" + br
                         + "DTSTART:20160707T170000Z" + br
                         + "DTEND:20160707T180000Z" + br
-                        + "SUMMARY:name-1" + br
+                        + "SUMMARY:name-1 (Farin Urlaub)" + br
                         + "DESCRIPTION:desc-1" + br
                         + "URL:http://euregjug.eu/register/23" + br
                         + "END:VEVENT" + br

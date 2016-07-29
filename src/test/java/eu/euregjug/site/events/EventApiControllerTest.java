@@ -266,6 +266,7 @@ public class EventApiControllerTest {
         updateEntity.setDuration(90);
         updateEntity.setNeedsRegistration(true);
         updateEntity.setType(Type.talk);
+        updateEntity.setSpeaker("Mark Paluch");
         final EventEntity oldEntity = Reflect.on(
                 new EventEntity(Calendar.getInstance(), "Mark Paluch - Hallo, ich bin Redis", "Mark spricht in diesem Vortrag über den Open Source NoSQL Data Store Redis. Der Vortrag ist eine Einführung in Redis und veranschaulicht mit Hilfe von Code-Beispielen, wie Redis mit Spring Data, Hibernate OGM und plain Java verwendet werden kann. Der Vortrag findet bei Thinking Networks in Aachen statt.")
         ).set("id", 42).get();
@@ -302,6 +303,7 @@ public class EventApiControllerTest {
                 .andExpect(jsonPath("$.description", equalTo(updateEntity.getDescription())))
                 .andExpect(jsonPath("$.duration", equalTo(updateEntity.getDuration())))
                 .andExpect(jsonPath("$.needsRegistration", equalTo(true)))
+                .andExpect(jsonPath("$.speaker", equalTo(updateEntity.getSpeaker())))
                 .andExpect(jsonPath("$.type", equalTo("talk")))
                 .andDo(document("api/events/update/updated",
                         preprocessRequest(prettyPrint()),
