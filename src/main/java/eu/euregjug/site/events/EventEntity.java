@@ -129,6 +129,13 @@ public class EventEntity implements Serializable {
     @Size(max = 256)
     private String speaker;
 
+    /**
+     * Location of this event, usually an unstructured address.
+     */
+    @Column(name = "location", length = 2048)
+    @Size(max = 2048)
+    private String location;
+
     @ManyToOne(optional = true, fetch = FetchType.EAGER)
     @JoinColumn(name = "post_id", referencedColumnName = "id")
     @JsonIgnore
@@ -230,6 +237,14 @@ public class EventEntity implements Serializable {
 
     public void setSpeaker(final String speaker) {
         this.speaker = speaker;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(final String location) {
+        this.location = location;
     }
 
     public PostEntity getPost() {

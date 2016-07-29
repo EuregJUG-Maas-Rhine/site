@@ -89,6 +89,7 @@ public class IndexControllerTest {
         ).set("id", 23).set("createdAt", GregorianCalendar.from(eventDate)).get();
         event1.setDuration(60);
         event1.setSpeaker("Farin Urlaub");
+        event1.setLocation("Am Strand\n4223 Schlaraffenland\n\nirgendwo");
 
         final ZonedDateTime eventDate2 = ZonedDateTime.of(2016, 11, 22, 18, 0, 0, 0, ZoneId.of("Europe/Berlin"));
         final EventEntity event2 = Reflect.on(
@@ -118,6 +119,7 @@ public class IndexControllerTest {
                         + "SUMMARY:name-1 (Farin Urlaub)" + br
                         + "DESCRIPTION:desc-1" + br
                         + "URL:http://euregjug.eu/register/23" + br
+                        + "LOCATION: Am Strand, 4223 Schlaraffenland, irgendwo" + br
                         + "END:VEVENT" + br
                         + "BEGIN:VEVENT" + br
                         + "UID:42@euregjug.eu" + br

@@ -105,6 +105,7 @@ class EventApiController {
         eventEntity.setNeedsRegistration(updatedEvent.isNeedsRegistration());
         eventEntity.setType(updatedEvent.getType());
         eventEntity.setSpeaker(updatedEvent.getSpeaker());
+        eventEntity.setLocation(updatedEvent.getLocation());
         return eventEntity;
     }
 }

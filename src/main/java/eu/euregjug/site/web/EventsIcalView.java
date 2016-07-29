@@ -75,6 +75,9 @@ final class EventsIcalView extends AbstractView {
                 w.write("SUMMARY:" + summaryBuilder.toString() + br);
                 w.write("DESCRIPTION:" + event.getDescription() + br);
                 w.write("URL:" + UriComponentsBuilder.fromHttpRequest(new ServletServerHttpRequest(request)).replacePath("/register/{eventId}").buildAndExpand(event.getId()) + br);
+                if (event.getLocation() != null) {
+                   w.write("LOCATION: " + event.getLocation().replaceAll("\\n+", ", ") + br);
+                }
                 w.write("END:VEVENT" + br);
             }
             w.write("END:VCALENDAR" + br);
