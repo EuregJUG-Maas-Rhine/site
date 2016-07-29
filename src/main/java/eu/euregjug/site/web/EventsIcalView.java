@@ -43,12 +43,22 @@ import org.springframework.web.util.UriComponentsBuilder;
 final class EventsIcalView extends AbstractView {
 
     public static final String ICS_LINEBREAK = "\r\n";
+    private static final int MAX_LINE_LENGTH = 75;
 
     private final DateTimeFormatter tstampFormat = DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss'Z'", Locale.ENGLISH).withZone(ZoneId.of("UTC"));
     private final ZoneId zoneId = ZoneId.systemDefault();
 
     EventsIcalView() {
         super.setContentType("text/calendar");
+    }
+
+    String formatLine(final StringBuilder s) {
+        final int l = s.length() / MAX_LINE_LENGTH;
+        int cnt = 0;
+        for (int i = 1; i <= l; ++i) {
+            s.insert(i * MAX_LINE_LENGTH + (ICS_LINEBREAK.length() * cnt++), ICS_LINEBREAK + " ");
+        }
+        return s.toString();
     }
 
     @Override
@@ -61,7 +71,7 @@ final class EventsIcalView extends AbstractView {
             w.write("VERSION:2.0" + ICS_LINEBREAK);
             w.write("PRODID:http://www.euregjug.eu/events" + ICS_LINEBREAK);
             for (EventEntity event : events) {
-                final StringBuilder summaryBuilder = new StringBuilder(event.getName());
+                final StringBuilder summaryBuilder = new StringBuilder("SUMMARY:").append(event.getName());
                 if (event.getSpeaker() != null) {
                     summaryBuilder.append(" (").append(event.getSpeaker()).append(")");
                 }
@@ -73,11 +83,11 @@ final class EventsIcalView extends AbstractView {
                 w.write("DTSTAMP:" + tstampFormat.format(event.getCreatedAt().toInstant().atZone(zoneId)) + ICS_LINEBREAK);
                 w.write("DTSTART:" + tstampFormat.format(heldOn) + ICS_LINEBREAK);
                 w.write("DTEND:" + tstampFormat.format(heldOn.plusMinutes(Optional.ofNullable(event.getDuration()).orElse(120))) + ICS_LINEBREAK);
-                w.write("SUMMARY:" + summaryBuilder.toString() + ICS_LINEBREAK);
-                w.write("DESCRIPTION:" + event.getDescription() + ICS_LINEBREAK);
+                w.write(formatLine(summaryBuilder) + ICS_LINEBREAK);
+                w.write(formatLine(new StringBuilder("DESCRIPTION:").append(event.getDescription())) + ICS_LINEBREAK);
                 w.write("URL:" + UriComponentsBuilder.fromHttpRequest(new ServletServerHttpRequest(request)).replacePath("/register/{eventId}").buildAndExpand(event.getId()) + ICS_LINEBREAK);
                 if (event.getLocation() != null) {
-                   w.write("LOCATION: " + event.getLocation().replaceAll("\\n+", ", ") + ICS_LINEBREAK);
+                    w.write("LOCATION: " + event.getLocation().replaceAll("\\n+", ", ") + ICS_LINEBREAK);
                 }
                 w.write("END:VEVENT" + ICS_LINEBREAK);
             }
