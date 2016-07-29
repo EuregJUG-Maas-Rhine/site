@@ -125,7 +125,7 @@ public class EventEntity implements Serializable {
     /**
      * The speaker on that event (Optional).
      */
-    @Column(name = "speaker", length = 256, nullable = true)
+    @Column(name = "speaker", length = 256)
     @Size(max = 256)
     private String speaker;
 
