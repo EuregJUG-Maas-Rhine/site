@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 EuregJUG.
+ * Copyright 2015-2016 EuregJUG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,47 +23,47 @@ import java.util.Date;
 /**
  * @author Michael J. Simons, 2015-12-28
  */
-public class Post implements Serializable {
+public final class Post implements Serializable {
 
     private static final long serialVersionUID = 5598037121835514804L;
-    
+
     private final LocalDate publishedOn;
-    
+
     private final String slug;
-    
+
     private final String title;
-    
+
     private final String content;
 
-    public Post(final Date publishedOn, String slug, String title, String content) {
-	this.publishedOn = publishedOn instanceof java.sql.Date? ((java.sql.Date)publishedOn).toLocalDate() : publishedOn.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-	this.slug = slug;
-	this.title = title;
-	this.content = content;
+    public Post(final Date publishedOn, final String slug, final String title, final String content) {
+        this.publishedOn = publishedOn instanceof java.sql.Date ? ((java.sql.Date) publishedOn).toLocalDate() : publishedOn.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        this.slug = slug;
+        this.title = title;
+        this.content = content;
     }
 
     /**
      * Maps an entity to a post without rendering the content.
-     * 
-     * @param postEntity 
+     *
+     * @param postEntity
      */
-    public Post(PostEntity postEntity) {
-	this(postEntity.getPublishedOn(), postEntity.getSlug(), postEntity.getTitle(), null);
+    public Post(final PostEntity postEntity) {
+        this(postEntity.getPublishedOn(), postEntity.getSlug(), postEntity.getTitle(), null);
     }
-    
+
     public LocalDate getPublishedOn() {
-	return publishedOn;
+        return publishedOn;
     }
 
     public String getSlug() {
-	return slug;
+        return slug;
     }
-    
+
     public String getTitle() {
-	return title;
+        return title;
     }
 
     public String getContent() {
-	return content;
+        return content;
     }
 }

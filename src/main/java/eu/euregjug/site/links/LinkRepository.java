@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 EuregJUG.
+ * Copyright 2015-2016 EuregJUG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,12 @@
 package eu.euregjug.site.links;
 
 import java.util.List;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.Repository;
 
 /**
  * @author Michael J. Simons, 2015-12-27
  */
-public interface LinkRepository extends JpaRepository<LinkEntity, Integer> {
+public interface LinkRepository extends Repository<LinkEntity, Integer> {
 
     List<LinkEntity> findAllByOrderByTypeAscSortColAscTitleAsc();
 }

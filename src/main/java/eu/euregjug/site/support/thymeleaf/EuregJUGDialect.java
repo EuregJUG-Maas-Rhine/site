@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 michael-simons.eu.
+ * Copyright 2015-2016 EuregJUG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,17 +28,17 @@ import org.thymeleaf.dialect.IExpressionEnhancingDialect;
  *
  * @author Michael J. Simons, 2015-01-04
  */
-public class EuregJUGDialect extends AbstractDialect implements IExpressionEnhancingDialect {
+public final class EuregJUGDialect extends AbstractDialect implements IExpressionEnhancingDialect {
 
     @Override
     public String getPrefix() {
-	return "eur";
+        return "eur";
     }
 
     @Override
-    public Map<String, Object> getAdditionalExpressionObjects(IProcessingContext processingContext) {
-	final Map<String, Object> expressionObjects = new HashMap<>();
-	expressionObjects.put("temporals", new Temporals(processingContext.getContext().getLocale()));
-	return expressionObjects;
+    public Map<String, Object> getAdditionalExpressionObjects(final IProcessingContext processingContext) {
+        final Map<String, Object> expressionObjects = new HashMap<>();
+        expressionObjects.put("temporals", new Temporals(processingContext.getContext().getLocale()));
+        return expressionObjects;
     }
 }

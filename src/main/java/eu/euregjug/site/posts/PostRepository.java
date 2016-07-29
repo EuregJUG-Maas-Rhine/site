@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 EuregJUG.
+ * Copyright 2015-2016 EuregJUG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,15 +16,59 @@
 package eu.euregjug.site.posts;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.repository.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author Michael J. Simons, 2015-12-28
  */
-public interface PostRepository extends JpaRepository<PostEntity, Integer>, PostRepositoryExt {
+public interface PostRepository extends Repository<PostEntity, Integer>, PostRepositoryExt {
 
+    /**
+     * Saves the given post.
+     *
+     * @param entity
+     * @return Persisted post
+     */
+    PostEntity save(PostEntity entity);
+
+    /**
+     * @param id
+     * @return Post with the given Id or an empty optional
+     */
     @Transactional(readOnly = true)
-    public Optional<PostEntity> findByPublishedOnAndSlug(final Date publishedOn, final String slug);
+    Optional<PostEntity> findOne(final Integer id);
+
+    /**
+     * Selects a post by date and slug.
+     *
+     * @param publishedOn
+     * @param slug
+     * @return
+     */
+    @Transactional(readOnly = true)
+    Optional<PostEntity> findByPublishedOnAndSlug(final Date publishedOn, final String slug);
+
+    /**
+     * Selects a "page" of posts.
+     *
+     * @param pageable
+     * @return
+     */
+    @Transactional(readOnly = true)
+    Page<PostEntity> findAll(Pageable pageable);
+
+    /**
+     * Selects all posts sorted by the specified sort.
+     *
+     * @param sort
+     * @return
+     */
+    @Transactional(readOnly = true)
+    List<PostEntity> findAll(Sort sort);
 }

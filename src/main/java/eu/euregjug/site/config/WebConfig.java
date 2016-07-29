@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 EuregJUG.
+ * Copyright 2015-2016 EuregJUG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,31 +35,31 @@ import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 public class WebConfig extends WebMvcConfigurerAdapter {
 
     @Override
-    public void addViewControllers(ViewControllerRegistry registry) {
-	registry.addViewController("/about").setViewName("about");
+    public void addViewControllers(final ViewControllerRegistry registry) {
+        registry.addViewController("/about").setViewName("about");
     }
 
     @Bean
     public EuregJUGDialect enSupplyDialect() {
-	return new EuregJUGDialect();
+        return new EuregJUGDialect();
     }
 
     @Bean
     public LocaleResolver localeResolver() {
-	final CookieLocaleResolver rv = new CookieLocaleResolver();
-	rv.setDefaultLocale(Locale.ENGLISH);
-	return rv;
+        final CookieLocaleResolver rv = new CookieLocaleResolver();
+        rv.setDefaultLocale(Locale.ENGLISH);
+        return rv;
     }
 
     @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-	final LocaleChangeInterceptor localeChangeInterceptor = new LocaleChangeInterceptor();
-	localeChangeInterceptor.setParamName("lang");
-	registry.addInterceptor(localeChangeInterceptor);
+    public void addInterceptors(final InterceptorRegistry registry) {
+        final LocaleChangeInterceptor localeChangeInterceptor = new LocaleChangeInterceptor();
+        localeChangeInterceptor.setParamName("lang");
+        registry.addInterceptor(localeChangeInterceptor);
     }
 
     @Override
-    public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
-	configurer.mediaType("ics", MediaType.valueOf("text/calendar"));
+    public void configureContentNegotiation(final ContentNegotiationConfigurer configurer) {
+        configurer.mediaType("ics", MediaType.valueOf("text/calendar"));
     }
 }

@@ -44,9 +44,9 @@ public class LinkEntity implements Serializable {
     /**
      * Types of links
      */
-    public static enum Type {
+    public enum Type {
 
-	generic, profile, sponsor
+        generic, profile, sponsor
     }
 
     /**
@@ -66,7 +66,7 @@ public class LinkEntity implements Serializable {
     @Enumerated(EnumType.STRING)
     @NotNull
     private Type type = Type.generic;
-    
+
     /**
      * Target of the link.
      */
@@ -74,110 +74,111 @@ public class LinkEntity implements Serializable {
     @URL
     @Size(max = 1024)
     private String target;
-    
+
     /**
      * Title of the link.
      */
-    @Column(name = "title", length = 512, nullable = false)    
+    @Column(name = "title", length = 512, nullable = false)
     @Size(max = 512)
     private String title;
-    
-    @Column(name = "sort_col", nullable = false)    
+
+    @Column(name = "sort_col", nullable = false)
     private Integer sortCol = 0;
-    
+
     /**
      * An optional font-awesome or similar icon.
      */
-    @Column(name = "icon", length = 128)    
+    @Column(name = "icon", length = 128)
     @Size(max = 128)
     private String icon;
-    
+
     /**
-     * An optional, local image resoure relative to {@code /img}. 
+     * An optional, local image resoure relative to {@code /img}.
      */
-    @Column(name = "local_image_resource", length = 128)    
+    @Column(name = "local_image_resource", length = 128)
     @Size(max = 128)
     private String localImageResource;
 
     /**
      * Needed for Hibernate, not to be called by application code.
      */
+    @SuppressWarnings({"squid:S2637"})
     protected LinkEntity() {
     }
 
-    public LinkEntity(String target, String title) {
-	this.target = target;
-	this.title = title;
+    public LinkEntity(final String target, final String title) {
+        this.target = target;
+        this.title = title;
     }
 
     @JsonProperty
     public Integer getId() {
-	return id;
-    }
-    
-    public Type getType() {
-	return type;
+        return id;
     }
 
-    public void setType(Type type) {
-	this.type = type;
+    public Type getType() {
+        return type;
+    }
+
+    public void setType(final Type type) {
+        this.type = type;
     }
 
     public String getTarget() {
-	return target;
+        return target;
     }
 
     public String getTitle() {
-	return title;
+        return title;
     }
 
-    public void setTitle(String title) {
-	this.title = title;
+    public void setTitle(final String title) {
+        this.title = title;
     }
 
     public Integer getSortCol() {
-	return sortCol;
+        return sortCol;
     }
 
-    public void setSortCol(Integer sortCol) {
-	this.sortCol = sortCol;
+    public void setSortCol(final Integer sortCol) {
+        this.sortCol = sortCol;
     }
-    
+
     public String getIcon() {
-	return icon;
+        return icon;
     }
 
-    public void setIcon(String icon) {
-	this.icon = icon;
+    public void setIcon(final String icon) {
+        this.icon = icon;
     }
 
     public String getLocalImageResource() {
-	return localImageResource;
+        return localImageResource;
     }
 
-    public void setLocalImageResource(String localImageResource) {
-	this.localImageResource = localImageResource;
+    public void setLocalImageResource(final String localImageResource) {
+        this.localImageResource = localImageResource;
     }
 
     @Override
     public int hashCode() {
-	int hash = 7;
-	hash = 29 * hash + Objects.hashCode(this.target);
-	return hash;
+        int hash = 7;
+        hash = 29 * hash + Objects.hashCode(this.target);
+        return hash;
     }
 
     @Override
-    public boolean equals(Object obj) {
-	if (this == obj) {
-	    return true;
-	}
-	if (obj == null) {
-	    return false;
-	}
-	if (getClass() != obj.getClass()) {
-	    return false;
-	}
-	final LinkEntity other = (LinkEntity) obj;
-	return Objects.equals(this.target, other.target);
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final LinkEntity other = (LinkEntity) obj;
+        return Objects.equals(this.target, other.target);
     }
 }

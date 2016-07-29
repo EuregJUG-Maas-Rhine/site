@@ -21,7 +21,7 @@ import java.util.Optional;
  * @author Michael J. Simons, 2015-12-29
  */
 public interface PostRepositoryExt {
-    public Optional<PostEntity> getPrevious(final PostEntity post);
-    
-    public Optional<PostEntity> getNext(final PostEntity post);
+    Optional<PostEntity> getPrevious(final PostEntity post);
+
+    Optional<PostEntity> getNext(final PostEntity post);
 }

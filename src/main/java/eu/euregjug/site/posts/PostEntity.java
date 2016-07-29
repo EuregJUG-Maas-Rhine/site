@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 EuregJUG.
+ * Copyright 2015-2016 EuregJUG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,8 @@
 package eu.euregjug.site.posts;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
 import java.text.Normalizer;
@@ -53,37 +55,38 @@ import org.hibernate.validator.constraints.NotBlank;
  */
 @Entity
 @Table(
-	name = "posts",
-	uniqueConstraints = {
-	    @UniqueConstraint(name = "posts_uk", columnNames = {"published_on", "slug"})
-	}
+        name = "posts",
+        uniqueConstraints = {
+            @UniqueConstraint(name = "posts_uk", columnNames = {"published_on", "slug"})
+        }
 )
 @NamedEntityGraph(name = "PostEntity.linkable",
-	attributeNodes = {
-	    @NamedAttributeNode("publishedOn"),
-	    @NamedAttributeNode("slug"),
-	    @NamedAttributeNode("title")}
+        attributeNodes = {
+            @NamedAttributeNode("publishedOn"),
+            @NamedAttributeNode("slug"),
+            @NamedAttributeNode("title")}
 )
 @NamedQueries({
-	// Named query for older posts relative to the current 	 
-	@NamedQuery(name = "PostEntity.getPrevious",		
-		query
-    		= "Select p1 from PostEntity p1, PostEntity p2 "
-		+ " where p2.id = :id "
-		+ "   and p1.id <> p2.id "
-		+ "   and (p1.publishedOn < p2.publishedOn or (p1.publishedOn = p2.publishedOn and p1.createdAt < p2.createdAt)) "
-		+ " order by p1.publishedOn desc, p1.createdAt desc "
-	),
-	// Named query for newer posts relative to the current 
-	@NamedQuery(name = "PostEntity.getNext",		
-		query
-    		= "Select p1 from PostEntity p1, PostEntity p2 "
-		+ " where p2.id = :id "
-		+ "   and p1.id <> p2.id "
-		+ "   and (p1.publishedOn > p2.publishedOn or (p1.publishedOn = p2.publishedOn and p1.createdAt > p2.createdAt)) "
-		+ " order by p1.publishedOn asc, p1.createdAt asc "
-	)
+        // Named query for older posts relative to the current
+        @NamedQuery(name = "PostEntity.getPrevious",
+                query
+                = "Select p1 from PostEntity p1, PostEntity p2 "
+                + " where p2.id = :id "
+                + "   and p1.id <> p2.id "
+                + "   and (p1.publishedOn < p2.publishedOn or (p1.publishedOn = p2.publishedOn and p1.createdAt < p2.createdAt)) "
+                + " order by p1.publishedOn desc, p1.createdAt desc "
+        ),
+        // Named query for newer posts relative to the current
+        @NamedQuery(name = "PostEntity.getNext",
+                query
+                = "Select p1 from PostEntity p1, PostEntity p2 "
+                + " where p2.id = :id "
+                + "   and p1.id <> p2.id "
+                + "   and (p1.publishedOn > p2.publishedOn or (p1.publishedOn = p2.publishedOn and p1.createdAt > p2.createdAt)) "
+                + " order by p1.publishedOn asc, p1.createdAt asc "
+        )
 })
+@JsonInclude(Include.NON_EMPTY)
 public class PostEntity implements Serializable {
 
     private static final long serialVersionUID = -2488354242899068540L;
@@ -91,9 +94,9 @@ public class PostEntity implements Serializable {
     /**
      * Textformat of a post.
      */
-    public static enum Format {
+    public enum Format {
 
-	asciidoc, markdown
+        asciidoc, markdown
     }
 
     /**
@@ -165,23 +168,24 @@ public class PostEntity implements Serializable {
     /**
      * Needed for Hibernate, not to be called by application code.
      */
+    @SuppressWarnings({"squid:S2637"})
     protected PostEntity() {
     }
 
-    public PostEntity(Date publishedOn, String slug, String title, String content) {
-	this.publishedOn = publishedOn;
-	this.slug = slug;
-	this.title = title;
-	this.content = content;
-	this.createdAt = Calendar.getInstance();
+    public PostEntity(final Date publishedOn, final String slug, final String title, final String content) {
+        this.publishedOn = publishedOn;
+        this.slug = slug;
+        this.title = title;
+        this.content = content;
+        this.createdAt = Calendar.getInstance();
     }
 
-    final String generateSlug(final String slug, final String title) {
-	String rv = slug;
-	if(rv == null || rv.trim().isEmpty()) {
-	    rv = Normalizer.normalize(title.toLowerCase(), Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}|[^\\w\\s]", "").replaceAll("[\\s-]+", " ").trim().replaceAll("\\s", "-");
-	}
-	return rv;
+    final String generateSlug(final String suggestedSlug, final String newTitle) {
+        String rv = suggestedSlug;
+        if (rv == null || rv.trim().isEmpty()) {
+            rv = Normalizer.normalize(newTitle.toLowerCase(), Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}|[^\\w\\s]", "").replaceAll("[\\s-]+", " ").trim().replaceAll("\\s", "-");
+        }
+        return rv;
     }
 
     /**
@@ -190,81 +194,81 @@ public class PostEntity implements Serializable {
     @PrePersist
     @PreUpdate
     void updateUpdatedAt() {
-	if (this.createdAt == null) {
-	    this.createdAt = Calendar.getInstance();
-	}
-	this.slug = generateSlug(slug, title);
-	this.updatedAt = Calendar.getInstance();
+        if (this.createdAt == null) {
+            this.createdAt = Calendar.getInstance();
+        }
+        this.slug = generateSlug(slug, title);
+        this.updatedAt = Calendar.getInstance();
     }
 
     @JsonProperty
     public Integer getId() {
-	return id;
+        return id;
     }
 
     public Date getPublishedOn() {
-	return publishedOn;
+        return publishedOn;
     }
 
     public String getSlug() {
-	return slug;
+        return slug;
     }
 
     public String getTitle() {
-	return title;
+        return title;
     }
 
-    public void setTitle(String title) {
-	this.title = title;
+    public void setTitle(final String title) {
+        this.title = title;
     }
 
     public String getContent() {
-	return content;
+        return content;
     }
 
-    public void setContent(String content) {
-	this.content = content;
+    public void setContent(final String content) {
+        this.content = content;
     }
 
     public Format getFormat() {
-	return format;
+        return format;
     }
 
-    public void setFormat(Format format) {
-	this.format = format;
+    public void setFormat(final Format format) {
+        this.format = format;
     }
 
     public Calendar getCreatedAt() {
-	return createdAt;
+        return createdAt;
     }
 
     public Calendar getUpdatedAt() {
-	return updatedAt;
+        return updatedAt;
     }
 
     @Override
     public int hashCode() {
-	int hash = 7;
-	hash = 37 * hash + Objects.hashCode(this.publishedOn);
-	hash = 37 * hash + Objects.hashCode(this.slug);
-	return hash;
+        int hash = 7;
+        hash = 37 * hash + Objects.hashCode(this.publishedOn);
+        hash = 37 * hash + Objects.hashCode(this.slug);
+        return hash;
     }
 
     @Override
-    public boolean equals(Object obj) {
-	if (this == obj) {
-	    return true;
-	}
-	if (obj == null) {
-	    return false;
-	}
-	if (getClass() != obj.getClass()) {
-	    return false;
-	}
-	final PostEntity other = (PostEntity) obj;
-	if (!Objects.equals(this.slug, other.slug)) {
-	    return false;
-	}
-	return Objects.equals(this.publishedOn, other.publishedOn);
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final PostEntity other = (PostEntity) obj;
+        if (!Objects.equals(this.slug, other.slug)) {
+            return false;
+        }
+        return Objects.equals(this.publishedOn, other.publishedOn);
     }
 }

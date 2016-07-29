@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 michael-simons.eu.
+ * Copyright 2015-2016 EuregJUG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,8 +38,8 @@ public final class Temporals {
      *
      * @param locale The locale of this instance
      */
-    public Temporals(Locale locale) {
-	this.locale = locale;
+    public Temporals(final Locale locale) {
+        this.locale = locale;
     }
 
     /**
@@ -51,8 +51,8 @@ public final class Temporals {
      * @param timeStyle The chosen time style
      * @return Formatted object
      */
-    public String formatDateTime(TemporalAccessor temporal, FormatStyle dateStyle, FormatStyle timeStyle) {
-	return DateTimeFormatter.ofLocalizedDateTime(dateStyle, timeStyle).withLocale(this.locale).format(temporal);
+    public String formatDateTime(final TemporalAccessor temporal, final FormatStyle dateStyle, final FormatStyle timeStyle) {
+        return DateTimeFormatter.ofLocalizedDateTime(dateStyle, timeStyle).withLocale(this.locale).format(temporal);
     }
 
     /**
@@ -63,8 +63,8 @@ public final class Temporals {
      * @param dateStyle The chosen date style
      * @return Formatted object
      */
-    public String formatDate(TemporalAccessor temporal, FormatStyle dateStyle) {
-	return DateTimeFormatter.ofLocalizedDate(dateStyle).withLocale(this.locale).format(temporal);
+    public String formatDate(final TemporalAccessor temporal, final FormatStyle dateStyle) {
+        return DateTimeFormatter.ofLocalizedDate(dateStyle).withLocale(this.locale).format(temporal);
     }
 
     /**
@@ -74,7 +74,7 @@ public final class Temporals {
      * @param pattern The pattern to format the year-mont
      * @return Formatted object
      */
-    public String format(TemporalAccessor temporal, String pattern) {
-	return DateTimeFormatter.ofPattern(pattern, locale).format(temporal);
-    }    
+    public String format(final TemporalAccessor temporal, final String pattern) {
+        return DateTimeFormatter.ofPattern(pattern, locale).format(temporal);
+    }
 }

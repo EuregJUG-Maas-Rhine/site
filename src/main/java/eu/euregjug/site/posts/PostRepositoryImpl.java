@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 EuregJUG.
+ * Copyright 2015-2016 EuregJUG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@ package eu.euregjug.site.posts;
 import java.util.Optional;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -29,35 +28,38 @@ public class PostRepositoryImpl implements PostRepositoryExt {
 
     private final EntityManager entityManager;
 
-    @Autowired
-    public PostRepositoryImpl(EntityManager entityManager) {
-	this.entityManager = entityManager;
+    public PostRepositoryImpl(final EntityManager entityManager) {
+        this.entityManager = entityManager;
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<PostEntity> getPrevious(PostEntity post) {
-	return getRelatedPost("PostEntity.getPrevious", post);
+    public Optional<PostEntity> getPrevious(final PostEntity post) {
+        return getRelatedPost("PostEntity.getPrevious", post);
     }
-    
+
     @Override
     @Transactional(readOnly = true)
-    public Optional<PostEntity> getNext(PostEntity post) {
-	return getRelatedPost("PostEntity.getNext", post);
+    public Optional<PostEntity> getNext(final PostEntity post) {
+        return getRelatedPost("PostEntity.getNext", post);
     }
-    
-    Optional<PostEntity> getRelatedPost(final String query, PostEntity post) {
-	Optional<PostEntity> rv;
-	try {
-	    rv = Optional.of(
-		    entityManager.createNamedQuery(query, PostEntity.class)
-		    .setParameter("id", post.getId())
-		    .setMaxResults(1)
-		    .getSingleResult()
-	    );
-	} catch (NoResultException e) {
-	    rv = Optional.empty();
-	}
-	return rv;
+
+    Optional<PostEntity> getRelatedPost(final String query, final PostEntity post) {
+        Optional<PostEntity> rv;
+        try {
+            rv = Optional.of(
+                    entityManager.createNamedQuery(query, PostEntity.class)
+                    .setParameter("id", post.getId())
+                    .setMaxResults(1)
+                    .getSingleResult()
+            );
+        } catch (@SuppressWarnings({"squid:S1166"}) NoResultException e) {
+            // The only reason the query call is implemented manually
+            // is the fact the I cannot use @Query and limiting
+            // the result set in a database agnostic way
+            // (for example through the method name (findXXX) or an annotation)
+            rv = Optional.empty();
+        }
+        return rv;
     }
 }

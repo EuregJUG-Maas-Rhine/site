@@ -37,20 +37,20 @@ public class SecurityConfig {
     @ConditionalOnBean(SecurityConfig.class)
     protected static class ApplicationWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
 
-	@Override
-	protected void configure(final HttpSecurity http) throws Exception {
-	    http
-		.httpBasic()
-		    .and()
-		.authorizeRequests()
-		    .antMatchers("/**").permitAll()
-		    .and()
-		.sessionManagement()
-		    .sessionCreationPolicy(SessionCreationPolicy.NEVER)		    
-		    .enableSessionUrlRewriting(false)
-		    .and()		   
-		.csrf()
-		    .disable();
-	}
+        @Override
+        protected void configure(final HttpSecurity http) throws Exception {
+            http
+                .httpBasic()
+                    .and()
+                .authorizeRequests()
+                    .antMatchers("/**").permitAll()
+                    .and()
+                .sessionManagement()
+                    .sessionCreationPolicy(SessionCreationPolicy.NEVER)
+                    .enableSessionUrlRewriting(false)
+                    .and()
+                .csrf()
+                    .disable();
+        }
     }
 }
