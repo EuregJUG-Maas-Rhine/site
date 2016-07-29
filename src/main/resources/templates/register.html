@@ -37,7 +37,7 @@
 		    <div th:if="${registered}">
 			<p><a href="#" class="button" th:href="@{/}" th:text="#{homeLink}">Index</a></p>
 		    </div>		    
-		    <div th:unless="${registered}">
+		    <div th:unless="${registered || !event.needsRegistration}">
 			<div class="alerts" th:if="${alerts != null and alerts.size() > 0}" >			
 			    <span th:each="alert : ${alerts}" th:text="#{${alert}}">alert</span>			    			
 			</div> 		

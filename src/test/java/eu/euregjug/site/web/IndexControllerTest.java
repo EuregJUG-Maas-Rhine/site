@@ -16,6 +16,7 @@
 package eu.euregjug.site.web;
 
 import com.github.mkopylec.recaptcha.validation.RecaptchaValidator;
+import eu.euregjug.site.config.MailChimpConfig;
 import eu.euregjug.site.events.EventEntity;
 import eu.euregjug.site.events.EventRepository;
 import eu.euregjug.site.events.RegistrationService;
@@ -27,10 +28,10 @@ import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Optional;
 import org.joor.Reflect;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -46,6 +47,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 /**
  *
@@ -55,14 +57,17 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @ActiveProfiles("test")
 @WebMvcTest(
         controllers = IndexController.class,
-        secure = false,        
-        // Need the custom view component as well...
-        includeFilters = @ComponentScan.Filter(classes = EventsIcalView.class, type = FilterType.ASSIGNABLE_TYPE)
+        secure = false,
+        // Need the custom view component and config as well...
+        includeFilters = @ComponentScan.Filter(
+                type = FilterType.ASSIGNABLE_TYPE,
+                classes = {EventsIcalView.class, MailChimpConfig.class}
+        )
 )
 @EnableSpringDataWebSupport // Needed to enable resolving of Pageable and other parameters
 @MockBean(classes = {
-    RegistrationService.class, 
-    LinkRepository.class, 
+    RegistrationService.class,
+    LinkRepository.class,
     PostRepository.class,
     PostRenderingService.class,
     RecaptchaValidator.class
@@ -93,7 +98,7 @@ public class IndexControllerTest {
 
     @Test
     public void eventsShouldWork() throws Exception {
-        when(this.eventRepository.findUpcomingEvents()).thenReturn(events); 
+        when(this.eventRepository.findUpcomingEvents()).thenReturn(events);
         final String br = "\r\n";
         this.mvc
                 .perform(get("http://euregjug.eu/events.ics").accept("text/calendar"))
@@ -129,4 +134,19 @@ public class IndexControllerTest {
         verifyNoMoreInteractions(this.eventRepository);
     }
 
+    @Test
+    public void registerFormShouldWork() throws Exception {
+        when(this.eventRepository.findOne(23)).thenReturn(Optional.of(this.events.get(0)));
+
+        this.mvc
+                .perform(get("http://euregjug.eu/register/{eventId}", 23))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.view().name("register"))
+                .andExpect(MockMvcResultMatchers.model().attribute("registered", false))
+                .andExpect(MockMvcResultMatchers.model().attribute("event", this.events.get(0)))
+                .andExpect(MockMvcResultMatchers.model().attributeExists("registration"));
+
+        verify(this.eventRepository).findOne(23);
+        verifyNoMoreInteractions(this.eventRepository);
+    }
 }

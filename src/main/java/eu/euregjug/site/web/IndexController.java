@@ -173,6 +173,9 @@ class IndexController {
             if (!model.containsAttribute("registration")) {
                 model.addAttribute("registration", new Registration());
             }
+            if (!model.containsAttribute("registered")) {
+                model.addAttribute("registered", false);
+            }
             rv = "register";
         }
         return rv;
