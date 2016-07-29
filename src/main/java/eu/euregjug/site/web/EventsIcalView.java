@@ -17,6 +17,7 @@ package eu.euregjug.site.web;
 
 import eu.euregjug.site.events.EventEntity;
 import java.io.BufferedWriter;
+import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.time.ZoneId;
@@ -28,8 +29,10 @@ import java.util.Map;
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.view.AbstractView;
+import org.springframework.web.util.UriComponentsBuilder;
 
 /**
  * Super simple (if not primitive) iCal / ics View for EuregJUG events.
@@ -48,7 +51,7 @@ final class EventsIcalView extends AbstractView {
     }
 
     @Override
-    protected void renderMergedOutputModel(final Map<String, Object> model, final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+    protected void renderMergedOutputModel(final Map<String, Object> model, final HttpServletRequest request, final HttpServletResponse response) throws IOException {
         final List<EventEntity> events = (List<EventEntity>) model.get("events");
         super.setResponseContentType(request, response);
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());
@@ -66,6 +69,7 @@ final class EventsIcalView extends AbstractView {
                 w.write("DTEND:" + tstampFormat.format(heldOn.plusMinutes(Optional.ofNullable(event.getDuration()).orElse(120))) + br);
                 w.write("SUMMARY:" + event.getName() + br);
                 w.write("DESCRIPTION:" + event.getDescription() + br);
+                w.write("URL:" + UriComponentsBuilder.fromHttpRequest(new ServletServerHttpRequest(request)).replacePath("/register/{eventId}").buildAndExpand(event.getId()) + br);
                 w.write("END:VEVENT" + br);
             }
             w.write("END:VCALENDAR" + br);

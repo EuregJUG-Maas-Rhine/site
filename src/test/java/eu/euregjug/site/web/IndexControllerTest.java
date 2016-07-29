@@ -55,7 +55,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @ActiveProfiles("test")
 @WebMvcTest(
         controllers = IndexController.class,
-        secure = false,
+        secure = false,        
         // Need the custom view component as well...
         includeFilters = @ComponentScan.Filter(classes = EventsIcalView.class, type = FilterType.ASSIGNABLE_TYPE)
 )
@@ -81,7 +81,7 @@ public class IndexControllerTest {
         final ZonedDateTime eventDate = ZonedDateTime.of(2016, 7, 7, 19, 0, 0, 0, ZoneId.of("Europe/Berlin"));
         final EventEntity event1 = Reflect.on(
                 new EventEntity(GregorianCalendar.from(eventDate), "name-1", "desc-1")
-        ).set("id", 42).set("createdAt", GregorianCalendar.from(eventDate)).get();
+        ).set("id", 23).set("createdAt", GregorianCalendar.from(eventDate)).get();
         event1.setDuration(60);
 
         final ZonedDateTime eventDate2 = ZonedDateTime.of(2016, 11, 22, 18, 0, 0, 0, ZoneId.of("Europe/Berlin"));
@@ -93,34 +93,37 @@ public class IndexControllerTest {
 
     @Test
     public void eventsShouldWork() throws Exception {
-        when(this.eventRepository.findUpcomingEvents()).thenReturn(events);        
+        when(this.eventRepository.findUpcomingEvents()).thenReturn(events); 
+        final String br = "\r\n";
         this.mvc
-                .perform(get("/events.ics").accept("text/calendar"))
+                .perform(get("http://euregjug.eu/events.ics").accept("text/calendar"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("text/calendar"))
                 .andExpect(content().string(""
-                        + "BEGIN:VCALENDAR\r\n"
-                        + "VERSION:2.0\r\n"
-                        + "PRODID:http://www.euregjug.eu/events\r\n"
-                        + "BEGIN:VEVENT\r\n"
-                        + "UID:42@euregjug.eu\r\n"
-                        + "ORGANIZER:EuregJUG\r\n"
-                        + "DTSTAMP:20160707T170000Z\r\n"
-                        + "DTSTART:20160707T170000Z\r\n"
-                        + "DTEND:20160707T180000Z\r\n"
-                        + "SUMMARY:name-1\r\n"
-                        + "DESCRIPTION:desc-1\r\n"
-                        + "END:VEVENT\r\n"
-                        + "BEGIN:VEVENT\r\n"
-                        + "UID:42@euregjug.eu\r\n"
-                        + "ORGANIZER:EuregJUG\r\n"
-                        + "DTSTAMP:20161122T170000Z\r\n"
-                        + "DTSTART:20161122T170000Z\r\n"
-                        + "DTEND:20161122T190000Z\r\n"
-                        + "SUMMARY:name-2\r\n"
-                        + "DESCRIPTION:desc-2\r\n"
-                        + "END:VEVENT\r\n"
-                        + "END:VCALENDAR\r\n"));
+                        + "BEGIN:VCALENDAR" + br
+                        + "VERSION:2.0" + br
+                        + "PRODID:http://www.euregjug.eu/events" + br
+                        + "BEGIN:VEVENT" + br
+                        + "UID:23@euregjug.eu" + br
+                        + "ORGANIZER:EuregJUG" + br
+                        + "DTSTAMP:20160707T170000Z" + br
+                        + "DTSTART:20160707T170000Z" + br
+                        + "DTEND:20160707T180000Z" + br
+                        + "SUMMARY:name-1" + br
+                        + "DESCRIPTION:desc-1" + br
+                        + "URL:http://euregjug.eu/register/23" + br
+                        + "END:VEVENT" + br
+                        + "BEGIN:VEVENT" + br
+                        + "UID:42@euregjug.eu" + br
+                        + "ORGANIZER:EuregJUG" + br
+                        + "DTSTAMP:20161122T170000Z" + br
+                        + "DTSTART:20161122T170000Z" + br
+                        + "DTEND:20161122T190000Z" + br
+                        + "SUMMARY:name-2" + br
+                        + "DESCRIPTION:desc-2" + br
+                        + "URL:http://euregjug.eu/register/42" + br
+                        + "END:VEVENT" + br
+                        + "END:VCALENDAR" + br));
 
         verify(this.eventRepository).findUpcomingEvents();
         verifyNoMoreInteractions(this.eventRepository);
