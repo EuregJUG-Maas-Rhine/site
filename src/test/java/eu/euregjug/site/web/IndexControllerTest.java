@@ -23,6 +23,7 @@ import eu.euregjug.site.events.RegistrationService;
 import eu.euregjug.site.links.LinkRepository;
 import eu.euregjug.site.posts.PostRenderingService;
 import eu.euregjug.site.posts.PostRepository;
+import static eu.euregjug.site.web.EventsIcalView.ICS_LINEBREAK;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
@@ -101,37 +102,36 @@ public class IndexControllerTest {
     @Test
     public void eventsShouldWork() throws Exception {
         when(this.eventRepository.findUpcomingEvents()).thenReturn(events);
-        final String br = "\r\n";
         this.mvc
                 .perform(get("http://euregjug.eu/events.ics").accept("text/calendar"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("text/calendar"))
                 .andExpect(content().string(""
-                        + "BEGIN:VCALENDAR" + br
-                        + "VERSION:2.0" + br
-                        + "PRODID:http://www.euregjug.eu/events" + br
-                        + "BEGIN:VEVENT" + br
-                        + "UID:23@euregjug.eu" + br
-                        + "ORGANIZER:EuregJUG" + br
-                        + "DTSTAMP:20160707T170000Z" + br
-                        + "DTSTART:20160707T170000Z" + br
-                        + "DTEND:20160707T180000Z" + br
-                        + "SUMMARY:name-1 (Farin Urlaub)" + br
-                        + "DESCRIPTION:desc-1" + br
-                        + "URL:http://euregjug.eu/register/23" + br
-                        + "LOCATION: Am Strand, 4223 Schlaraffenland, irgendwo" + br
-                        + "END:VEVENT" + br
-                        + "BEGIN:VEVENT" + br
-                        + "UID:42@euregjug.eu" + br
-                        + "ORGANIZER:EuregJUG" + br
-                        + "DTSTAMP:20161122T170000Z" + br
-                        + "DTSTART:20161122T170000Z" + br
-                        + "DTEND:20161122T190000Z" + br
-                        + "SUMMARY:name-2" + br
-                        + "DESCRIPTION:desc-2" + br
-                        + "URL:http://euregjug.eu/register/42" + br
-                        + "END:VEVENT" + br
-                        + "END:VCALENDAR" + br));
+                        + "BEGIN:VCALENDAR" + ICS_LINEBREAK
+                        + "VERSION:2.0" + ICS_LINEBREAK
+                        + "PRODID:http://www.euregjug.eu/events" + ICS_LINEBREAK
+                        + "BEGIN:VEVENT" + ICS_LINEBREAK
+                        + "UID:23@euregjug.eu" + ICS_LINEBREAK
+                        + "ORGANIZER:EuregJUG" + ICS_LINEBREAK
+                        + "DTSTAMP:20160707T170000Z" + ICS_LINEBREAK
+                        + "DTSTART:20160707T170000Z" + ICS_LINEBREAK
+                        + "DTEND:20160707T180000Z" + ICS_LINEBREAK
+                        + "SUMMARY:name-1 (Farin Urlaub)" + ICS_LINEBREAK
+                        + "DESCRIPTION:desc-1" + ICS_LINEBREAK
+                        + "URL:http://euregjug.eu/register/23" + ICS_LINEBREAK
+                        + "LOCATION: Am Strand, 4223 Schlaraffenland, irgendwo" + ICS_LINEBREAK
+                        + "END:VEVENT" + ICS_LINEBREAK
+                        + "BEGIN:VEVENT" + ICS_LINEBREAK
+                        + "UID:42@euregjug.eu" + ICS_LINEBREAK
+                        + "ORGANIZER:EuregJUG" + ICS_LINEBREAK
+                        + "DTSTAMP:20161122T170000Z" + ICS_LINEBREAK
+                        + "DTSTART:20161122T170000Z" + ICS_LINEBREAK
+                        + "DTEND:20161122T190000Z" + ICS_LINEBREAK
+                        + "SUMMARY:name-2" + ICS_LINEBREAK
+                        + "DESCRIPTION:desc-2" + ICS_LINEBREAK
+                        + "URL:http://euregjug.eu/register/42" + ICS_LINEBREAK
+                        + "END:VEVENT" + ICS_LINEBREAK
+                        + "END:VCALENDAR" + ICS_LINEBREAK));
 
         verify(this.eventRepository).findUpcomingEvents();
         verifyNoMoreInteractions(this.eventRepository);
