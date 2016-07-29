@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 EuregJUG.
+ * Copyright 2015-2016 EuregJUG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,6 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -54,8 +53,7 @@ public class LinkEntity implements Serializable {
      */
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.AUTO, generator = "links_id_seq_generator")
-    @SequenceGenerator(name = "links_id_seq_generator", sequenceName = "links_id_seq")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonIgnore
     private Integer id;
 
