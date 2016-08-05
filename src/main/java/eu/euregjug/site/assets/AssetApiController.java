@@ -25,8 +25,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.tika.Tika;
 import org.apache.tika.io.TikaInputStream;
 import org.apache.tika.mime.MediaType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -43,6 +41,7 @@ import static java.time.format.DateTimeFormatter.RFC_1123_DATE_TIME;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import static java.time.ZoneId.of;
 import static java.time.ZonedDateTime.now;
+import lombok.extern.slf4j.Slf4j;
 import static org.springframework.http.HttpStatus.CREATED;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
@@ -51,9 +50,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  */
 @Controller
 @RequestMapping("/api/assets")
+@Slf4j
 class AssetApiController {
-
-    public static final Logger LOGGER = LoggerFactory.getLogger(AssetApiController.class.getPackage().getName());
 
     private final Tika tika;
 
@@ -82,7 +80,7 @@ class AssetApiController {
                 try {
                     mediaType = MediaType.parse(tika.detect(usedStream, assetData.getOriginalFilename()));
                 } catch (IOException e) {
-                    LOGGER.warn("Could not detect content type", e);
+                    log.warn("Could not detect content type", e);
                 }
                 this.gridFs.store(assetData.getInputStream(), assetData.getOriginalFilename(), Optional.ofNullable(mediaType).map(MediaType::toString).orElse(null));
                 return assetData.getOriginalFilename();

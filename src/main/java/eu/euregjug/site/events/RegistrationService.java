@@ -20,14 +20,13 @@ import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 import java.util.regex.Pattern;
+import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Entities.EscapeMode;
 import org.jsoup.parser.Parser;
 import org.jsoup.safety.Cleaner;
 import org.jsoup.safety.Whitelist;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.mail.MailException;
@@ -43,9 +42,8 @@ import org.thymeleaf.spring4.SpringTemplateEngine;
  * @author Michael J. Simons, 2015-12-29
  */
 @Service
+@Slf4j
 public class RegistrationService {
-
-    public static final Logger LOGGER = LoggerFactory.getLogger(RegistrationService.class.getPackage().getName());
 
     public static class InvalidRegistrationException extends RuntimeException {
 
@@ -141,10 +139,10 @@ public class RegistrationService {
                 message.setText(htmlTextToPlainText(htmlText), htmlText);
 
             });
-            LOGGER.info("Sent confirmation email for '{}' to '{}'.", registrationEntity.getEvent().getName(), registrationEntity.getEmail());
+            log.info("Sent confirmation email for '{}' to '{}'.", registrationEntity.getEvent().getName(), registrationEntity.getEmail());
         } catch (MailException e) {
-            LOGGER.warn("Could not send an email to {} for event '{}': {}", registrationEntity.getEmail(), registrationEntity.getEvent().getName(), e.getMessage());
-            LOGGER.debug("Full error", e);
+            log.warn("Could not send an email to {} for event '{}': {}", registrationEntity.getEmail(), registrationEntity.getEvent().getName(), e.getMessage());
+            log.debug("Full error", e);
         }
     }
 

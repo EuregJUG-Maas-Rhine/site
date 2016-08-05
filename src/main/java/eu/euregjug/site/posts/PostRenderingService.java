@@ -16,11 +16,10 @@
 package eu.euregjug.site.posts;
 
 import eu.euregjug.site.posts.PostEntity.Format;
+import lombok.extern.slf4j.Slf4j;
 import org.asciidoctor.Asciidoctor;
 import org.asciidoctor.Options;
 import org.asciidoctor.OptionsBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -30,9 +29,8 @@ import org.springframework.stereotype.Service;
  * @author Michael J. Simons, 2015-12-28
  */
 @Service
+@Slf4j
 public class PostRenderingService {
-
-    public static final Logger LOGGER = LoggerFactory.getLogger(PostRenderingService.class.getPackage().getName());
 
     @FunctionalInterface
     interface Renderer {
@@ -51,7 +49,7 @@ public class PostRenderingService {
             try {
                 rv = asciidoctor.render(content, options);
             } catch (Exception e) {
-                LOGGER.error("Could not render AsciiDoc content!", e);
+                log.error("Could not render AsciiDoc content!", e);
                 rv = "<strong>Could not render content.</strong>";
             }
             return rv;
