@@ -21,26 +21,44 @@ import eu.euregjug.site.events.EventEntity;
 import eu.euregjug.site.events.EventRepository;
 import eu.euregjug.site.events.RegistrationService;
 import eu.euregjug.site.links.LinkRepository;
+import eu.euregjug.site.posts.Post;
+import eu.euregjug.site.posts.PostEntity;
 import eu.euregjug.site.posts.PostRenderingService;
 import eu.euregjug.site.posts.PostRepository;
 import static eu.euregjug.site.web.EventsIcalView.ICS_LINEBREAK;
+import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
+import org.hamcrest.CoreMatchers;
+import static org.hamcrest.CoreMatchers.containsString;
 import org.joor.Reflect;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
+import org.springframework.boot.autoconfigure.MessageSourceAutoConfiguration;
+import org.springframework.boot.autoconfigure.cache.CacheAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -49,6 +67,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.xpath;
 
 /**
  *
@@ -62,15 +81,18 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
         // Need the custom view component and config as well...
         includeFilters = @ComponentScan.Filter(
                 type = FilterType.ASSIGNABLE_TYPE,
-                classes = {EventsIcalView.class, MailChimpConfig.class}
+                classes = {
+                    EventsIcalView.class,
+                    IndexRssView.class,
+                    MailChimpConfig.class,
+                    PostRenderingService.class // PostRenderService cannot be mocked (again: @Cacheable)
+                }
         )
 )
+@ImportAutoConfiguration(MessageSourceAutoConfiguration.class)
 @EnableSpringDataWebSupport // Needed to enable resolving of Pageable and other parameters
 @MockBean(classes = {
     RegistrationService.class,
-    LinkRepository.class,
-    PostRepository.class,
-    PostRenderingService.class,
     RecaptchaValidator.class
 })
 public class IndexControllerTest {
@@ -81,7 +103,15 @@ public class IndexControllerTest {
     @MockBean
     private EventRepository eventRepository;
 
+    @MockBean
+    private PostRepository postRepository;
+
+    @MockBean
+    private LinkRepository linkRepository;
+
     private final List<EventEntity> events;
+
+    private final List<PostEntity> posts;
 
     public IndexControllerTest() {
         final ZonedDateTime eventDate = ZonedDateTime.of(2016, 7, 7, 19, 0, 0, 0, ZoneId.of("Europe/Berlin"));
@@ -97,6 +127,10 @@ public class IndexControllerTest {
                 new EventEntity(GregorianCalendar.from(eventDate2), "name-2", "desc-2")
         ).set("id", 42).set("createdAt", GregorianCalendar.from(eventDate2)).get();
         this.events = Arrays.asList(event1, event2);
+
+        this.posts = new ArrayList<>();
+        this.posts.add(Reflect.on(new PostEntity(Date.from(LocalDate.of(2016, 8, 5).atStartOfDay(ZoneId.of("Europe/Berlin")).toInstant()), "foo", "foo", "foo")).set("id", 2).get());
+        this.posts.add(Reflect.on(new PostEntity(Date.from(LocalDate.of(2016, 8, 4).atStartOfDay(ZoneId.of("Europe/Berlin")).toInstant()), "bar", "bar", "bar")).set("id", 1).get());
     }
 
     @Test
@@ -151,5 +185,39 @@ public class IndexControllerTest {
 
         verify(this.eventRepository).findOne(23);
         verifyNoMoreInteractions(this.eventRepository);
+    }
+
+    @Test
+    public void feedShouldWork() throws Exception {
+        when(this.eventRepository.findUpcomingEvents()).thenReturn(events);
+        final PageRequest pageRequest = new PageRequest(1, 5, Sort.Direction.DESC, "publishedOn", "createdAt");
+        final PageImpl<PostEntity> postsPage = new PageImpl<>(this.posts, pageRequest, 15);
+        when(this.postRepository.findAll(pageRequest)).thenReturn(postsPage);
+        when(this.linkRepository.findAllByOrderByTypeAscSortColAscTitleAsc()).thenReturn(new ArrayList<>());
+
+        this.mvc
+                .perform(
+                        get("http://euregjug.eu/feed.rss")
+                        .param("page", "1")
+                        .locale(Locale.ENGLISH)
+                        .accept("application/rss+xml"))
+                .andExpect(xpath("/rss/channel/title").string("EuregJUG Maas-Rhine - All things JVM!"))
+                .andExpect(xpath("/rss/channel/link").string("http://euregjug.eu"))
+                .andExpect(xpath("/rss/channel/description").string("RSS Feed from EuregJUG, the Java User Group for the Euregio Maas-Rhine (Aachen, Maastricht, Liege)."))
+                .andExpect(xpath("/rss/channel/pubDate").string("Thu, 04 Aug 2016 22:00:00 GMT"))
+                .andExpect(xpath("/rss/channel/lastBuildDate").string("Thu, 04 Aug 2016 22:00:00 GMT"))
+                .andExpect(xpath("/rss/channel/generator").string("https://github.com/EuregJUG-Maas-Rhine/site"))
+                .andExpect(xpath("/rss/channel/*[local-name() = 'link' and @rel='previous']/@href").string("http://euregjug.eu/feed.rss?page=0"))
+                .andExpect(xpath("/rss/channel/*[local-name() = 'link' and @rel='self']/@href").string("http://euregjug.eu/feed.rss?page=1"))
+                .andExpect(xpath("/rss/channel/*[local-name() = 'link' and @rel='next']/@href").string("http://euregjug.eu/feed.rss?page=2"))
+                .andExpect(xpath("/rss/channel/*[local-name() = 'link' and @rel='next']/@href").string("http://euregjug.eu/feed.rss?page=2"))
+                .andExpect(xpath("/rss/channel/item").nodeCount(2))
+                .andExpect(xpath("/rss/channel/item[2]/title").string("bar"))
+                .andExpect(xpath("/rss/channel/item[2]/link").string("http://euregjug.eu/2016/8/4/bar"))
+                .andExpect(xpath("/rss/channel/item[2]/*[local-name() = 'encoded']").string(containsString("bar")))
+                .andExpect(xpath("/rss/channel/item[2]/pubDate").string("Wed, 03 Aug 2016 22:00:00 GMT"))
+                .andExpect(xpath("/rss/channel/item[2]/author").string("euregjug.eu"))
+                .andExpect(xpath("/rss/channel/item[2]/guid").string("http://euregjug.eu/2016/8/4/bar"))
+                .andExpect(status().isOk());
     }
 }
