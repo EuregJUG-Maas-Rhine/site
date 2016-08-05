@@ -17,6 +17,7 @@ package eu.euregjug.site.posts;
 
 import eu.euregjug.site.support.ResourceNotFoundException;
 import javax.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -37,15 +38,12 @@ import static org.springframework.web.bind.annotation.RequestMethod.PUT;
  * @author Michael J. Simons, 2015-12-28
  */
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/posts")
 class PostApiController {
 
     private final PostRepository postRepository;
-
-    PostApiController(final PostRepository postRepository) {
-        this.postRepository = postRepository;
-    }
-
+    
     @RequestMapping(method = POST)
     @PreAuthorize("isAuthenticated()")
     @ResponseStatus(CREATED)

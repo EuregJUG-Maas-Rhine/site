@@ -56,12 +56,14 @@ import static java.util.stream.Collectors.toList;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import static java.util.stream.Collectors.groupingBy;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author Michael J. Simons, 2015-12-27
  */
 @Controller
+@RequiredArgsConstructor
 @Slf4j
 class IndexController {
 
@@ -76,22 +78,6 @@ class IndexController {
     private final PostRenderingService postRenderingService;
 
     private final RecaptchaValidator recaptchaValidator;
-
-    IndexController(
-            final EventRepository eventRepository,
-            final RegistrationService registrationService,
-            final LinkRepository linkRepository,
-            final PostRepository postRepository,
-            final PostRenderingService postRenderingService,
-            final RecaptchaValidator recaptchaValidator
-    ) {
-        this.eventRepository = eventRepository;
-        this.registrationService = registrationService;
-        this.linkRepository = linkRepository;
-        this.postRepository = postRepository;
-        this.postRenderingService = postRenderingService;
-        this.recaptchaValidator = recaptchaValidator;
-    }
 
     @RequestMapping({"", "/", "/feed"})
     public String index(

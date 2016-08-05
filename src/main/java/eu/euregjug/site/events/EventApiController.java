@@ -20,6 +20,7 @@ import eu.euregjug.site.posts.PostRepository;
 import eu.euregjug.site.support.ResourceNotFoundException;
 import java.util.List;
 import javax.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import static org.springframework.http.HttpStatus.CREATED;
@@ -39,6 +40,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  * @author Michael J. Simons, 2015-12-27
  */
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/events")
 class EventApiController {
 
@@ -47,12 +49,6 @@ class EventApiController {
     private final PostRepository postRepository;
 
     private final RegistrationRepository registrationRepository;
-
-    EventApiController(final EventRepository eventRepository, final PostRepository postRepository, final RegistrationRepository registrationRepository) {
-        this.eventRepository = eventRepository;
-        this.postRepository = postRepository;
-        this.registrationRepository = registrationRepository;
-    }
 
     @RequestMapping(method = POST)
     @PreAuthorize("isAuthenticated()")

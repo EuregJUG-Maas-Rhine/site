@@ -41,6 +41,7 @@ import static java.time.format.DateTimeFormatter.RFC_1123_DATE_TIME;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import static java.time.ZoneId.of;
 import static java.time.ZonedDateTime.now;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import static org.springframework.http.HttpStatus.CREATED;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -50,17 +51,13 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  */
 @Controller
 @RequestMapping("/api/assets")
+@RequiredArgsConstructor
 @Slf4j
 class AssetApiController {
 
-    private final Tika tika;
+    private final Tika tika = new Tika();
 
     private final GridFsTemplate gridFs;
-
-    AssetApiController(final GridFsTemplate gridFs) {
-        this.tika = new Tika();
-        this.gridFs = gridFs;
-    }
 
     @RequestMapping(method = POST)
     @PreAuthorize("isAuthenticated()")
