@@ -82,7 +82,7 @@ class IndexRssView extends AbstractRssFeedView {
 
         final String self = getAbsoluteUrl(request, "/feed.rss");
         final List<Link> atomLinks = new ArrayList<>();
-        atomLinks.add(new SyndicationLink().withRel("previous").withType(super.getContentType()).withHref(self).getLink());
+        atomLinks.add(new SyndicationLink().withRel("self").withType(super.getContentType()).withHref(String.format("%s?page=%d", self, posts.getNumber())).getLink());
         if (posts.hasPrevious()) {
             atomLinks.add(new SyndicationLink()
                     .withRel("previous")
