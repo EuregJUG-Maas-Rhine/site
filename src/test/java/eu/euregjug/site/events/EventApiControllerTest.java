@@ -29,9 +29,12 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Optional;
 import static java.util.stream.Collectors.toList;
+import org.hamcrest.Matchers;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.nullValue;
 import org.joor.Reflect;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -123,11 +126,14 @@ public class EventApiControllerTest {
     public void createShouldWork() throws Exception {
         final EventEntity eventEntity = new EventEntity(Calendar.getInstance(), "Mark Paluch - Hallo, ich bin Redis", "Mark spricht in diesem Vortrag über den Open Source NoSQL Data Store Redis. Der Vortrag ist eine Einführung in Redis und veranschaulicht mit Hilfe von Code-Beispielen, wie Redis mit Spring Data, Hibernate OGM und plain Java verwendet werden kann. Der Vortrag findet bei Thinking Networks in Aachen statt.");
         eventEntity.setNeedsRegistration(true);
-        eventEntity.setType(Type.talk);
+        eventEntity.setType(Type.talk);        
+        eventEntity.setPost(new PostEntity(new Date(), "foo", "foo", "foo"));
+        Reflect.on(eventEntity).set("id", 30).get();
         
         when(this.eventRepository.save(any(EventEntity.class))).then(invocation -> {
             // Do the stuff JPA would do for us...
-            final EventEntity rv = invocation.getArgumentAt(0, EventEntity.class);
+            final EventEntity rv = invocation.getArgumentAt(0, EventEntity.class);            
+            Assert.assertThat(rv.getId(), nullValue());
             return Reflect.on(rv).call("prePersistAndUpdate").set("id", 4712).get();
         });
         
@@ -141,6 +147,7 @@ public class EventApiControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id", equalTo(4712)))
                 .andExpect(jsonPath("$.name", equalTo(eventEntity.getName())))
+                .andExpect(jsonPath("$.post").doesNotExist())
                 .andDo(document("api/events/create",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint())

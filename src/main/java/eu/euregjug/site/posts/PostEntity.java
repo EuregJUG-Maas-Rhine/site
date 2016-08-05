@@ -47,6 +47,8 @@ import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.validator.constraints.NotBlank;
 
 /**
@@ -105,6 +107,7 @@ public class PostEntity implements Serializable {
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonIgnore
+    @Getter(onMethod = @__(@JsonProperty))
     private Integer id;
 
     /**
@@ -113,6 +116,7 @@ public class PostEntity implements Serializable {
     @Column(name = "published_on", nullable = false)
     @Temporal(TemporalType.DATE)
     @NotNull
+    @Getter
     private Date publishedOn;
 
     /**
@@ -120,6 +124,7 @@ public class PostEntity implements Serializable {
      */
     @Column(name = "slug", length = 512, nullable = false)
     @Size(max = 512)
+    @Getter
     private String slug;
 
     /**
@@ -128,6 +133,7 @@ public class PostEntity implements Serializable {
     @Column(name = "title", length = 512, nullable = false)
     @NotBlank
     @Size(max = 512)
+    @Getter @Setter
     private String title;
 
     /**
@@ -137,6 +143,7 @@ public class PostEntity implements Serializable {
     @Lob
     @Basic(fetch = FetchType.EAGER)
     @NotBlank
+    @Getter @Setter
     private String content;
 
     /**
@@ -145,6 +152,7 @@ public class PostEntity implements Serializable {
     @Column(name = "format")
     @Enumerated(EnumType.STRING)
     @NotNull
+    @Getter @Setter
     private Format format = Format.asciidoc;
 
     /**
@@ -153,6 +161,7 @@ public class PostEntity implements Serializable {
     @Column(name = "created_at", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     @JsonIgnore
+    @Getter
     private Calendar createdAt;
 
     /**
@@ -161,6 +170,7 @@ public class PostEntity implements Serializable {
     @Column(name = "updated_at", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     @JsonIgnore
+    @Getter
     private Calendar updatedAt;
 
     /**
@@ -197,51 +207,6 @@ public class PostEntity implements Serializable {
         }
         this.slug = generateSlug(slug, title);
         this.updatedAt = Calendar.getInstance();
-    }
-
-    @JsonProperty
-    public Integer getId() {
-        return id;
-    }
-
-    public Date getPublishedOn() {
-        return publishedOn;
-    }
-
-    public String getSlug() {
-        return slug;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(final String title) {
-        this.title = title;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(final String content) {
-        this.content = content;
-    }
-
-    public Format getFormat() {
-        return format;
-    }
-
-    public void setFormat(final Format format) {
-        this.format = format;
-    }
-
-    public Calendar getCreatedAt() {
-        return createdAt;
-    }
-
-    public Calendar getUpdatedAt() {
-        return updatedAt;
     }
 
     @Override

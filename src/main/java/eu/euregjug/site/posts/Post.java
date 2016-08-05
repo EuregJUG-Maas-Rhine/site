@@ -19,10 +19,12 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
+import lombok.Getter;
 
 /**
  * @author Michael J. Simons, 2015-12-28
  */
+@Getter
 public final class Post implements Serializable {
 
     private static final long serialVersionUID = 5598037121835514804L;
@@ -49,21 +51,5 @@ public final class Post implements Serializable {
      */
     public Post(final PostEntity postEntity) {
         this(postEntity.getPublishedOn(), postEntity.getSlug(), postEntity.getTitle(), null);
-    }
-
-    public LocalDate getPublishedOn() {
-        return publishedOn;
-    }
-
-    public String getSlug() {
-        return slug;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getContent() {
-        return content;
     }
 }

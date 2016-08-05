@@ -43,6 +43,8 @@ import javax.validation.constraints.Size;
 import org.hibernate.validator.constraints.NotBlank;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Represents events for the EuregJUG.
@@ -76,6 +78,7 @@ public class EventEntity implements Serializable {
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonIgnore
+    @Getter(onMethod = @__(@JsonProperty))
     private Integer id;
 
     /**
@@ -84,6 +87,7 @@ public class EventEntity implements Serializable {
     @Column(name = "held_on", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     @NotNull
+    @Getter
     private Calendar heldOn;
 
     /**
@@ -92,6 +96,7 @@ public class EventEntity implements Serializable {
     @Column(name = "name", length = 512, nullable = false)
     @NotBlank
     @Size(max = 512)
+    @Getter
     private String name;
 
     /**
@@ -100,6 +105,7 @@ public class EventEntity implements Serializable {
     @Column(name = "description", length = 2048, nullable = false)
     @NotBlank
     @Size(max = 2048)
+    @Getter @Setter
     private String description;
 
     /**
@@ -107,17 +113,20 @@ public class EventEntity implements Serializable {
      * {@code false}.
      */
     @Column(name = "needs_registration", nullable = false)
+    @Getter @Setter
     private boolean needsRegistration = false;
 
     @Column(name = "type")
     @Enumerated(EnumType.STRING)
     @NotNull
+    @Getter @Setter
     private Type type = Type.talk;
 
     /**
      * Optional duration in minutes.
      */
     @Column(name = "duration")
+    @Getter @Setter
     private Integer duration;
 
     /**
@@ -125,6 +134,7 @@ public class EventEntity implements Serializable {
      */
     @Column(name = "speaker", length = 256)
     @Size(max = 256)
+    @Getter @Setter
     private String speaker;
 
     /**
@@ -132,11 +142,13 @@ public class EventEntity implements Serializable {
      */
     @Column(name = "location", length = 2048)
     @Size(max = 2048)
+    @Getter @Setter
     private String location;
 
     @ManyToOne(optional = true, fetch = FetchType.EAGER)
     @JoinColumn(name = "post_id", referencedColumnName = "id")
     @JsonIgnore
+    @Getter(onMethod = @__(@JsonProperty)) @Setter(onMethod = @__(@JsonIgnore))
     private PostEntity post;
 
     /**
@@ -145,6 +157,7 @@ public class EventEntity implements Serializable {
     @Column(name = "created_at", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     @JsonIgnore
+    @Getter
     private Calendar createdAt;
 
     /**
@@ -176,86 +189,12 @@ public class EventEntity implements Serializable {
         }
     }
 
-    @JsonProperty
-    public Integer getId() {
-        return id;
-    }
-
-    public Calendar getHeldOn() {
-        return heldOn;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(final String description) {
-        this.description = description;
-    }
-
-    public boolean isNeedsRegistration() {
-        return needsRegistration;
-    }
-
-    public void setNeedsRegistration(final boolean needsRegistration) {
-        this.needsRegistration = needsRegistration;
-    }
-
     /**
      * @return True if the event is still open for registration
      */
     @JsonIgnore
     public boolean isOpen() {
         return this.heldOn.after(Calendar.getInstance());
-    }
-
-    public Type getType() {
-        return type;
-    }
-
-    public void setType(final Type type) {
-        this.type = type;
-    }
-
-    public Integer getDuration() {
-        return duration;
-    }
-
-    public void setDuration(final Integer duration) {
-        this.duration = duration;
-    }
-
-    public String getSpeaker() {
-        return speaker;
-    }
-
-    public void setSpeaker(final String speaker) {
-        this.speaker = speaker;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(final String location) {
-        this.location = location;
-    }
-
-    public PostEntity getPost() {
-        return post;
-    }
-
-    @JsonProperty
-    public void setPost(final PostEntity post) {
-        this.post = post;
-    }
-
-    public Calendar getCreatedAt() {
-        return createdAt;
     }
 
     @Override

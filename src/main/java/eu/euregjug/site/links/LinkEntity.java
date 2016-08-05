@@ -29,6 +29,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.validator.constraints.URL;
 
 /**
@@ -55,6 +57,7 @@ public class LinkEntity implements Serializable {
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonIgnore
+    @Getter(onMethod = @__(@JsonProperty))
     private Integer id;
 
     /**
@@ -63,6 +66,7 @@ public class LinkEntity implements Serializable {
     @Column(name = "type")
     @Enumerated(EnumType.STRING)
     @NotNull
+    @Getter @Setter
     private Type type = Type.generic;
 
     /**
@@ -71,6 +75,7 @@ public class LinkEntity implements Serializable {
     @Column(name = "target", length = 1024, nullable = false, unique = true)
     @URL
     @Size(max = 1024)
+    @Getter
     private String target;
 
     /**
@@ -78,9 +83,11 @@ public class LinkEntity implements Serializable {
      */
     @Column(name = "title", length = 512, nullable = false)
     @Size(max = 512)
+    @Getter @Setter
     private String title;
 
     @Column(name = "sort_col", nullable = false)
+    @Getter @Setter
     private Integer sortCol = 0;
 
     /**
@@ -88,6 +95,7 @@ public class LinkEntity implements Serializable {
      */
     @Column(name = "icon", length = 128)
     @Size(max = 128)
+    @Getter @Setter
     private String icon;
 
     /**
@@ -95,6 +103,7 @@ public class LinkEntity implements Serializable {
      */
     @Column(name = "local_image_resource", length = 128)
     @Size(max = 128)
+    @Getter @Setter
     private String localImageResource;
 
     /**
@@ -107,55 +116,6 @@ public class LinkEntity implements Serializable {
     public LinkEntity(final String target, final String title) {
         this.target = target;
         this.title = title;
-    }
-
-    @JsonProperty
-    public Integer getId() {
-        return id;
-    }
-
-    public Type getType() {
-        return type;
-    }
-
-    public void setType(final Type type) {
-        this.type = type;
-    }
-
-    public String getTarget() {
-        return target;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(final String title) {
-        this.title = title;
-    }
-
-    public Integer getSortCol() {
-        return sortCol;
-    }
-
-    public void setSortCol(final Integer sortCol) {
-        this.sortCol = sortCol;
-    }
-
-    public String getIcon() {
-        return icon;
-    }
-
-    public void setIcon(final String icon) {
-        this.icon = icon;
-    }
-
-    public String getLocalImageResource() {
-        return localImageResource;
-    }
-
-    public void setLocalImageResource(final String localImageResource) {
-        this.localImageResource = localImageResource;
     }
 
     @Override

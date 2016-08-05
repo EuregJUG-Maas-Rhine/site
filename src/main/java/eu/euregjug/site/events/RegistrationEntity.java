@@ -29,6 +29,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * A registration by a person identified by his email for an
@@ -54,6 +56,7 @@ public class RegistrationEntity implements Serializable {
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonIgnore
+    @Getter(onMethod = @__(@JsonProperty))
     private Integer id;
 
     /**
@@ -62,24 +65,28 @@ public class RegistrationEntity implements Serializable {
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     @JoinColumn(name = "event_id", referencedColumnName = "id")
     @JsonIgnore
+    @Getter(onMethod = @__(@JsonProperty)) @Setter(onMethod = @__(@JsonIgnore))
     private EventEntity event;
 
     /**
      * Name of the person registered for the event.
      */
     @Column(name = "email", length = 1024, nullable = false)
+    @Getter
     private String email;
 
     /**
      * Name of the person registered for the event.
      */
     @Column(name = "name", length = 512, nullable = false)
+    @Getter @Setter
     private String name;
 
     /**
      * First name of the person registered for the event.
      */
     @Column(name = "first_name", length = 512)
+    @Getter @Setter
     private String firstName;
 
     /**
@@ -87,6 +94,7 @@ public class RegistrationEntity implements Serializable {
      * {@code false}.
      */
     @Column(name = "subscribe_to_newsletter", nullable = false)
+    @Getter @Setter
     private boolean subscribeToNewsletter = false;
 
     /**
@@ -101,43 +109,6 @@ public class RegistrationEntity implements Serializable {
         this.email = email;
         this.name = name;
         this.firstName = firstName;
-        this.subscribeToNewsletter = subscribeToNewsletter;
-    }
-
-    @JsonProperty
-    public Integer getId() {
-        return id;
-    }
-
-    public EventEntity getEvent() {
-        return event;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(final String name) {
-        this.name = name;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(final String firstName) {
-        this.firstName = firstName;
-    }
-
-    public boolean isSubscribeToNewsletter() {
-        return subscribeToNewsletter;
-    }
-
-    public void setSubscribeToNewsletter(final boolean subscribeToNewsletter) {
         this.subscribeToNewsletter = subscribeToNewsletter;
     }
 

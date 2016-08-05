@@ -43,7 +43,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 class PostApiController {
 
     private final PostRepository postRepository;
-    
+
     @RequestMapping(method = POST)
     @PreAuthorize("isAuthenticated()")
     @ResponseStatus(CREATED)

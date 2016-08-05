@@ -18,6 +18,8 @@ package eu.euregjug.site.events;
 import java.io.Serializable;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -27,6 +29,7 @@ import org.hibernate.validator.constraints.NotBlank;
  *
  * @author Michael J. Simons, 2016-01-03
  */
+@Getter @Setter
 public final class Registration implements Serializable {
 
     private static final long serialVersionUID = 770264014400800147L;
@@ -45,36 +48,4 @@ public final class Registration implements Serializable {
 
     @NotNull
     private boolean subscribeToNewsletter = false;
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(final String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(final String name) {
-        this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(final String email) {
-        this.email = email;
-    }
-
-    public boolean isSubscribeToNewsletter() {
-        return subscribeToNewsletter;
-    }
-
-    public void setSubscribeToNewsletter(final boolean subscribeToNewsletter) {
-        this.subscribeToNewsletter = subscribeToNewsletter;
-    }
 }
