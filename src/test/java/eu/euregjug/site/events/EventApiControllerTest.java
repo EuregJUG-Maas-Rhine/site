@@ -29,7 +29,6 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Optional;
 import static java.util.stream.Collectors.toList;
-import org.hamcrest.Matchers;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.nullValue;
