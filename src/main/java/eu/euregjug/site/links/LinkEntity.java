@@ -18,7 +18,6 @@ package eu.euregjug.site.links;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
-import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -29,6 +28,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.URL;
@@ -38,6 +38,7 @@ import org.hibernate.validator.constraints.URL;
  */
 @Entity
 @Table(name = "links")
+@EqualsAndHashCode(of = {"target"})
 public class LinkEntity implements Serializable {
 
     private static final long serialVersionUID = 2624180625891214911L;
@@ -116,27 +117,5 @@ public class LinkEntity implements Serializable {
     public LinkEntity(final String target, final String title) {
         this.target = target;
         this.title = title;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 7;
-        hash = 29 * hash + Objects.hashCode(this.target);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final LinkEntity other = (LinkEntity) obj;
-        return Objects.equals(this.target, other.target);
     }
 }

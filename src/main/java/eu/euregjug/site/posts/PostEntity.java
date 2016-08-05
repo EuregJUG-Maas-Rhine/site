@@ -24,7 +24,6 @@ import java.text.Normalizer;
 import java.text.Normalizer.Form;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Objects;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -47,6 +46,7 @@ import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.NotBlank;
@@ -88,6 +88,7 @@ import org.hibernate.validator.constraints.NotBlank;
         )
 })
 @JsonInclude(Include.NON_EMPTY)
+@EqualsAndHashCode(of = {"publishedOn", "slug"})
 public class PostEntity implements Serializable {
 
     private static final long serialVersionUID = -2488354242899068540L;
@@ -207,31 +208,5 @@ public class PostEntity implements Serializable {
         }
         this.slug = generateSlug(slug, title);
         this.updatedAt = Calendar.getInstance();
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 7;
-        hash = 37 * hash + Objects.hashCode(this.publishedOn);
-        hash = 37 * hash + Objects.hashCode(this.slug);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final PostEntity other = (PostEntity) obj;
-        if (!Objects.equals(this.slug, other.slug)) {
-            return false;
-        }
-        return Objects.equals(this.publishedOn, other.publishedOn);
     }
 }

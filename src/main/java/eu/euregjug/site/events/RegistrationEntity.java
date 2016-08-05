@@ -18,7 +18,6 @@ package eu.euregjug.site.events;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
-import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -29,6 +28,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -45,6 +45,7 @@ import lombok.Setter;
             @UniqueConstraint(name = "registrations_uk", columnNames = {"event_id", "email"})
         }
 )
+@EqualsAndHashCode(of = {"event", "email"})
 public class RegistrationEntity implements Serializable {
 
     private static final long serialVersionUID = 6473617754778481078L;
@@ -110,31 +111,5 @@ public class RegistrationEntity implements Serializable {
         this.name = name;
         this.firstName = firstName;
         this.subscribeToNewsletter = subscribeToNewsletter;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 5;
-        hash = 29 * hash + Objects.hashCode(this.event);
-        hash = 29 * hash + Objects.hashCode(this.email);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final RegistrationEntity other = (RegistrationEntity) obj;
-        if (!Objects.equals(this.email, other.email)) {
-            return false;
-        }
-        return Objects.equals(this.event, other.event);
     }
 }

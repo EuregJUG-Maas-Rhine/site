@@ -21,7 +21,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.euregjug.site.posts.PostEntity;
 import java.io.Serializable;
 import java.util.Calendar;
-import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -43,6 +42,7 @@ import javax.validation.constraints.Size;
 import org.hibernate.validator.constraints.NotBlank;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -59,6 +59,7 @@ import lombok.Setter;
         }
 )
 @JsonInclude(NON_NULL)
+@EqualsAndHashCode(of = {"heldOn", "name"})
 public class EventEntity implements Serializable {
 
     private static final long serialVersionUID = 2005305860095134425L;
@@ -195,31 +196,5 @@ public class EventEntity implements Serializable {
     @JsonIgnore
     public boolean isOpen() {
         return this.heldOn.after(Calendar.getInstance());
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 7;
-        hash = 29 * hash + Objects.hashCode(this.heldOn);
-        hash = 29 * hash + Objects.hashCode(this.name);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final EventEntity other = (EventEntity) obj;
-        if (!Objects.equals(this.name, other.name)) {
-            return false;
-        }
-        return Objects.equals(this.heldOn, other.heldOn);
     }
 }
