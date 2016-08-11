@@ -66,7 +66,7 @@ public class RegistrationEntity implements Serializable {
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     @JoinColumn(name = "event_id", referencedColumnName = "id")
     @JsonIgnore
-    @Getter(onMethod = @__(@JsonProperty)) @Setter(onMethod = @__(@JsonIgnore))
+    @Getter(onMethod = @__(@JsonIgnore))
     private EventEntity event;
 
     /**
