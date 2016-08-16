@@ -87,7 +87,7 @@
 
 			<ol>
 			    <li th:each="upcomingEvent : ${upcomingEvents}">
-				<span class="title" th:utext="#{upcomingEvents.title(${upcomingEvent.heldOn.time},${upcomingEvent.name})}">27.12.2015 14:00 Some title:</span>
+				<span class="title" th:utext="#{upcomingEvents.title(${upcomingEvent.heldOn.time},${upcomingEvent.displayName})}">27.12.2015 14:00 Some title:</span>
 				<span th:text="${upcomingEvent.description}">Sed tristique purus vitae volutpat commodo suscipit amet sed nibh. Proin a ullamcorper sed blandit. Sed tristique purus vitae volutpat commodo suscipit ullamcorper commodo suscipit amet sed nibh. Proin a ullamcorper sed blandit.</span>
 				<span class="readMore" th:if="${upcomingEvent.post}"><span th:text="#{readMore}">Read more</span> <a href="#" th:href="@{/{date}/{slug}(date=${#dates.format(upcomingEvent.post.publishedOn,'yyyy/MM/dd')},slug=${upcomingEvent.post.slug})}" th:text="${upcomingEvent.post.title}">Link</a></span>
 				<span class="register" th:if="${upcomingEvent.needsRegistration and upcomingEvent.open}">

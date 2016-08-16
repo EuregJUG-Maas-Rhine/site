@@ -7,7 +7,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
       th:lang="${#locale.language}">
-    <head th:replace="fragments/head :: head (_pageTitle=#{registerTitle(${event.name},${event.heldOn.time})})">
+    <head th:replace="fragments/head :: head (_pageTitle=#{registerTitle(${event.displayName},${event.heldOn.time})})">
 	<title>index.html</title>
     </head>
     <body>
@@ -18,7 +18,7 @@
 	    <div class="inner">
 
 		<header class="major">
-		    <h2 th:text="#{registerTitle(${event.name},${event.heldOn.time})}">Page Title</h2>	
+		    <h2 th:text="#{registerTitle(${event.displayName},${event.heldOn.time})}">Page Title</h2>	
 		    <p th:text="#{registrationExplanation}">Explain register</p>		      
 		</header>
 
@@ -29,7 +29,7 @@
 		    </div>
 		    
 		    <div class="eventDescription">
-			<span class="title" th:utext="#{upcomingEvents.title(${event.heldOn.time},${event.name})}">27.12.2015 14:00 Some title:</span>
+			<span class="title" th:utext="#{upcomingEvents.title(${event.heldOn.time},${event.displayName})}">27.12.2015 14:00 Some title:</span>
 			<span th:text="${event.description}">Sed tristique purus vitae volutpat commodo suscipit amet sed nibh. Proin a ullamcorper sed blandit. Sed tristique purus vitae volutpat commodo suscipit ullamcorper commodo suscipit amet sed nibh. Proin a ullamcorper sed blandit.</span>
 			<span class="readMore" th:if="${event.post}"><span th:text="#{readMore}">Read more</span> <a href="#" th:href="@{/{date}/{slug}(date=${#dates.format(event.post.publishedOn,'yyyy/MM/dd')},slug=${event.post.slug})}" th:text="${event.post.title}">Link</a></span>
 		    </div>

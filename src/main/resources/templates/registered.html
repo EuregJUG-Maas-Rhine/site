@@ -18,10 +18,10 @@ limitations under the License.
       xmlns:th="http://www.thymeleaf.org"
       th:lang="${#locale.language}">
     <head>
-	<title th:text="#{registered} + ' ' + ${registration.event.name}">Thanks</title>
+	<title th:text="#{registered} + ' ' + ${registration.event.displayName}">Thanks</title>
 	<meta charset="UTF-8" />	
     </head>
     <body>
-	<div th:utext="#{registeredLong(${registration.firstName},${registration.event.name},${registration.event.heldOn.time})}">registeredLong</div>
+	<div th:utext="#{registeredLong(${registration.firstName},${registration.event.displayName},${registration.event.heldOn.time})}">registeredLong</div>
     </body>
 </html>

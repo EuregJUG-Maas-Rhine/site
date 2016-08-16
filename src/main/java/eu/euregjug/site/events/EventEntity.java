@@ -42,6 +42,7 @@ import javax.validation.constraints.Size;
 import org.hibernate.validator.constraints.NotBlank;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
+import java.util.Optional;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -196,5 +197,18 @@ public class EventEntity implements Serializable {
     @JsonIgnore
     public boolean isOpen() {
         return this.heldOn.after(Calendar.getInstance());
+    }
+
+    /**
+     * @return The name of the event or "speaker - name" if there is a speaker
+     * defined for this event.
+     */
+    @JsonIgnore
+    public String getDisplayName() {
+        return Optional
+                .ofNullable(this.speaker)
+                .filter(s -> !s.trim().isEmpty())
+                .map(s -> s + " - " + this.name)
+                .orElse(this.name);
     }
 }
