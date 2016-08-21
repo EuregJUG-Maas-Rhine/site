@@ -68,9 +68,9 @@ import lombok.extern.slf4j.Slf4j;
 class IndexController {
 
     private static final String ATTRIBUTE_ALERTS = "alerts";
-    
+
     private static final String ATTRIBUTE_REGISTERED = "registered";
-    
+
     private final EventRepository eventRepository;
 
     private final RegistrationService registrationService;
@@ -167,7 +167,7 @@ class IndexController {
             rv = "register";
         }
         return rv;
-    }    
+    }
 
     @RequestMapping(value = "/register/{eventId}", method = POST)
     public String register(
@@ -199,5 +199,5 @@ class IndexController {
             }
         }
         return rv;
-    }    
+    }
 }
