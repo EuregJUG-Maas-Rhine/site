@@ -80,14 +80,15 @@ class IndexRssView extends AbstractRssFeedView {
         }
         feed.setGenerator("https://github.com/EuregJUG-Maas-Rhine/site");
 
+        final String hrefFormat = "%s?page=%d";
         final String self = getAbsoluteUrl(request, "/feed.rss");
         final List<Link> atomLinks = new ArrayList<>();
-        atomLinks.add(new SyndicationLink().withRel("self").withType(super.getContentType()).withHref(String.format("%s?page=%d", self, posts.getNumber())).getLink());
+        atomLinks.add(new SyndicationLink().withRel("self").withType(super.getContentType()).withHref(String.format(hrefFormat, self, posts.getNumber())).getLink());
         if (posts.hasPrevious()) {
             atomLinks.add(new SyndicationLink()
                     .withRel("previous")
                     .withType(super.getContentType())
-                    .withHref(String.format("%s?page=%d", self, posts.previousPageable().getPageNumber()))
+                    .withHref(String.format(hrefFormat, self, posts.previousPageable().getPageNumber()))
                     .getLink()
             );
         }
@@ -95,7 +96,7 @@ class IndexRssView extends AbstractRssFeedView {
             atomLinks.add(new SyndicationLink()
                     .withRel("next")
                     .withType(super.getContentType())
-                    .withHref(String.format("%s?page=%d", self, posts.nextPageable().getPageNumber()))
+                    .withHref(String.format(hrefFormat, self, posts.nextPageable().getPageNumber()))
                     .getLink()
             );
         }
