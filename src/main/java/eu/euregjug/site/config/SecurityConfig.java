@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 EuregJUG.
+ * Copyright 2015-2016 EuregJUG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,6 +30,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
  */
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
+@SuppressWarnings({"squid:S1118"}) // This is not a utility class. It cannot have a private constructor.
 public class SecurityConfig {
 
     @Configuration
