@@ -43,6 +43,7 @@ import org.springframework.web.servlet.view.feed.AbstractRssFeedView;
  * @author Michael J. Simons, 2015-12-30
  */
 @Component("index.rss")
+@SuppressWarnings({"squid:MaximumInheritanceDepth"}) // Cannot change this...
 class IndexRssView extends AbstractRssFeedView {
 
     private final MessageSource messageSource;
