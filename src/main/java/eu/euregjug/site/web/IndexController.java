@@ -67,6 +67,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 class IndexController {
 
+    private static final String ATTRIBUTE_ALERTS = "alerts";
+    
+    private static final String ATTRIBUTE_REGISTERED = "registered";
+    
     private final EventRepository eventRepository;
 
     private final RegistrationService registrationService;
@@ -150,20 +154,20 @@ class IndexController {
         final EventEntity event = this.eventRepository.findOne(eventId).orElse(null);
         String rv;
         if (event == null) {
-            redirectAttributes.addFlashAttribute("alerts", Arrays.asList("invalidEvent"));
+            redirectAttributes.addFlashAttribute(ATTRIBUTE_ALERTS, Arrays.asList("invalidEvent"));
             rv = "redirect:/";
         } else {
             model.addAttribute("event", event);
             if (!model.containsAttribute("registration")) {
                 model.addAttribute("registration", new Registration());
             }
-            if (!model.containsAttribute("registered")) {
-                model.addAttribute("registered", false);
+            if (!model.containsAttribute(ATTRIBUTE_REGISTERED)) {
+                model.addAttribute(ATTRIBUTE_REGISTERED, false);
             }
             rv = "register";
         }
         return rv;
-    }
+    }    
 
     @RequestMapping(value = "/register/{eventId}", method = POST)
     public String register(
@@ -177,7 +181,7 @@ class IndexController {
     ) {
         String rv;
         if (registrationBindingResult.hasErrors() || recaptchaValidator.validate(request).isFailure()) {
-            model.addAttribute("alerts", Arrays.asList("invalidRegistration"));
+            model.addAttribute(ATTRIBUTE_ALERTS, Arrays.asList("invalidRegistration"));
             rv = register(eventId, model, redirectAttributes);
         } else {
             try {
@@ -185,15 +189,15 @@ class IndexController {
                 this.registrationService.sendConfirmationMail(registrationEntity, locale);
                 redirectAttributes
                         .addFlashAttribute("event", registrationEntity.getEvent())
-                        .addFlashAttribute("registered", true)
-                        .addFlashAttribute("alerts", Arrays.asList("registered"));
+                        .addFlashAttribute(ATTRIBUTE_REGISTERED, true)
+                        .addFlashAttribute(ATTRIBUTE_ALERTS, Arrays.asList(ATTRIBUTE_REGISTERED));
                 rv = "redirect:/register/" + eventId;
             } catch (InvalidRegistrationException e) {
                 log.debug("Invalid registration request", e);
-                model.addAttribute("alerts", Arrays.asList(e.getLocalizedMessage()));
+                model.addAttribute(ATTRIBUTE_ALERTS, Arrays.asList(e.getLocalizedMessage()));
                 rv = register(eventId, model, redirectAttributes);
             }
         }
         return rv;
-    }
+    }    
 }
