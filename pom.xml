@@ -386,6 +386,44 @@
               </execution>
           </executions>
       </plugin>
+      <plugin>
+          <groupId>io.fabric8</groupId>
+          <artifactId>docker-maven-plugin</artifactId>
+          <version>0.15.16</version>
+          <executions>
+              <execution>
+                  <id>prepare-it-database</id>
+                  <phase>pre-integration-test</phase>
+                  <goals>
+                      <goal>start</goal>
+                  </goals>
+                  <configuration>
+                      <images>
+                          <image>
+                              <name>postgres:9.5.4</name>
+                              <alias>it-database</alias>
+                              <run>
+                                  <ports>
+                                      <port>it-database.port:5432</port>
+                                  </ports>
+                                  <wait>
+                                      <log>database system is ready to accept connections</log>
+                                      <time>20000</time>
+                                  </wait>
+                              </run>
+                          </image>
+                      </images>
+                  </configuration>
+              </execution>
+              <execution>
+                  <id>remove-it-database</id>
+                  <phase>post-integration-test</phase>
+                  <goals>
+                      <goal>stop</goal>
+                  </goals>
+              </execution>
+          </executions>
+      </plugin>
     </plugins>
     <resources>
       <resource>
