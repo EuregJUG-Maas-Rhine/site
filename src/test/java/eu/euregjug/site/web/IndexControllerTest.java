@@ -20,6 +20,7 @@ import eu.euregjug.site.config.MailChimpConfig;
 import eu.euregjug.site.events.EventEntity;
 import eu.euregjug.site.events.EventRepository;
 import eu.euregjug.site.events.RegistrationService;
+import eu.euregjug.site.links.LinkEntity;
 import eu.euregjug.site.links.LinkRepository;
 import eu.euregjug.site.posts.PostEntity;
 import eu.euregjug.site.posts.PostRenderingService;
@@ -32,8 +33,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
 import static org.hamcrest.CoreMatchers.containsString;
 import org.joor.Reflect;
@@ -60,6 +63,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.xpath;
 
 /**
@@ -106,6 +111,8 @@ public class IndexControllerTest {
 
     private final List<PostEntity> posts;
 
+    private final List<LinkEntity> links;
+
     public IndexControllerTest() {
         final ZonedDateTime eventDate = ZonedDateTime.of(2016, 7, 7, 19, 0, 0, 0, ZoneId.of("Europe/Berlin"));
         final EventEntity event1 = Reflect.on(
@@ -124,6 +131,29 @@ public class IndexControllerTest {
         this.posts = new ArrayList<>();
         this.posts.add(Reflect.on(new PostEntity(Date.from(LocalDate.of(2016, 8, 5).atStartOfDay(ZoneId.of("Europe/Berlin")).toInstant()), "foo", "foo", "foo")).set("id", 2).get());
         this.posts.add(Reflect.on(new PostEntity(Date.from(LocalDate.of(2016, 8, 4).atStartOfDay(ZoneId.of("Europe/Berlin")).toInstant()), "bar", "bar", "bar")).set("id", 1).get());
+
+        this.links = new ArrayList<>();
+        this.links.add(new LinkEntity("http://michael-simons.eu", "Michael Simons"));
+    }
+
+    @Test
+    public void indexShouldWork() throws Exception {
+        when(this.eventRepository.findUpcomingEvents()).thenReturn(events);
+        when(this.linkRepository.findAllByOrderByTypeAscSortColAscTitleAsc()).thenReturn(links);
+        final PageRequest pageRequest = new PageRequest(0, 5, Sort.Direction.DESC, "publishedOn", "createdAt");
+        final PageImpl<PostEntity> postsPage = new PageImpl<>(this.posts, pageRequest, 15);
+        when(this.postRepository.findAll(pageRequest)).thenReturn(postsPage);
+
+        final Map<LinkEntity.Type, List<LinkEntity>> links = new HashMap<>();
+        links.put(LinkEntity.Type.generic, this.links);
+
+        this.mvc
+                .perform(get("http://euregjug.eu"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("index"))
+                .andExpect(model().attribute("upcomingEvents", events))
+                .andExpect(model().attribute("links", links))
+                .andExpect(model().attributeExists("posts"));
     }
 
     @Test
