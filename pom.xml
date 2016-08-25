@@ -385,6 +385,11 @@
                   </goals>
               </execution>
           </executions>
+          <configuration>
+              <environmentVariables>
+                  <it-database.port>${it-database.port}</it-database.port>
+              </environmentVariables>
+          </configuration>
       </plugin>
       <plugin>
           <groupId>io.fabric8</groupId>
