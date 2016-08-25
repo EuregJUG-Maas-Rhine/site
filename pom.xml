@@ -61,7 +61,7 @@
   <dependencies>
     <dependency>
       <groupId>org.projectlombok</groupId>
-      <artifactId>lombok</artifactId> 
+      <artifactId>lombok</artifactId>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -114,7 +114,7 @@
     </dependency>
     <dependency>
         <groupId>org.postgresql</groupId>
-        <artifactId>postgresql</artifactId>        
+        <artifactId>postgresql</artifactId>
     </dependency>
     <dependency>
       <groupId>org.flywaydb</groupId>
