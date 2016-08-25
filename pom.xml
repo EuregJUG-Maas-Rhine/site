@@ -113,8 +113,8 @@
       <scope>runtime</scope>
     </dependency>
     <dependency>
-        <groupId>org.postgresql</groupId>
-        <artifactId>postgresql</artifactId>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
     </dependency>
     <dependency>
       <groupId>org.flywaydb</groupId>
@@ -375,59 +375,59 @@
         </executions>
       </plugin>
       <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-failsafe-plugin</artifactId>
-          <executions>
-              <execution>
-                  <goals>
-                      <goal>integration-test</goal>
-                      <goal>verify</goal>
-                  </goals>
-              </execution>
-          </executions>
-          <configuration>
-              <environmentVariables>
-                  <it-database.port>${it-database.port}</it-database.port>
-              </environmentVariables>
-          </configuration>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>integration-test</goal>
+              <goal>verify</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <environmentVariables>
+            <it-database.port>${it-database.port}</it-database.port>
+          </environmentVariables>
+        </configuration>
       </plugin>
       <plugin>
-          <groupId>io.fabric8</groupId>
-          <artifactId>docker-maven-plugin</artifactId>
-          <version>0.15.16</version>
-          <executions>
-              <execution>
-                  <id>prepare-it-database</id>
-                  <phase>pre-integration-test</phase>
-                  <goals>
-                      <goal>start</goal>
-                  </goals>
-                  <configuration>
-                      <images>
-                          <image>
-                              <name>postgres:9.5.4</name>
-                              <alias>it-database</alias>
-                              <run>
-                                  <ports>
-                                      <port>it-database.port:5432</port>
-                                  </ports>
-                                  <wait>
-                                      <log>database system is ready to accept connections</log>
-                                      <time>60000</time>
-                                  </wait>
-                              </run>
-                          </image>
-                      </images>
-                  </configuration>
-              </execution>
-              <execution>
-                  <id>remove-it-database</id>
-                  <phase>post-integration-test</phase>
-                  <goals>
-                      <goal>stop</goal>
-                  </goals>
-              </execution>
-          </executions>
+        <groupId>io.fabric8</groupId>
+        <artifactId>docker-maven-plugin</artifactId>
+        <version>0.15.16</version>
+        <executions>
+          <execution>
+            <id>prepare-it-database</id>
+            <phase>pre-integration-test</phase>
+            <goals>
+              <goal>start</goal>
+            </goals>
+            <configuration>
+              <images>
+                <image>
+                  <name>postgres:9.5.4</name>
+                  <alias>it-database</alias>
+                  <run>
+                    <ports>
+                      <port>it-database.port:5432</port>
+                    </ports>
+                    <wait>
+                      <log>database system is ready to accept connections</log>
+                      <time>60000</time>
+                    </wait>
+                  </run>
+                </image>
+              </images>
+            </configuration>
+          </execution>
+          <execution>
+            <id>remove-it-database</id>
+            <phase>post-integration-test</phase>
+            <goals>
+              <goal>stop</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
     <resources>
