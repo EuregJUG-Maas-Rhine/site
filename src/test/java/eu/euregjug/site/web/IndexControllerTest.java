@@ -62,7 +62,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.xpath;
@@ -201,10 +200,10 @@ public class IndexControllerTest {
         this.mvc
                 .perform(get("http://euregjug.eu/register/{eventId}", 23))
                 .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.view().name("register"))
-                .andExpect(MockMvcResultMatchers.model().attribute("registered", false))
-                .andExpect(MockMvcResultMatchers.model().attribute("event", this.events.get(0)))
-                .andExpect(MockMvcResultMatchers.model().attributeExists("registration"));
+                .andExpect(view().name("register"))
+                .andExpect(model().attribute("registered", false))
+                .andExpect(model().attribute("event", this.events.get(0)))
+                .andExpect(model().attributeExists("registration"));
 
         verify(this.eventRepository).findOne(23);
         verifyNoMoreInteractions(this.eventRepository);
