@@ -411,7 +411,7 @@
                   <runCmd>unzip -q -d /opt/ groovy.zip</runCmd>
                   <runCmd>rm -rf groovy.zip</runCmd>
                   <runCmd>mv /opt/groovy-*/ /opt/groovy/</runCmd>
-                  <runCmd>wget -q --no-iri https://raw.githubusercontent.com/michael-simons/java-mocksmtp/ac14d7b8c27787139d8fc5348cfb7802ed468807/groovy/groovy-mocksmtp.groovy</runCmd>
+                  <runCmd>wget -q --no-iri https://raw.githubusercontent.com/michael-simons/java-mocksmtp/master/groovy/groovy-mocksmtp.groovy</runCmd>
                 </runCmds>
                 <optimise>true</optimise>
                 <ports>
