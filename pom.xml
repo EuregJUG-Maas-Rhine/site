@@ -290,7 +290,7 @@
               <artifactId>asciidoctorj</artifactId>
             </dependency>
           </requiresUnpack>
-          <excludeArtifactIds>lombok,h2</excludeArtifactIds>
+          <excludeArtifactIds>lombok</excludeArtifactIds>
         </configuration>
       </plugin>
       <plugin>
