@@ -19,7 +19,6 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.util.Locale;
-import java.util.regex.Pattern;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -164,6 +163,6 @@ public class RegistrationService {
                 .prettyPrint(false)
                 .escapeMode(EscapeMode.xhtml)
                 .charset(StandardCharsets.UTF_8);
-        return Parser.unescapeEntities(cleanedDocument.body().html().trim(), true).replaceAll(Pattern.quote("<br />"), "\n");
+        return Parser.unescapeEntities(cleanedDocument.body().html().trim(), true).replaceAll("<br(?: ?/)?>", "\n");
     }
 }
