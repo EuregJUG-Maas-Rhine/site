@@ -46,7 +46,7 @@ public class RegistrationServiceTest {
     public void htmlTextToPlainTextShouldWork() {
         final RegistrationService service = new RegistrationService(eventRepository, registrationRepository, mailSender, null, messageSource, "info@euregjug.eu");
         final String plainText = service.htmlTextToPlainText("<strong>Hallo<br>das ist ein<br />test.<br/>Auf wiedersehen.");
-        assertThat(plainText, is("Hallo\ndas ist ein\ntest.\nAuf wiedersehen."));
+        assertThat(plainText, is("Hallo\r\ndas ist ein\r\ntest.\r\nAuf wiedersehen."));
     }
 
 }

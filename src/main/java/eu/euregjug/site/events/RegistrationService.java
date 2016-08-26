@@ -163,6 +163,6 @@ public class RegistrationService {
                 .prettyPrint(false)
                 .escapeMode(EscapeMode.xhtml)
                 .charset(StandardCharsets.UTF_8);
-        return Parser.unescapeEntities(cleanedDocument.body().html().trim(), true).replaceAll("<br(?: ?/)?>", "\n");
+        return Parser.unescapeEntities(cleanedDocument.body().html().trim(), true).replaceAll("<br(?: ?/)?>", "\r\n");
     }
 }
