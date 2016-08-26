@@ -395,6 +395,60 @@
         <groupId>io.fabric8</groupId>
         <artifactId>docker-maven-plugin</artifactId>
         <version>0.15.16</version>
+        <configuration>
+          <images>
+            <image>
+              <name>euregjug/mocksmtp</name>
+              <alias>mocksmtp</alias>
+              <build>
+                <from>java:8u102</from>
+                <env>
+                  <GROOVY_VERSION>2.4.7</GROOVY_VERSION>
+                </env>
+                <runCmds>
+                  <runCmd>wget -q --no-iri https://bintray.com/artifact/download/groovy/maven/apache-groovy-binary-${GROOVY_VERSION}.zip -O groovy.zip</runCmd>
+                  <runCmd>unzip -q -d /opt/ groovy.zip</runCmd>
+                  <runCmd>rm -rf groovy.zip</runCmd>
+                  <runCmd>mv /opt/groovy-*/ /opt/groovy/</runCmd>
+                  <runCmd>wget -q --no-iri https://raw.githubusercontent.com/michael-simons/java-mocksmtp/ac14d7b8c27787139d8fc5348cfb7802ed468807/groovy/groovy-mocksmtp.groovy</runCmd>
+                </runCmds>
+                <optimise>true</optimise>
+                <ports>
+                  <port>25000</port>
+                </ports>
+                <entryPoint>
+                  <exec>
+                    <args>/opt/groovy/bin/groovy</args>
+                    <args>groovy-mocksmtp.groovy</args>
+                  </exec>
+                </entryPoint>
+              </build>
+              <run>
+                <ports>
+                  <port>25000:25000</port>
+                </ports>
+              </run>
+            </image>
+            <image>
+              <name>mongo:3.2.9</name>
+              <alias>assetdb</alias>
+              <run>
+                <ports>
+                  <port>27017:27017</port>
+                </ports>
+              </run>
+            </image>
+            <image>
+              <name>redis:3.0.7</name>
+              <alias>cache</alias>
+              <run>
+                <ports>
+                  <port>6379:6379</port>
+                </ports>
+              </run>
+            </image>
+          </images>
+        </configuration>
         <executions>
           <execution>
             <id>prepare-it-database</id>
