@@ -77,7 +77,6 @@ public class EventEntity implements Serializable {
      * Primary key of this event.
      */
     @Id
-    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonIgnore
     @Getter(onMethod = @__(@JsonProperty))
@@ -95,7 +94,7 @@ public class EventEntity implements Serializable {
     /**
      * Name of this event. Must be unique on a given {@link #heldOn date}.
      */
-    @Column(name = "name", length = 512, nullable = false)
+    @Column(length = 512, nullable = false)
     @NotBlank
     @Size(max = 512)
     @Getter
@@ -104,7 +103,7 @@ public class EventEntity implements Serializable {
     /**
      * Description of this event.
      */
-    @Column(name = "description", length = 2048, nullable = false)
+    @Column(length = 2048, nullable = false)
     @NotBlank
     @Size(max = 2048)
     @Getter @Setter
@@ -118,7 +117,6 @@ public class EventEntity implements Serializable {
     @Getter @Setter
     private boolean needsRegistration = false;
 
-    @Column(name = "type")
     @Enumerated(EnumType.STRING)
     @NotNull
     @Getter @Setter
@@ -127,14 +125,13 @@ public class EventEntity implements Serializable {
     /**
      * Optional duration in minutes.
      */
-    @Column(name = "duration")
     @Getter @Setter
     private Integer duration;
 
     /**
      * The speaker on that event (Optional).
      */
-    @Column(name = "speaker", length = 256)
+    @Column(length = 256)
     @Size(max = 256)
     @Getter @Setter
     private String speaker;
@@ -142,7 +139,7 @@ public class EventEntity implements Serializable {
     /**
      * Location of this event, usually an unstructured address.
      */
-    @Column(name = "location", length = 2048)
+    @Column(length = 2048)
     @Size(max = 2048)
     @Getter @Setter
     private String location;

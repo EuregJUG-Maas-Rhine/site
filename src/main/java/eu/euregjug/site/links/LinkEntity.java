@@ -55,7 +55,6 @@ public class LinkEntity implements Serializable {
      * Primary key of this link.
      */
     @Id
-    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonIgnore
     @Getter(onMethod = @__(@JsonProperty))
@@ -64,7 +63,6 @@ public class LinkEntity implements Serializable {
     /**
      * Type of the link.
      */
-    @Column(name = "type")
     @Enumerated(EnumType.STRING)
     @NotNull
     @Getter @Setter
@@ -73,7 +71,7 @@ public class LinkEntity implements Serializable {
     /**
      * Target of the link.
      */
-    @Column(name = "target", length = 1024, nullable = false, unique = true)
+    @Column(length = 1024, nullable = false, unique = true)
     @URL
     @Size(max = 1024)
     @Getter
@@ -82,7 +80,7 @@ public class LinkEntity implements Serializable {
     /**
      * Title of the link.
      */
-    @Column(name = "title", length = 512, nullable = false)
+    @Column(length = 512, nullable = false)
     @Size(max = 512)
     @Getter @Setter
     private String title;
@@ -94,7 +92,7 @@ public class LinkEntity implements Serializable {
     /**
      * An optional font-awesome or similar icon.
      */
-    @Column(name = "icon", length = 128)
+    @Column(length = 128)
     @Size(max = 128)
     @Getter @Setter
     private String icon;

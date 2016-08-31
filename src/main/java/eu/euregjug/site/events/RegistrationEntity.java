@@ -54,7 +54,6 @@ public class RegistrationEntity implements Serializable {
      * Primary key of this registration.
      */
     @Id
-    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonIgnore
     @Getter(onMethod = @__(@JsonProperty))
@@ -72,14 +71,14 @@ public class RegistrationEntity implements Serializable {
     /**
      * Name of the person registered for the event.
      */
-    @Column(name = "email", length = 1024, nullable = false)
+    @Column(length = 1024, nullable = false)
     @Getter
     private String email;
 
     /**
      * Name of the person registered for the event.
      */
-    @Column(name = "name", length = 512, nullable = false)
+    @Column(length = 512, nullable = false)
     @Getter @Setter
     private String name;
 

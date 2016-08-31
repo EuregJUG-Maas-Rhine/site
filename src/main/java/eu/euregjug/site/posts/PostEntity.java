@@ -105,7 +105,6 @@ public class PostEntity implements Serializable {
      * Primary key of this post.
      */
     @Id
-    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonIgnore
     @Getter(onMethod = @__(@JsonProperty))
@@ -123,7 +122,7 @@ public class PostEntity implements Serializable {
     /**
      * A slug for this post to identify it. Can be generated or manually set.
      */
-    @Column(name = "slug", length = 512, nullable = false)
+    @Column(length = 512, nullable = false)
     @Size(max = 512)
     @Getter
     private String slug;
@@ -131,7 +130,7 @@ public class PostEntity implements Serializable {
     /**
      * The title of this post.
      */
-    @Column(name = "title", length = 512, nullable = false)
+    @Column(length = 512, nullable = false)
     @NotBlank
     @Size(max = 512)
     @Getter @Setter
@@ -140,7 +139,7 @@ public class PostEntity implements Serializable {
     /**
      * Content of this posts.
      */
-    @Column(name = "content", nullable = false)
+    @Column(nullable = false)
     @Lob
     @Basic(fetch = FetchType.EAGER)
     @NotBlank
@@ -150,7 +149,6 @@ public class PostEntity implements Serializable {
     /**
      * Format of this posts. Defaults to Markdown.
      */
-    @Column(name = "format")
     @Enumerated(EnumType.STRING)
     @NotNull
     @Getter @Setter
