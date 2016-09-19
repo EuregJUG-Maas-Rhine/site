@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.euregjug.site.posts.PostEntity.Format;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Optional;
 import org.joor.Reflect;
 import org.junit.Before;
@@ -41,6 +42,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Matchers.any;
+import org.mockito.Mockito;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -152,8 +155,9 @@ public class PostApiControllerTest {
     @Test
     public void updateShouldShouldWork() throws Exception {
         final PostEntity updateEntity = new PostEntity(new Date(), "newslug", "newtitle", "newcontent");
-        updateEntity.setFormat(Format.markdown);
+        updateEntity.setFormat(Format.markdown);        
         final PostEntity oldEntity = new PostEntity(new Date(), "oldslug", "oldtitle", "oldcontent");
+        oldEntity.setLocale(new Locale("de", "DE"));
         oldEntity.setFormat(Format.asciidoc);
         when(this.postRepository.findOne(4711)).thenReturn(Optional.empty());
         when(this.postRepository.findOne(4712)).thenReturn(Optional.of(oldEntity));
@@ -183,13 +187,25 @@ public class PostApiControllerTest {
                 .andExpect(jsonPath("$.format", equalTo("markdown")))
                 .andExpect(jsonPath("$.title", equalTo("newtitle")))
                 .andExpect(jsonPath("$.slug", equalTo("oldslug")))
+                .andExpect(jsonPath("$.locale", equalTo("de_DE")));
+        
+        updateEntity.setLocale(new Locale("en", "US"));
+        this.mvc
+                .perform(
+                        put("/api/posts/{id}", 4712)
+                        .content(this.json.write(updateEntity).getJson())
+                        .contentType(APPLICATION_JSON)
+                        .principal(() -> "euregjug")
+                )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.locale", equalTo("en_US")))
                 .andDo(document("api/posts/update/updated",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint())
                 ));
 
         verify(this.postRepository).findOne(4711);
-        verify(this.postRepository).findOne(4712);
+        verify(this.postRepository, times(2)).findOne(4712);
         verifyNoMoreInteractions(this.postRepository);
     }
 }

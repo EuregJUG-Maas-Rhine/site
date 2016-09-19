@@ -24,6 +24,7 @@ import java.text.Normalizer;
 import java.text.Normalizer.Form;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -171,6 +172,10 @@ public class PostEntity implements Serializable {
     @JsonIgnore
     @Getter
     private Calendar updatedAt;
+
+    @Column(nullable = false)
+    @Getter @Setter
+    private Locale locale;
 
     /**
      * Needed for Hibernate, not to be called by application code.

@@ -65,6 +65,9 @@ class PostApiController {
         postEntity.setContent(updatedPost.getContent());
         postEntity.setFormat(updatedPost.getFormat());
         postEntity.setTitle(updatedPost.getTitle());
+        if (updatedPost.getLocale() != null) {
+            postEntity.setLocale(updatedPost.getLocale());
+        }
         return postEntity;
     }
 }
