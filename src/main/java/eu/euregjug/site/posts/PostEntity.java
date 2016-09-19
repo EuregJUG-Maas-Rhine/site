@@ -50,12 +50,21 @@ import javax.validation.constraints.Size;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.search.annotations.Analyze;
+import org.hibernate.search.annotations.AnalyzerDiscriminator;
+import org.hibernate.search.annotations.DateBridge;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Index;
+import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.Resolution;
+import org.hibernate.search.annotations.Store;
 import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * @author Michael J. Simons, 2015-12-28
  */
 @Entity
+@Indexed
 @Table(
         name = "posts",
         uniqueConstraints = {
@@ -90,6 +99,7 @@ import org.hibernate.validator.constraints.NotBlank;
 })
 @JsonInclude(Include.NON_EMPTY)
 @EqualsAndHashCode(of = {"publishedOn", "slug"})
+@AnalyzerDiscriminator(impl = PostLanguageDiscriminator.class)
 public class PostEntity implements Serializable {
 
     private static final long serialVersionUID = -2488354242899068540L;
@@ -118,6 +128,8 @@ public class PostEntity implements Serializable {
     @Temporal(TemporalType.DATE)
     @NotNull
     @Getter
+    @Field(name = "published_on", index = Index.YES, analyze = Analyze.NO, store = Store.YES)
+    @DateBridge(resolution = Resolution.DAY)
     private Date publishedOn;
 
     /**
@@ -135,6 +147,7 @@ public class PostEntity implements Serializable {
     @NotBlank
     @Size(max = 512)
     @Getter @Setter
+    @Field(index = Index.YES, analyze = Analyze.YES, store = Store.YES)
     private String title;
 
     /**
@@ -145,6 +158,7 @@ public class PostEntity implements Serializable {
     @Basic(fetch = FetchType.EAGER)
     @NotBlank
     @Getter @Setter
+    @Field(index = Index.YES, analyze = Analyze.YES, store = Store.NO)
     private String content;
 
     /**
