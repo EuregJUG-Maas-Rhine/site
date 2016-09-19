@@ -44,6 +44,8 @@ class PostApiController {
 
     private final PostRepository postRepository;
 
+    private final PostIndexService postIndexService;
+
     @RequestMapping(method = POST)
     @PreAuthorize("isAuthenticated()")
     @ResponseStatus(CREATED)
@@ -69,5 +71,12 @@ class PostApiController {
             postEntity.setLocale(updatedPost.getLocale());
         }
         return postEntity;
+    }
+
+    @RequestMapping(path = "/rebuildIndex", method = POST)
+    @PreAuthorize("isAuthenticated()")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void rebuildIndex() throws InterruptedException {
+        this.postIndexService.rebuildIndex();
     }
 }

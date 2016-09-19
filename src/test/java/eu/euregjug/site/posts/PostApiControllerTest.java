@@ -47,6 +47,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
+import org.springframework.boot.test.mock.mockito.MockBeans;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
@@ -71,6 +72,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
         uriHost = "euregjug.eu",
         uriPort = 80
 )
+@MockBean(PostIndexService.class)
 public class PostApiControllerTest {
 
     @Autowired
