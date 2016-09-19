@@ -139,6 +139,25 @@ class IndexController {
         return "archive";
     }
 
+    @RequestMapping("/search")
+    public String search(@RequestParam final String q, final Model model) {
+        final TreeMap<LocalDate, List<Post>> posts = this.postRepository
+                .searchByKeyword(q).stream()
+                .map(Post::new)
+                .collect(groupingBy(
+                        post -> post.getPublishedOn().withDayOfMonth(1),
+                        () -> new TreeMap<LocalDate, List<Post>>(reverseOrder()),
+                        toList()
+                ));
+        if (posts.isEmpty()) {
+            model.addAttribute(ATTRIBUTE_ALERTS, Arrays.asList("search.noResults"));
+        }
+        model
+                .addAttribute("posts", posts)
+                .addAttribute("q", q);
+        return "archive";
+    }
+
     @RequestMapping(value = "/events", produces = "text/calendar")
     public String events(final Model model) {
         model.addAttribute("events", this.eventRepository.findUpcomingEvents());

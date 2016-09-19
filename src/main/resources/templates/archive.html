@@ -1,45 +1,58 @@
 <!DOCTYPE HTML>
 <!--
-	Slate by Pixelarity
-	pixelarity.com @pixelarity
-	License: pixelarity.com/license
+        Slate by Pixelarity
+        pixelarity.com @pixelarity
+        License: pixelarity.com/license
 -->
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
       th:lang="${#locale.language}">
     <head th:replace="fragments/head :: head (_pageTitle=#{archiveTitle})">
-	<title>index.html</title>
+        <title>index.html</title>
     </head>
     <body>
-	<header th:replace="fragments/header :: header" />
+        <header th:replace="fragments/header :: header" />
 
-	<!-- Main -->
-	<section id="main" class="wrapper">
-	    <div class="inner">
+        <!-- Main -->
+        <section id="main" class="wrapper">
+            <div class="inner">
 
-		<header class="major">
-		    <h2 th:text="#{archiveTitle}">Page Title</h2>		    
-		</header>
+                <header class="major">
+                    <h2 th:text="#{archiveTitle}">Page Title</h2>
+                    <div class="alerts" th:if="${alerts != null and alerts.size() > 0}" >			
+                        <span th:each="alert : ${alerts}" th:text="#{${alert}}">alert</span>			    			
+                    </div>
+                </header>
 
-		<!-- Content -->
-		<div class="content">
-		    <section th:each="entry : ${posts.entrySet()}">
-			<h5 class="alt" th:text="${#temporals.format(entry.key, 'MMMM yyyy')}">Month</h5>
-			<ul>
-			    <li th:each="post : ${entry.value}">
-				<span th:text="${#temporals.formatDate(post.publishedOn, 'SHORT')}">Date</span> - <a href="#" th:href="@{/{date}/{slug}(date=${#temporals.format(post.publishedOn,'yyyy/MM/dd')},slug=${post.slug})}" th:text="${post.title}">Post</a>				
-			    </li>
-			</ul>
-		    </section>		    		    	    
-		</div>
+                <form method="GET" action="#"  th:action="@{/search}">
+                    <div >
+                        <div class="row uniform">
+                            <div class="6u$ 12u$(small)">
+                                <input type="text" name="q" th:value="${q}" th:placeholder="#{search}" />
+                            </div>
+                        </div>		    
+                    </div>
+                </form>
 
-	    </div>
-	</section>
+                <!-- Content -->
+                <div class="content">
+                    <section th:each="entry : ${posts.entrySet()}">
+                        <h5 class="alt" th:text="${#temporals.format(entry.key, 'MMMM yyyy')}">Month</h5>
+                        <ul>
+                            <li th:each="post : ${entry.value}">
+                                <span th:text="${#temporals.formatDate(post.publishedOn, 'SHORT')}">Date</span> - <a href="#" th:href="@{/{date}/{slug}(date=${#temporals.format(post.publishedOn,'yyyy/MM/dd')},slug=${post.slug})}" th:text="${post.title}">Post</a>				
+                            </li>
+                        </ul>
+                    </section>		    		    	    
+                </div>
 
-	<section th:replace="fragments/contact :: #contact" />
+            </div>
+        </section>
 
-	<footer th:replace="fragments/footer :: footer" />
+        <section th:replace="fragments/contact :: #contact" />
 
-	<div th:replace="fragments/scripts :: body/script" />
+        <footer th:replace="fragments/footer :: footer" />
+
+        <div th:replace="fragments/scripts :: body/script" />
     </body>
 </html>
