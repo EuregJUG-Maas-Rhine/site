@@ -66,6 +66,7 @@ class PostApiController {
         return this.postRepository.searchByKeyword(q);
     }
 
+    @RequestMapping(path = "/{id:\\d+}", method = PUT)
     @PreAuthorize("isAuthenticated()")
     @Transactional
     @CacheEvict(cacheNames = "renderedPosts", key = "#id")
