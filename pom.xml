@@ -461,6 +461,15 @@
                 </ports>
               </run>
             </image>
+            <image>
+              <name>elasticsearch:2.4.0</name>
+              <alias>search</alias>
+              <run>
+                <ports>
+                  <port>9200:9200</port>
+                </ports>
+              </run>
+            </image>
           </images>
         </configuration>
         <executions>
