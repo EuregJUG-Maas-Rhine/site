@@ -16,11 +16,13 @@
 package eu.euregjug.site.posts;
 
 import eu.euregjug.site.support.ResourceNotFoundException;
+import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,6 +35,7 @@ import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import static org.springframework.web.bind.annotation.RequestMethod.PUT;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * @author Michael J. Simons, 2015-12-28
@@ -58,7 +61,11 @@ class PostApiController {
         return this.postRepository.findAll(pageable);
     }
 
-    @RequestMapping(value = "/{id:\\d+}", method = PUT)
+    @RequestMapping(path = "/search", method = GET)
+    public List<PostEntity> get(@RequestParam final String q) {
+        return this.postRepository.searchByKeyword(q);
+    }
+
     @PreAuthorize("isAuthenticated()")
     @Transactional
     @CacheEvict(cacheNames = "renderedPosts", key = "#id")

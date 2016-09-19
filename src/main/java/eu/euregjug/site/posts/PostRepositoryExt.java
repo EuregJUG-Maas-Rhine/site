@@ -15,6 +15,7 @@
  */
 package eu.euregjug.site.posts;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -24,4 +25,12 @@ public interface PostRepositoryExt {
     Optional<PostEntity> getPrevious(final PostEntity post);
 
     Optional<PostEntity> getNext(final PostEntity post);
+
+    /**
+     * Searchs for posts by keyword.
+     *
+     * @param keyword
+     * @return A list of posts that matches on the given keyword
+     */
+    List<PostEntity> searchByKeyword(final String keyword);
 }

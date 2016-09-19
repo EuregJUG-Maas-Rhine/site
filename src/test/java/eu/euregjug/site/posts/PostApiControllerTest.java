@@ -42,12 +42,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Matchers.any;
-import org.mockito.Mockito;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
-import org.springframework.boot.test.mock.mockito.MockBeans;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
@@ -151,6 +149,32 @@ public class PostApiControllerTest {
                 ));
 
         verify(this.postRepository).findAll(any(Pageable.class));
+        verifyNoMoreInteractions(this.postRepository);
+    }
+    
+    @Test
+    public void searchShouldWork() throws Exception {
+        final PostEntity p1 = Reflect.on(
+                new PostEntity(new Date(), "new-site-is-live", "New site is live", "Welcome to the new EuregJUG website. We have switched off the old static pages and replaced it with a little application based on Hibernate, Spring Data JPA, Spring Boot and Thymeleaf.")
+        ).call("updateUpdatedAt").set("id", 23).get();        
+        
+        when(this.postRepository.searchByKeyword("website")).thenReturn(Arrays.asList(p1));
+        
+        this.mvc
+                .perform(
+                        get("/api/posts/search")
+                        .param("q", "website")
+                        .principal(() -> "euregjug")
+                )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].slug", equalTo("new-site-is-live")))                
+                .andDo(document("api/posts/search",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint())
+                ));
+
+        verify(this.postRepository).searchByKeyword("website");
         verifyNoMoreInteractions(this.postRepository);
     }
 

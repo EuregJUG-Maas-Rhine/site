@@ -15,9 +15,13 @@
  */
 package eu.euregjug.site.posts;
 
+import java.util.List;
 import java.util.Optional;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import org.hibernate.search.jpa.FullTextEntityManager;
+import org.hibernate.search.jpa.Search;
+import org.hibernate.search.query.dsl.QueryBuilder;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -61,5 +65,17 @@ public class PostRepositoryImpl implements PostRepositoryExt {
             rv = Optional.empty();
         }
         return rv;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<PostEntity> searchByKeyword(final String keyword) {
+        final FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(entityManager);
+        final QueryBuilder queryBuilder = fullTextEntityManager.getSearchFactory().buildQueryBuilder().forEntity(PostEntity.class).get();
+        return fullTextEntityManager
+                .createFullTextQuery(queryBuilder.keyword()
+                .onFields("content")
+                .matching(keyword)
+                .createQuery(), PostEntity.class).getResultList();
     }
 }
