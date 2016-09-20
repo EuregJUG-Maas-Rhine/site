@@ -17,6 +17,7 @@ package eu.euregjug.site.posts;
 
 import eu.euregjug.site.support.ResourceNotFoundException;
 import java.util.List;
+import java.util.Locale;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
@@ -53,6 +54,9 @@ class PostApiController {
     @PreAuthorize("isAuthenticated()")
     @ResponseStatus(CREATED)
     public PostEntity create(@Valid @RequestBody final PostEntity newPost) {
+        if (newPost.getLocale() == null) {
+            newPost.setLocale(new Locale("en", "US"));
+        }
         return this.postRepository.save(newPost);
     }
 

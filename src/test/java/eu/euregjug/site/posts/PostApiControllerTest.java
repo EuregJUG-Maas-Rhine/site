@@ -91,30 +91,51 @@ public class PostApiControllerTest {
 
     @Test
     public void createShouldWork() throws Exception {
-        final PostEntity postEntity = new PostEntity(new Date(), "new-site-is-live", "New site is live", "Welcome to the new EuregJUG website. We have switched off the old static pages and replaced it with a little application based on Hibernate, Spring Data JPA, Spring Boot and Thymeleaf.");
-
-        when(this.postRepository.save(postEntity)).then(invocation -> {
+        final PostEntity postEntity1 = new PostEntity(new Date(), "new-site-is-live", "New site is live", "Welcome to the new EuregJUG website. We have switched off the old static pages and replaced it with a little application based on Hibernate, Spring Data JPA, Spring Boot and Thymeleaf.");
+        postEntity1.setLocale(new Locale("de", "DE"));        
+        when(this.postRepository.save(postEntity1)).then(invocation -> {
             // Do the stuff JPA would do for us...
             final PostEntity rv = invocation.getArgumentAt(0, PostEntity.class);
             return Reflect.on(rv).call("updateUpdatedAt").set("id", 4711).get();
+        });
+        
+        final PostEntity postEntity2 = new PostEntity(new Date(), "new-site-is-live", "New site is live", "Welcome to the new EuregJUG website. We have switched off the old static pages and replaced it with a little application based on Hibernate, Spring Data JPA, Spring Boot and Thymeleaf.");        
+        when(this.postRepository.save(postEntity2)).then(invocation -> {
+            // Do the stuff JPA would do for us...
+            final PostEntity rv = invocation.getArgumentAt(0, PostEntity.class);
+            return Reflect.on(rv).call("updateUpdatedAt").set("id", 4712).get();
         });
 
         this.mvc
                 .perform(
                         post("/api/posts")
-                        .content(this.json.write(postEntity).getJson())
+                        .content(this.json.write(postEntity1).getJson())
                         .contentType(APPLICATION_JSON)
                         .principal(() -> "euregjug")
                 )
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id", equalTo(4711)))
                 .andExpect(jsonPath("$.slug", equalTo("new-site-is-live")))
+                .andExpect(jsonPath("$.locale", equalTo("de_DE")))
                 .andDo(document("api/posts/create",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint())
                 ));
+        
+        this.mvc
+                .perform(
+                        post("/api/posts")
+                        .content(this.json.write(postEntity2).getJson())
+                        .contentType(APPLICATION_JSON)
+                        .principal(() -> "euregjug")
+                )
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id", equalTo(4712)))
+                .andExpect(jsonPath("$.slug", equalTo("new-site-is-live")))
+                .andExpect(jsonPath("$.locale", equalTo("en_US")));
 
-        verify(this.postRepository).save(postEntity);
+        verify(this.postRepository).save(postEntity1);
+        verify(this.postRepository).save(postEntity2);
         verifyNoMoreInteractions(this.postRepository);
     }
 
