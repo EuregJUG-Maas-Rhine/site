@@ -35,7 +35,7 @@ public class PostRenderingService {
     @FunctionalInterface
     interface Renderer {
 
-        String render(final String content);
+        String render(String content);
     }
 
     static class AsciiDocRenderer implements Renderer {

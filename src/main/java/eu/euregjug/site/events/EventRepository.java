@@ -53,7 +53,7 @@ public interface EventRepository extends Repository<EventEntity, Integer> {
      * @return Event with the given Id or an empty optional
      */
     @Transactional(readOnly = true)
-    Optional<EventEntity> findOne(final Integer id);
+    Optional<EventEntity> findOne(Integer id);
 
     /**
      * Selects a "page" of events.

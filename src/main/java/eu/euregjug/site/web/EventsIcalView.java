@@ -66,7 +66,7 @@ final class EventsIcalView extends AbstractView {
         final List<EventEntity> events = (List<EventEntity>) model.get("events");
         super.setResponseContentType(request, response);
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());
-        try (final BufferedWriter w = new BufferedWriter(new OutputStreamWriter(response.getOutputStream(), StandardCharsets.UTF_8))) {
+        try (BufferedWriter w = new BufferedWriter(new OutputStreamWriter(response.getOutputStream(), StandardCharsets.UTF_8))) {
             w.write("BEGIN:VCALENDAR" + ICS_LINEBREAK);
             w.write("VERSION:2.0" + ICS_LINEBREAK);
             w.write("PRODID:http://www.euregjug.eu/events" + ICS_LINEBREAK);

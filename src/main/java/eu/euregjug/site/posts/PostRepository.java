@@ -42,7 +42,7 @@ public interface PostRepository extends Repository<PostEntity, Integer>, PostRep
      * @return Post with the given Id or an empty optional
      */
     @Transactional(readOnly = true)
-    Optional<PostEntity> findOne(final Integer id);
+    Optional<PostEntity> findOne(Integer id);
 
     /**
      * Selects a post by date and slug.
@@ -52,7 +52,7 @@ public interface PostRepository extends Repository<PostEntity, Integer>, PostRep
      * @return
      */
     @Transactional(readOnly = true)
-    Optional<PostEntity> findByPublishedOnAndSlug(final Date publishedOn, final String slug);
+    Optional<PostEntity> findByPublishedOnAndSlug(Date publishedOn, String slug);
 
     /**
      * Selects a "page" of posts.

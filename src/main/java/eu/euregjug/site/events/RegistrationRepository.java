@@ -31,14 +31,14 @@ public interface RegistrationRepository extends Repository<RegistrationEntity, I
      * @param entity
      * @return Persisted registration
      */
-    RegistrationEntity save(final RegistrationEntity entity);
+    RegistrationEntity save(RegistrationEntity entity);
 
     /**
      * @param event
      * @param email
      * @return A registration for a given event by a user.
      */
-    Optional<RegistrationEntity> findByEventAndEmail(final EventEntity event, final String email);
+    Optional<RegistrationEntity> findByEventAndEmail(EventEntity event, String email);
 
     @Transactional(readOnly = true)
     List<RegistrationEntity> findAllByEventId(Integer eventId);

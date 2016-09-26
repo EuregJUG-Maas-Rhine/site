@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 EuregJUG.
+ * Copyright 2015-2016 EuregJUG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,9 +22,9 @@ import java.util.Optional;
  * @author Michael J. Simons, 2015-12-29
  */
 public interface PostRepositoryExt {
-    Optional<PostEntity> getPrevious(final PostEntity post);
+    Optional<PostEntity> getPrevious(PostEntity post);
 
-    Optional<PostEntity> getNext(final PostEntity post);
+    Optional<PostEntity> getNext(PostEntity post);
 
     /**
      * Searchs for posts by keyword.
@@ -32,5 +32,5 @@ public interface PostRepositoryExt {
      * @param keyword
      * @return A list of posts that matches on the given keyword
      */
-    List<PostEntity> searchByKeyword(final String keyword);
+    List<PostEntity> searchByKeyword(String keyword);
 }
