@@ -16,7 +16,9 @@
 package eu.euregjug.site.config;
 
 import eu.euregjug.site.support.thymeleaf.EuregJUGDialect;
+import java.time.Duration;
 import java.util.Locale;
+import java.util.TimeZone;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
@@ -49,6 +51,9 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     public LocaleResolver localeResolver() {
         final CookieLocaleResolver rv = new CookieLocaleResolver();
         rv.setDefaultLocale(Locale.ENGLISH);
+        rv.setDefaultTimeZone(TimeZone.getTimeZone("Europe/Berlin"));
+        rv.setLanguageTagCompliant(true);
+        rv.setCookieMaxAge((int) Duration.ofDays(365).getSeconds());
         return rv;
     }
 
