@@ -96,11 +96,8 @@ public class SecurityConfig {
                     .antMatchers("/**").permitAll()
                     .and()
                 .sessionManagement()
-                    .sessionCreationPolicy(SessionCreationPolicy.NEVER)
-                    .enableSessionUrlRewriting(false)
-                    .and()
-                .csrf()
-                    .disable();
+                    .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+                    .enableSessionUrlRewriting(false);
         }
     }
 }
