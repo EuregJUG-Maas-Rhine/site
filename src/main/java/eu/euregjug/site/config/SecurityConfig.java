@@ -23,6 +23,9 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
+import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 
 
 /**
@@ -32,6 +35,51 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @SuppressWarnings({"squid:S1118"}) // This is not a utility class. It cannot have a private constructor.
 public class SecurityConfig {
+
+    @Configuration
+    @EnableAuthorizationServer
+    @ConditionalOnBean(SecurityConfig.class)
+    static class AuthorizationServerConfig {
+    }
+
+    @Configuration
+    @EnableResourceServer
+    @ConditionalOnBean(SecurityConfig.class)
+    static class ResourceServerConfig extends ResourceServerConfigurerAdapter {
+
+        /**
+         * The part of the api that needs protection is secured by method
+         * level security. So all here the http security is matched on the /api/**
+         * endpoints but permits all access by default. Secured resources are
+         * then blacklisted on method level.
+         * <br>
+         * We must also take care of the actuator endpoints. An alternative
+         * would be excluding them by using
+         * <pre>http.regexMatcher("/api/(?!.*(system)).*")</pre> as first matcher
+         * but that would mean having to separate auth mechanism in place.
+         * <br>
+         * I prefer manually enabling the non sensitive ones.
+         *
+         * @param http
+         * @throws Exception
+         */
+        @Override
+        public void configure(final HttpSecurity http) throws Exception {
+            http
+                .antMatcher("/api/**")
+                    .authorizeRequests()
+                        .regexMatchers("/api/system/(?:info|health|metrics)").permitAll()
+                        .antMatchers("/api/system/**").authenticated()
+                        .antMatchers("/api/**").permitAll()
+                .and()
+                    .sessionManagement()
+                    .sessionCreationPolicy(SessionCreationPolicy.NEVER)
+                    .enableSessionUrlRewriting(false)
+                .and()
+                    .csrf()
+                    .disable();
+        }
+    }
 
     @Configuration
     @Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
@@ -44,6 +92,7 @@ public class SecurityConfig {
                 .httpBasic()
                     .and()
                 .authorizeRequests()
+                    .antMatchers("/oauth/**").authenticated()
                     .antMatchers("/**").permitAll()
                     .and()
                 .sessionManagement()
