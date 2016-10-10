@@ -42,7 +42,7 @@
 			    <span th:each="alert : ${alerts}" th:text="#{${alert}}">alert</span>			    			
 			</div> 		
 
-			<form method="post" class="registrationForm" action="#"  th:attr="action=@{/register/{eventId}(eventId=${event.id})}" th:object="${registration}">
+			<form method="post" class="registrationForm" action="#"  th:action="@{/register/{eventId}(eventId=${event.id})}" th:object="${registration}">
 			    <div class="row uniform">
 				<div class="6u$ 12u$(small)" th:classappend="${#fields.hasErrors('firstName')} ? 'has-error'">
 				    <input type="text" th:field="*{firstName}" th:placeholder="#{registration.firstName}" />

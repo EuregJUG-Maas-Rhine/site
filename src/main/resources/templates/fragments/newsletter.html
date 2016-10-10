@@ -24,7 +24,7 @@ limitations under the License.
     <body>
 	<section id="newsletter" th:if="${@mailChimpConfig.enabled}">
 	    <h2 th:text="#{newsletterTitle}">Newsletter</h2>
-	    <form method="post" action="#"  th:attr="action=${@mailChimpConfig.registrationUrl}">
+	    <form method="post" action="#" th:action="${@mailChimpConfig.registrationUrl}">
 		<div id="mc_embed_signup_scroll">
 		    <div class="row uniform">
 			<div class="6u$ 12u$(small)">
