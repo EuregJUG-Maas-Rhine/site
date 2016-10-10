@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+<!--
+	Slate by Pixelarity
+	pixelarity.com @pixelarity
+	License: pixelarity.com/license
+-->
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      th:lang="${#locale.language}">
+    <head th:replace="fragments/head :: head (_pageTitle=#{error404Title})">
+	<title>index.html</title>
+    </head>
+    <body>
+	<header th:replace="fragments/header :: header" />
+
+	<!-- Main -->
+	<section id="main" class="wrapper">
+	    <div class="inner">
+
+		<header class="major">
+		    <h2 th:text="#{error404Title}">Page Title</h2>		    
+		</header>
+
+		<!-- Content -->
+		<div class="content">
+		    <a href="#" class="image left"><img src="webapp/public/img/duke-thinking.jpg" th:src="@{/img/duke-thinking.jpg}" alt="" /></a>
+		    <div th:utext="#{error404(@{/archive},@{/})}">
+			<p>Aliquam massa urna, imperdiet sit amet mi non, bibendum euismod est. Curabitur mi justo, tincidunt vel eros ullamcorper, porta cursus justo. Cras vel neque eros. Vestibulum diam quam, mollis at magna consectetur non, malesuada quis augue. Morbi tincidunt pretium interdum est. Curabitur mi justo, tincidunt vel eros ullamcorper, porta cursus justo. Cras vel neque eros. Vestibulum diam.</p>
+		    </div>
+                    <div style="clear:both"></div>                    
+		</div>
+
+	    </div>
+	</section>
+
+	<section th:replace="fragments/contact :: #contact" />
+
+	<footer th:replace="fragments/footer :: footer" />
+
+	<div th:replace="fragments/scripts :: body/script" />
+    </body>
+</html>
