@@ -73,7 +73,7 @@ public class SecurityConfig {
                         .antMatchers("/api/**").permitAll()
                 .and()
                     .sessionManagement()
-                    .sessionCreationPolicy(SessionCreationPolicy.NEVER)
+                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                     .enableSessionUrlRewriting(false)
                 .and()
                     .csrf()
