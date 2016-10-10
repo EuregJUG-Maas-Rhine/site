@@ -15,10 +15,14 @@
  */
 package eu.euregjug.site.config;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -26,12 +30,15 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
+import org.springframework.security.oauth2.provider.token.TokenStore;
+import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
 
 
 /**
  * @author Michael J. Simons, 2015-12-27
  */
 @Configuration
+@Slf4j
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @SuppressWarnings({"squid:S1118"}) // This is not a utility class. It cannot have a private constructor.
 public class SecurityConfig {
@@ -40,6 +47,18 @@ public class SecurityConfig {
     @EnableAuthorizationServer
     @ConditionalOnBean(SecurityConfig.class)
     static class AuthorizationServerConfig {
+    }
+
+    @Configuration
+    @Profile("cloud")
+    @ConditionalOnBean(SecurityConfig.class)
+    static class TokenStoreConfig {
+
+        @Bean
+        public TokenStore tokenStore(final RedisConnectionFactory redisConnectionFactory) {
+            log.debug("Enabling RedisTokenStore");
+            return new RedisTokenStore(redisConnectionFactory);
+        }
     }
 
     @Configuration
