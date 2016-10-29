@@ -37,6 +37,6 @@ mvn docker:build
 Running and stopping them is as easy as
 
 ```
-mvn docker:run
+mvn docker:start
 mvn docker:stop
 ```
