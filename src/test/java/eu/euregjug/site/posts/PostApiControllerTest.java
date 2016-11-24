@@ -207,6 +207,7 @@ public class PostApiControllerTest {
     public void updateShouldShouldWork() throws Exception {
         final PostEntity updateEntity = new PostEntity(new Date(), "newslug", "newtitle", "newcontent");
         updateEntity.setFormat(Format.markdown);
+        updateEntity.setStatus(null);
         final PostEntity oldEntity = new PostEntity(new Date(), "oldslug", "oldtitle", "oldcontent");
         oldEntity.setLocale(new Locale("de", "DE"));
         oldEntity.setFormat(Format.asciidoc);

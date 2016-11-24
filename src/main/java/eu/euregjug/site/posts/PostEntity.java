@@ -219,7 +219,7 @@ public class PostEntity implements Serializable {
         this.title = title;
         this.content = content;
         this.createdAt = Calendar.getInstance();
-        this.status = Status.published;
+        this.status = Status.draft;
     }
 
     final String generateSlug(final String suggestedSlug, final String newTitle) {
