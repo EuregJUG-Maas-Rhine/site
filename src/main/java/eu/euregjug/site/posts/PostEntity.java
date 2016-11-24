@@ -162,7 +162,7 @@ public class PostEntity implements Serializable {
     private String content;
 
     /**
-     * Format of this posts. Defaults to Markdown.
+     * Format of this posts. Defaults to asciidoc.
      */
     @Enumerated(EnumType.STRING)
     @NotNull
