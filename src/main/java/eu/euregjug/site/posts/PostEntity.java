@@ -243,6 +243,7 @@ public class PostEntity implements Serializable {
         this.updatedAt = Calendar.getInstance();
     }
 
+    @JsonIgnore
     public boolean isPublished() {
         return this.status == Status.published;
     }
