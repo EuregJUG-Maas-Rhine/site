@@ -113,6 +113,14 @@ public class PostEntity implements Serializable {
     }
 
     /**
+     * Status of a post.
+     */
+    public enum Status {
+
+        draft, published, hidden
+    }
+
+    /**
      * Primary key of this post.
      */
     @Id
@@ -192,6 +200,13 @@ public class PostEntity implements Serializable {
     private Locale locale;
 
     /**
+     * Status of this post.
+     */
+    @Enumerated(EnumType.STRING)
+    @Getter @Setter
+    private Status status;
+
+    /**
      * Needed for Hibernate, not to be called by application code.
      */
     @SuppressWarnings({"squid:S2637"})
@@ -204,6 +219,7 @@ public class PostEntity implements Serializable {
         this.title = title;
         this.content = content;
         this.createdAt = Calendar.getInstance();
+        this.status = Status.published;
     }
 
     final String generateSlug(final String suggestedSlug, final String newTitle) {
@@ -225,5 +241,9 @@ public class PostEntity implements Serializable {
         }
         this.slug = generateSlug(slug, title);
         this.updatedAt = Calendar.getInstance();
+    }
+
+    public boolean isPublished() {
+        return this.status == Status.published;
     }
 }

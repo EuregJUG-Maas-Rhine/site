@@ -26,6 +26,7 @@ import eu.euregjug.site.links.LinkEntity;
 import eu.euregjug.site.links.LinkRepository;
 import eu.euregjug.site.posts.Post;
 import eu.euregjug.site.posts.PostEntity;
+import eu.euregjug.site.posts.PostEntity.Status;
 import eu.euregjug.site.posts.PostRenderingService;
 import eu.euregjug.site.posts.PostRepository;
 import java.time.DateTimeException;
@@ -91,7 +92,7 @@ class IndexController {
         model
                 .addAttribute("upcomingEvents", this.eventRepository.findUpcomingEvents())
                 .addAttribute("links", this.linkRepository.findAllByOrderByTypeAscSortColAscTitleAsc().stream().collect(groupingBy(LinkEntity::getType)))
-                .addAttribute("posts", this.postRepository.findAll(new PageRequest(page, 5, Direction.DESC, "publishedOn", "createdAt")).map(postRenderingService::render));
+                .addAttribute("posts", this.postRepository.findAllByStatus(Status.published, new PageRequest(page, 5, Direction.DESC, "publishedOn", "createdAt")).map(postRenderingService::render));
         return "index";
     }
 
@@ -110,7 +111,9 @@ class IndexController {
         String rv = "redirect:/";
         try {
             final Date publishedOn = Date.from(LocalDate.of(year, month, day).atStartOfDay(ZoneId.systemDefault()).toInstant());
-            final Optional<PostEntity> post = this.postRepository.findByPublishedOnAndSlug(publishedOn, slug);
+            final Optional<PostEntity> post = this.postRepository
+                    .findByPublishedOnAndSlug(publishedOn, slug)
+                    .filter(PostEntity::isPublished);
             model
                     .addAttribute("previousPost", post.flatMap(this.postRepository::getPrevious))
                     .addAttribute("post", post.map(postRenderingService::render).get())
@@ -128,6 +131,7 @@ class IndexController {
         model.addAttribute("posts",
                 this.postRepository
                 .findAll(new Sort(Direction.DESC, "publishedOn")).stream()
+                .filter(PostEntity::isPublished)
                 .map(Post::new)
                 .collect(groupingBy(
                         post -> post.getPublishedOn().withDayOfMonth(1),
@@ -143,6 +147,7 @@ class IndexController {
     public String search(@RequestParam final String q, final Model model) {
         final TreeMap<LocalDate, List<Post>> posts = this.postRepository
                 .searchByKeyword(q).stream()
+                .filter(PostEntity::isPublished)
                 .map(Post::new)
                 .collect(groupingBy(
                         post -> post.getPublishedOn().withDayOfMonth(1),

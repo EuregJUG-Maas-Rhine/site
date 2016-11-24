@@ -15,6 +15,7 @@
  */
 package eu.euregjug.site.posts;
 
+import eu.euregjug.site.posts.PostEntity.Status;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -53,6 +54,16 @@ public interface PostRepository extends Repository<PostEntity, Integer>, PostRep
      */
     @Transactional(readOnly = true)
     Optional<PostEntity> findByPublishedOnAndSlug(Date publishedOn, String slug);
+
+    /**
+     * Selects a "page" of posts with a given status.
+     *
+     * @param status status as selection criteria
+     * @param pageable
+     * @return
+     */
+    @Transactional(readOnly = true)
+    Page<PostEntity> findAllByStatus(Status status, Pageable pageable);
 
     /**
      * Selects a "page" of posts.

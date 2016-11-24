@@ -18,6 +18,7 @@ package eu.euregjug.site.posts;
 import eu.euregjug.site.config.SecurityTestConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.euregjug.site.posts.PostEntity.Format;
+import eu.euregjug.site.posts.PostEntity.Status;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Locale;
@@ -92,14 +93,15 @@ public class PostApiControllerTest {
     @Test
     public void createShouldWork() throws Exception {
         final PostEntity postEntity1 = new PostEntity(new Date(), "new-site-is-live1", "New site is live", "Welcome to the new EuregJUG website. We have switched off the old static pages and replaced it with a little application based on Hibernate, Spring Data JPA, Spring Boot and Thymeleaf.");
-        postEntity1.setLocale(new Locale("de", "DE"));        
+        postEntity1.setLocale(new Locale("de", "DE"));
+        postEntity1.setStatus(Status.published);
         when(this.postRepository.save(postEntity1)).then(invocation -> {
             // Do the stuff JPA would do for us...
             final PostEntity rv = invocation.getArgumentAt(0, PostEntity.class);
             return Reflect.on(rv).call("updateUpdatedAt").set("id", 4711).get();
         });
-        
-        final PostEntity postEntity2 = new PostEntity(new Date(), "new-site-is-live2", "New site is live", "Welcome to the new EuregJUG website. We have switched off the old static pages and replaced it with a little application based on Hibernate, Spring Data JPA, Spring Boot and Thymeleaf.");        
+
+        final PostEntity postEntity2 = new PostEntity(new Date(), "new-site-is-live2", "New site is live", "Welcome to the new EuregJUG website. We have switched off the old static pages and replaced it with a little application based on Hibernate, Spring Data JPA, Spring Boot and Thymeleaf.");
         when(this.postRepository.save(postEntity2)).then(invocation -> {
             // Do the stuff JPA would do for us...
             final PostEntity rv = invocation.getArgumentAt(0, PostEntity.class);
@@ -117,11 +119,12 @@ public class PostApiControllerTest {
                 .andExpect(jsonPath("$.id", equalTo(4711)))
                 .andExpect(jsonPath("$.slug", equalTo("new-site-is-live1")))
                 .andExpect(jsonPath("$.locale", equalTo("de_DE")))
+                .andExpect(jsonPath("$.status", equalTo("published")))
                 .andDo(document("api/posts/create",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint())
                 ));
-        
+
         this.mvc
                 .perform(
                         post("/api/posts")
@@ -132,7 +135,8 @@ public class PostApiControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id", equalTo(4712)))
                 .andExpect(jsonPath("$.slug", equalTo("new-site-is-live2")))
-                .andExpect(jsonPath("$.locale", equalTo("en_US")));
+                .andExpect(jsonPath("$.locale", equalTo("en_US")))
+                .andExpect(jsonPath("$.status", equalTo("draft")));
 
         verify(this.postRepository).save(postEntity1);
         verify(this.postRepository).save(postEntity2);
@@ -172,15 +176,15 @@ public class PostApiControllerTest {
         verify(this.postRepository).findAll(any(Pageable.class));
         verifyNoMoreInteractions(this.postRepository);
     }
-    
+
     @Test
     public void searchShouldWork() throws Exception {
         final PostEntity p1 = Reflect.on(
                 new PostEntity(new Date(), "new-site-is-live", "New site is live", "Welcome to the new EuregJUG website. We have switched off the old static pages and replaced it with a little application based on Hibernate, Spring Data JPA, Spring Boot and Thymeleaf.")
-        ).call("updateUpdatedAt").set("id", 23).get();        
-        
+        ).call("updateUpdatedAt").set("id", 23).get();
+
         when(this.postRepository.searchByKeyword("website")).thenReturn(Arrays.asList(p1));
-        
+
         this.mvc
                 .perform(
                         get("/api/posts/search")
@@ -189,7 +193,7 @@ public class PostApiControllerTest {
                 )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].slug", equalTo("new-site-is-live")))                
+                .andExpect(jsonPath("$[0].slug", equalTo("new-site-is-live")))
                 .andDo(document("api/posts/search",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint())
@@ -202,10 +206,11 @@ public class PostApiControllerTest {
     @Test
     public void updateShouldShouldWork() throws Exception {
         final PostEntity updateEntity = new PostEntity(new Date(), "newslug", "newtitle", "newcontent");
-        updateEntity.setFormat(Format.markdown);        
+        updateEntity.setFormat(Format.markdown);
         final PostEntity oldEntity = new PostEntity(new Date(), "oldslug", "oldtitle", "oldcontent");
         oldEntity.setLocale(new Locale("de", "DE"));
         oldEntity.setFormat(Format.asciidoc);
+        oldEntity.setStatus(Status.hidden);
         when(this.postRepository.findOne(4711)).thenReturn(Optional.empty());
         when(this.postRepository.findOne(4712)).thenReturn(Optional.of(oldEntity));
 
@@ -234,9 +239,11 @@ public class PostApiControllerTest {
                 .andExpect(jsonPath("$.format", equalTo("markdown")))
                 .andExpect(jsonPath("$.title", equalTo("newtitle")))
                 .andExpect(jsonPath("$.slug", equalTo("oldslug")))
-                .andExpect(jsonPath("$.locale", equalTo("de_DE")));
-        
+                .andExpect(jsonPath("$.locale", equalTo("de_DE")))
+                .andExpect(jsonPath("$.status", equalTo("hidden")));
+
         updateEntity.setLocale(new Locale("en", "US"));
+        updateEntity.setStatus(Status.published);
         this.mvc
                 .perform(
                         put("/api/posts/{id}", 4712)
@@ -246,6 +253,7 @@ public class PostApiControllerTest {
                 )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.locale", equalTo("en_US")))
+                .andExpect(jsonPath("$.status", equalTo("published")))
                 .andDo(document("api/posts/update/updated",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint())

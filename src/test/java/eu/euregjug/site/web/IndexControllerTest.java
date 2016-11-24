@@ -23,6 +23,7 @@ import eu.euregjug.site.events.RegistrationService;
 import eu.euregjug.site.links.LinkEntity;
 import eu.euregjug.site.links.LinkRepository;
 import eu.euregjug.site.posts.PostEntity;
+import eu.euregjug.site.posts.PostEntity.Status;
 import eu.euregjug.site.posts.PostRenderingService;
 import eu.euregjug.site.posts.PostRepository;
 import static eu.euregjug.site.web.EventsIcalView.ICS_LINEBREAK;
@@ -141,7 +142,7 @@ public class IndexControllerTest {
         when(this.linkRepository.findAllByOrderByTypeAscSortColAscTitleAsc()).thenReturn(links);
         final PageRequest pageRequest = new PageRequest(0, 5, Sort.Direction.DESC, "publishedOn", "createdAt");
         final PageImpl<PostEntity> postsPage = new PageImpl<>(this.posts, pageRequest, 15);
-        when(this.postRepository.findAll(pageRequest)).thenReturn(postsPage);
+        when(this.postRepository.findAllByStatus(Status.published, pageRequest)).thenReturn(postsPage);
 
         final Map<LinkEntity.Type, List<LinkEntity>> links = new HashMap<>();
         links.put(LinkEntity.Type.generic, this.links);
@@ -214,7 +215,7 @@ public class IndexControllerTest {
         when(this.eventRepository.findUpcomingEvents()).thenReturn(events);
         final PageRequest pageRequest = new PageRequest(1, 5, Sort.Direction.DESC, "publishedOn", "createdAt");
         final PageImpl<PostEntity> postsPage = new PageImpl<>(this.posts, pageRequest, 15);
-        when(this.postRepository.findAll(pageRequest)).thenReturn(postsPage);
+        when(this.postRepository.findAllByStatus(Status.published, pageRequest)).thenReturn(postsPage);
         when(this.linkRepository.findAllByOrderByTypeAscSortColAscTitleAsc()).thenReturn(new ArrayList<>());
 
         this.mvc
