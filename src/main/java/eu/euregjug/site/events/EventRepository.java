@@ -43,6 +43,7 @@ public interface EventRepository extends Repository<EventEntity, Integer> {
             = " Select e"
             + "   from EventEntity e"
             + "  where e.heldOn > current_date()"
+            + "    and e.status = 'open'"
             + "  order by e.heldOn asc "
     )
     @Transactional(readOnly = true)

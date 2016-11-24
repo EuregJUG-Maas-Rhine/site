@@ -17,6 +17,7 @@ package eu.euregjug.site.events;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.euregjug.site.config.SecurityTestConfig;
+import eu.euregjug.site.events.EventEntity.Status;
 import eu.euregjug.site.events.EventEntity.Type;
 import eu.euregjug.site.posts.PostEntity;
 import eu.euregjug.site.posts.PostRepository;
@@ -147,6 +148,7 @@ public class EventApiControllerTest {
                 .andExpect(jsonPath("$.id", equalTo(4712)))
                 .andExpect(jsonPath("$.name", equalTo(eventEntity.getName())))
                 .andExpect(jsonPath("$.post").doesNotExist())
+                .andExpect(jsonPath("$.status", equalTo("open")))
                 .andDo(document("api/events/create",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint())
@@ -282,6 +284,7 @@ public class EventApiControllerTest {
         oldEntity.setDuration(60);
         oldEntity.setNeedsRegistration(false);
         oldEntity.setType(Type.meetup);
+        oldEntity.setStatus(Status.open);
         
         when(this.eventRepository.findOne(23)).thenReturn(Optional.empty());
         when(this.eventRepository.findOne(42)).thenReturn(Optional.of(oldEntity));
@@ -315,13 +318,33 @@ public class EventApiControllerTest {
                 .andExpect(jsonPath("$.speaker", equalTo(updateEntity.getSpeaker())))
                 .andExpect(jsonPath("$.location", equalTo(updateEntity.getLocation())))
                 .andExpect(jsonPath("$.type", equalTo("talk")))
+                .andExpect(jsonPath("$.status", equalTo("open")));
+        
+        updateEntity.setStatus(EventEntity.Status.closed);
+        this.mvc
+                .perform(
+                        put("/api/events/{id}", 42)
+                        .content(this.json.write(updateEntity).getJson())
+                        .contentType(APPLICATION_JSON)
+                        .principal(() -> "euregjug")
+                )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", equalTo(42)))
+                .andExpect(jsonPath("$.name", equalTo(oldEntity.getName())))
+                .andExpect(jsonPath("$.description", equalTo(updateEntity.getDescription())))
+                .andExpect(jsonPath("$.duration", equalTo(updateEntity.getDuration())))
+                .andExpect(jsonPath("$.needsRegistration", equalTo(true)))
+                .andExpect(jsonPath("$.speaker", equalTo(updateEntity.getSpeaker())))
+                .andExpect(jsonPath("$.location", equalTo(updateEntity.getLocation())))
+                .andExpect(jsonPath("$.type", equalTo("talk")))
+                .andExpect(jsonPath("$.status", equalTo("closed")))
                 .andDo(document("api/events/update/updated",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint())
                 ));
         
         verify(this.eventRepository).findOne(23);
-        verify(this.eventRepository).findOne(42);
+        verify(this.eventRepository, times(2)).findOne(42);
         verifyNoMoreInteractions(this.eventRepository, this.postRepository, this.registrationRepository);
     }
 }

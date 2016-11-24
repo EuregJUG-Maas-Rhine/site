@@ -74,6 +74,14 @@ public class EventEntity implements Serializable {
     }
 
     /**
+     * Status of an event.
+     */
+    public enum Status {
+
+        open, closed
+    }
+
+    /**
      * Primary key of this event.
      */
     @Id
@@ -160,6 +168,13 @@ public class EventEntity implements Serializable {
     private Calendar createdAt;
 
     /**
+     * Status of this event.
+     */
+    @Enumerated(EnumType.STRING)
+    @Getter @Setter
+    private Status status;
+
+    /**
      * Needed for Hibernate, not to be called by application code.
      */
     @SuppressWarnings({"squid:S2637"})
@@ -178,6 +193,7 @@ public class EventEntity implements Serializable {
         this.heldOn = heldOn;
         this.name = name;
         this.description = description;
+        this.status = Status.open;
     }
 
     @PrePersist
@@ -193,7 +209,7 @@ public class EventEntity implements Serializable {
      */
     @JsonIgnore
     public boolean isOpen() {
-        return this.heldOn.after(Calendar.getInstance());
+        return this.status == Status.open && this.heldOn.after(Calendar.getInstance());
     }
 
     /**

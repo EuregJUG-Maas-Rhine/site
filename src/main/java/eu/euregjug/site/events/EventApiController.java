@@ -15,10 +15,12 @@
  */
 package eu.euregjug.site.events;
 
+import eu.euregjug.site.events.EventEntity.Status;
 import eu.euregjug.site.posts.PostEntity;
 import eu.euregjug.site.posts.PostRepository;
 import eu.euregjug.site.support.ResourceNotFoundException;
 import java.util.List;
+import java.util.Optional;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -54,6 +56,7 @@ class EventApiController {
     @PreAuthorize("isAuthenticated()")
     @ResponseStatus(CREATED)
     public EventEntity create(@Valid @RequestBody final EventEntity newEvent) {
+        newEvent.setStatus(Optional.ofNullable(newEvent.getStatus()).orElse(Status.open));
         return this.eventRepository.save(newEvent);
     }
 
@@ -102,6 +105,9 @@ class EventApiController {
         eventEntity.setType(updatedEvent.getType());
         eventEntity.setSpeaker(updatedEvent.getSpeaker());
         eventEntity.setLocation(updatedEvent.getLocation());
+        if (updatedEvent.getStatus() != null) {
+            eventEntity.setStatus(updatedEvent.getStatus());
+        }
         return eventEntity;
     }
 }

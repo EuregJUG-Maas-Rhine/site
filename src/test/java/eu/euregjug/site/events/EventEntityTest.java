@@ -15,7 +15,11 @@
  */
 package eu.euregjug.site.events;
 
+import eu.euregjug.site.events.EventEntity.Status;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import org.junit.Test;
@@ -33,5 +37,16 @@ public class EventEntityTest {
         assertThat(event.getDisplayName(), is("test"));
         event.setSpeaker("test");
         assertThat(event.getDisplayName(), is("test - test"));
+    }
+    
+    @Test
+    public void isOpenShouldWork() {
+        EventEntity event;
+        event = new EventEntity(GregorianCalendar.from(LocalDateTime.now().plusDays(1).atZone(ZoneId.systemDefault())), "test", "test");        
+        assertThat(event.isOpen(), is(true));
+        event.setStatus(Status.closed);
+        assertThat(event.isOpen(), is(false));
+        event = new EventEntity(GregorianCalendar.from(LocalDateTime.now().minusDays(1).atZone(ZoneId.systemDefault())), "test", "test");
+        assertThat(event.isOpen(), is(false));
     }
 }
