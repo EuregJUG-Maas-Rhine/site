@@ -162,6 +162,16 @@ public class IndexControllerTest {
                 .andExpect(model().attribute("links", links))
                 .andExpect(model().attributeExists("posts"));
     }
+    
+    @Test
+    public void postShouldHandleInvalidDate() throws Exception {
+         this.mvc
+                .perform(
+                        get("http://euregjug.eu/{year}/{month}/{day}/{slug}", 2016, 2, 30, "test")
+                )
+                .andExpect(status().isFound())
+                .andExpect(view().name("redirect:/"));
+    }
 
     @Test
     public void eventsShouldWork() throws Exception {
