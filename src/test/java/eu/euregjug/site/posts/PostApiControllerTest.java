@@ -71,7 +71,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
         uriHost = "euregjug.eu",
         uriPort = 80
 )
-@MockBean(PostIndexService.class)
 public class PostApiControllerTest {
 
     @Autowired
@@ -79,6 +78,9 @@ public class PostApiControllerTest {
 
     @MockBean
     private PostRepository postRepository;
+
+    @MockBean
+    private PostIndexService postIndexService;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -111,9 +113,9 @@ public class PostApiControllerTest {
         this.mvc
                 .perform(
                         post("/api/posts")
-                        .content(this.json.write(postEntity1).getJson())
-                        .contentType(APPLICATION_JSON)
-                        .principal(() -> "euregjug")
+                                .content(this.json.write(postEntity1).getJson())
+                                .contentType(APPLICATION_JSON)
+                                .principal(() -> "euregjug")
                 )
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id", equalTo(4711)))
@@ -128,9 +130,9 @@ public class PostApiControllerTest {
         this.mvc
                 .perform(
                         post("/api/posts")
-                        .content(this.json.write(postEntity2).getJson())
-                        .contentType(APPLICATION_JSON)
-                        .principal(() -> "euregjug")
+                                .content(this.json.write(postEntity2).getJson())
+                                .contentType(APPLICATION_JSON)
+                                .principal(() -> "euregjug")
                 )
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id", equalTo(4712)))
@@ -159,7 +161,7 @@ public class PostApiControllerTest {
         this.mvc
                 .perform(
                         get("/api/posts")
-                        .principal(() -> "euregjug")
+                                .principal(() -> "euregjug")
                 )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.numberOfElements", equalTo(2)))
@@ -188,8 +190,8 @@ public class PostApiControllerTest {
         this.mvc
                 .perform(
                         get("/api/posts/search")
-                        .param("q", "website")
-                        .principal(() -> "euregjug")
+                                .param("q", "website")
+                                .principal(() -> "euregjug")
                 )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
@@ -218,9 +220,9 @@ public class PostApiControllerTest {
         this.mvc
                 .perform(
                         put("/api/posts/{id}", 4711)
-                        .content(this.json.write(updateEntity).getJson())
-                        .contentType(APPLICATION_JSON)
-                        .principal(() -> "euregjug")
+                                .content(this.json.write(updateEntity).getJson())
+                                .contentType(APPLICATION_JSON)
+                                .principal(() -> "euregjug")
                 )
                 .andExpect(status().isNotFound())
                 .andDo(document("api/posts/update/notfound",
@@ -231,9 +233,9 @@ public class PostApiControllerTest {
         this.mvc
                 .perform(
                         put("/api/posts/{id}", 4712)
-                        .content(this.json.write(updateEntity).getJson())
-                        .contentType(APPLICATION_JSON)
-                        .principal(() -> "euregjug")
+                                .content(this.json.write(updateEntity).getJson())
+                                .contentType(APPLICATION_JSON)
+                                .principal(() -> "euregjug")
                 )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content", equalTo("newcontent")))
@@ -248,9 +250,9 @@ public class PostApiControllerTest {
         this.mvc
                 .perform(
                         put("/api/posts/{id}", 4712)
-                        .content(this.json.write(updateEntity).getJson())
-                        .contentType(APPLICATION_JSON)
-                        .principal(() -> "euregjug")
+                                .content(this.json.write(updateEntity).getJson())
+                                .contentType(APPLICATION_JSON)
+                                .principal(() -> "euregjug")
                 )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.locale", equalTo("en_US")))
@@ -263,5 +265,22 @@ public class PostApiControllerTest {
         verify(this.postRepository).findOne(4711);
         verify(this.postRepository, times(2)).findOne(4712);
         verifyNoMoreInteractions(this.postRepository);
+    }
+
+    @Test
+    public void rebuildIndexShouldWork() throws Exception {
+        this.mvc
+                .perform(
+                        post("/api/posts/rebuildIndex")
+                                .principal(() -> "euregjug")
+                )
+                .andExpect(status().isCreated())
+                .andDo(document("api/posts/rebuildIndex",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint())
+                ));
+
+        verify(this.postIndexService).rebuildIndex();
+        verifyNoMoreInteractions(this.postIndexService);
     }
 }
