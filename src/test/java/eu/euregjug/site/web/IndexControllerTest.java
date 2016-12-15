@@ -63,6 +63,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.xpath;
@@ -255,5 +256,18 @@ public class IndexControllerTest {
                 .andExpect(xpath("/rss/channel/item[2]/author").string("euregjug.eu"))
                 .andExpect(xpath("/rss/channel/item[2]/guid").string("http://euregjug.eu/2016/8/4/bar"))
                 .andExpect(status().isOk());
+    }
+    
+    @Test
+    public void registerShouldHandleInvalidData() throws Exception {
+        when(this.eventRepository.findOne(23)).thenReturn(Optional.of(this.events.get(0)));
+        
+        this.mvc.perform(post("/register/{eventId}", 23))
+                .andExpect(status().isOk())
+                .andExpect(view().name("register"))
+                .andExpect(model().attribute("registered", false))
+                .andExpect(model().attribute("event", this.events.get(0)))
+                .andExpect(model().attribute("alerts", Arrays.asList("invalidRegistration")))
+                .andExpect(model().attributeExists("registration"));
     }
 }
