@@ -16,9 +16,11 @@
 package eu.euregjug.site.web;
 
 import com.github.mkopylec.recaptcha.validation.RecaptchaValidator;
+import com.github.mkopylec.recaptcha.validation.ValidationResult;
 import eu.euregjug.site.config.MailChimpConfig;
 import eu.euregjug.site.events.EventEntity;
 import eu.euregjug.site.events.EventRepository;
+import eu.euregjug.site.events.Registration;
 import eu.euregjug.site.events.RegistrationService;
 import eu.euregjug.site.links.LinkEntity;
 import eu.euregjug.site.links.LinkRepository;
@@ -39,10 +41,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import javax.servlet.http.HttpServletRequest;
 import static org.hamcrest.CoreMatchers.containsString;
 import org.joor.Reflect;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -91,8 +95,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ImportAutoConfiguration(MessageSourceAutoConfiguration.class)
 @EnableSpringDataWebSupport // Needed to enable resolving of Pageable and other parameters
 @MockBean(classes = {
-    RegistrationService.class,
-    RecaptchaValidator.class
+    RegistrationService.class
 })
 public class IndexControllerTest {
 
@@ -107,6 +110,9 @@ public class IndexControllerTest {
 
     @MockBean
     private LinkRepository linkRepository;
+
+    @MockBean
+    private RecaptchaValidator recaptchaValidator;
 
     private final List<EventEntity> events;
 
@@ -210,11 +216,11 @@ public class IndexControllerTest {
         verify(this.eventRepository).findOne(23);
         verifyNoMoreInteractions(this.eventRepository);
     }
-    
+
     @Test
     public void registerFormShouldHandleInvalidEvent() throws Exception {
         when(this.eventRepository.findOne(23)).thenReturn(Optional.empty());
-        
+
         this.mvc
                 .perform(get("http://euregjug.eu/register/{eventId}", 23))
                 .andExpect(status().isFound())
@@ -257,12 +263,37 @@ public class IndexControllerTest {
                 .andExpect(xpath("/rss/channel/item[2]/guid").string("http://euregjug.eu/2016/8/4/bar"))
                 .andExpect(status().isOk());
     }
-    
+
     @Test
     public void registerShouldHandleInvalidData() throws Exception {
         when(this.eventRepository.findOne(23)).thenReturn(Optional.of(this.events.get(0)));
-        
+
         this.mvc.perform(post("/register/{eventId}", 23))
+                .andExpect(status().isOk())
+                .andExpect(view().name("register"))
+                .andExpect(model().attribute("registered", false))
+                .andExpect(model().attribute("event", this.events.get(0)))
+                .andExpect(model().attribute("alerts", Arrays.asList("invalidRegistration")))
+                .andExpect(model().attributeExists("registration"));
+    }
+
+    @Test
+    public void registerShouldHandleInvalidRecaptca() throws Exception {
+        when(this.eventRepository.findOne(23)).thenReturn(Optional.of(this.events.get(0)));
+        when(this.recaptchaValidator.validate(any(HttpServletRequest.class))).thenReturn(new ValidationResult(false, new ArrayList<>()));
+
+        final Registration registration = new Registration();
+        registration.setFirstName("Michael");
+        registration.setName("Simons");
+        registration.setEmail("michael@euregjug.eu");
+        registration.setSubscribeToNewsletter(true);
+
+        this.mvc.perform(
+                    post("/register/{eventId}", 23)
+                    .param("firstName", "Michael")
+                    .param("name", "Simons")
+                    .param("email", "michael@euregjug.eu")
+                )
                 .andExpect(status().isOk())
                 .andExpect(view().name("register"))
                 .andExpect(model().attribute("registered", false))
