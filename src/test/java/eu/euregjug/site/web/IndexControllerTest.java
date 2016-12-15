@@ -209,6 +209,19 @@ public class IndexControllerTest {
         verify(this.eventRepository).findOne(23);
         verifyNoMoreInteractions(this.eventRepository);
     }
+    
+    @Test
+    public void registerFormShouldHandleInvalidEvent() throws Exception {
+        when(this.eventRepository.findOne(23)).thenReturn(Optional.empty());
+        
+        this.mvc
+                .perform(get("http://euregjug.eu/register/{eventId}", 23))
+                .andExpect(status().isFound())
+                .andExpect(view().name("redirect:/"));
+
+        verify(this.eventRepository).findOne(23);
+        verifyNoMoreInteractions(this.eventRepository);
+    }
 
     @Test
     public void feedShouldWork() throws Exception {
