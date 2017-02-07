@@ -29,6 +29,7 @@ import eu.euregjug.site.posts.PostEntity.Status;
 import eu.euregjug.site.posts.PostRenderingService;
 import eu.euregjug.site.posts.PostRepository;
 import static eu.euregjug.site.web.EventsIcalView.ICS_LINEBREAK;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -136,8 +137,8 @@ public class IndexControllerTest {
         this.events = Arrays.asList(event1, event2);
 
         this.posts = new ArrayList<>();
-        this.posts.add(Reflect.on(new PostEntity(Date.from(LocalDate.of(2016, 8, 5).atStartOfDay(ZoneId.of("Europe/Berlin")).toInstant()), "foo", "foo", "foo")).set("id", 2).get());
-        this.posts.add(Reflect.on(new PostEntity(Date.from(LocalDate.of(2016, 8, 4).atStartOfDay(ZoneId.of("Europe/Berlin")).toInstant()), "bar", "bar", "bar")).set("id", 1).get());
+        this.posts.add(Reflect.on(new PostEntity(Date.from(LocalDate.of(2016, 8, 5).atStartOfDay(ZoneId.systemDefault()).toInstant()), "foo", "foo", "foo")).set("id", 2).get());
+        this.posts.add(Reflect.on(new PostEntity(Date.from(LocalDate.of(2016, 8, 4).atStartOfDay(ZoneId.systemDefault()).toInstant()), "bar", "bar", "bar")).set("id", 1).get());
 
         this.links = new ArrayList<>();
         this.links.add(new LinkEntity("http://michael-simons.eu", "Michael Simons"));
@@ -248,6 +249,11 @@ public class IndexControllerTest {
         when(this.postRepository.findAllByStatus(Status.published, pageRequest)).thenReturn(postsPage);
         when(this.linkRepository.findAllByOrderByTypeAscSortColAscTitleAsc()).thenReturn(new ArrayList<>());
 
+        final ZoneId zoneUtc = ZoneId.of("UTC");
+        final SimpleDateFormat df = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss 'GMT'", Locale.US);
+        final String date1 = df.format(this.posts.get(0).getPublishedOn());
+        final String date2 = df.format(this.posts.get(1).getPublishedOn());
+        
         this.mvc
                 .perform(
                         get("http://euregjug.eu/feed.rss")
@@ -257,8 +263,8 @@ public class IndexControllerTest {
                 .andExpect(xpath("/rss/channel/title").string("EuregJUG Maas-Rhine - All things JVM!"))
                 .andExpect(xpath("/rss/channel/link").string("http://euregjug.eu"))
                 .andExpect(xpath("/rss/channel/description").string("RSS Feed from EuregJUG, the Java User Group for the Euregio Maas-Rhine (Aachen, Maastricht, Liege)."))
-                .andExpect(xpath("/rss/channel/pubDate").string("Thu, 04 Aug 2016 22:00:00 GMT"))
-                .andExpect(xpath("/rss/channel/lastBuildDate").string("Thu, 04 Aug 2016 22:00:00 GMT"))
+                .andExpect(xpath("/rss/channel/pubDate").string(date1))
+                .andExpect(xpath("/rss/channel/lastBuildDate").string(date1))
                 .andExpect(xpath("/rss/channel/generator").string("https://github.com/EuregJUG-Maas-Rhine/site"))
                 .andExpect(xpath("/rss/channel/*[local-name() = 'link' and @rel='previous']/@href").string("http://euregjug.eu/feed.rss?page=0"))
                 .andExpect(xpath("/rss/channel/*[local-name() = 'link' and @rel='self']/@href").string("http://euregjug.eu/feed.rss?page=1"))
@@ -268,7 +274,7 @@ public class IndexControllerTest {
                 .andExpect(xpath("/rss/channel/item[2]/title").string("bar"))
                 .andExpect(xpath("/rss/channel/item[2]/link").string("http://euregjug.eu/2016/8/4/bar"))
                 .andExpect(xpath("/rss/channel/item[2]/*[local-name() = 'encoded']").string(containsString("bar")))
-                .andExpect(xpath("/rss/channel/item[2]/pubDate").string("Wed, 03 Aug 2016 22:00:00 GMT"))
+                .andExpect(xpath("/rss/channel/item[2]/pubDate").string(date2))
                 .andExpect(xpath("/rss/channel/item[2]/author").string("euregjug.eu"))
                 .andExpect(xpath("/rss/channel/item[2]/guid").string("http://euregjug.eu/2016/8/4/bar"))
                 .andExpect(status().isOk());
