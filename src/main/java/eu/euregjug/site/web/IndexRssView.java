@@ -46,6 +46,8 @@ import org.springframework.web.servlet.view.feed.AbstractRssFeedView;
 @SuppressWarnings({"squid:MaximumInheritanceDepth"}) // Cannot change this...
 class IndexRssView extends AbstractRssFeedView {
 
+    private static final ZoneId UTC = ZoneId.of("UTC");
+
     private final MessageSource messageSource;
 
     private final DateTimeFormatter permalinkDateFormatter;
@@ -75,7 +77,7 @@ class IndexRssView extends AbstractRssFeedView {
         feed.setDescription(messageSource.getMessage("feedDescription", null, locale));
         feed.setLink(getAbsoluteUrl(request, ""));
         if (posts.hasContent()) {
-            final Date pubDate = Date.from(posts.getContent().get(0).getPublishedOn().atStartOfDay(ZoneId.systemDefault()).toInstant());
+            final Date pubDate = Date.from(posts.getContent().get(0).getPublishedOn().atStartOfDay(UTC).toInstant());
             feed.setLastBuildDate(pubDate);
             feed.setPubDate(pubDate);
         }
@@ -123,7 +125,7 @@ class IndexRssView extends AbstractRssFeedView {
             rv.setContent(content);
             rv.setGuid(new SyndicationGuid().withPermaLink(true).withValue(link).getGuid());
             rv.setLink(link);
-            rv.setPubDate(Date.from(post.getPublishedOn().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+            rv.setPubDate(Date.from(post.getPublishedOn().atStartOfDay(UTC).toInstant()));
             rv.setTitle(post.getTitle());
             return rv;
         }).getContent();
