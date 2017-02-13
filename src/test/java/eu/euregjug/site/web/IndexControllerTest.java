@@ -21,6 +21,7 @@ import eu.euregjug.site.config.MailChimpConfig;
 import eu.euregjug.site.events.EventEntity;
 import eu.euregjug.site.events.EventRepository;
 import eu.euregjug.site.events.Registration;
+import eu.euregjug.site.events.RegistrationEntity;
 import eu.euregjug.site.events.RegistrationService;
 import eu.euregjug.site.links.LinkEntity;
 import eu.euregjug.site.links.LinkRepository;
@@ -56,7 +57,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.autoconfigure.context.MessageSourceAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.data.domain.PageImpl;
@@ -70,9 +73,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.flash;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.xpath;
+import org.springframework.web.servlet.LocaleResolver;
+import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
 
 /**
  *
@@ -98,6 +105,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @EnableSpringDataWebSupport // Needed to enable resolving of Pageable and other parameters
 public class IndexControllerTest {
 
+    
+    /**
+     * Makes the tests locale aware.
+     */
+    @TestConfiguration
+    static class Config {
+        @Bean
+        public LocaleResolver localeResolver() {
+            return new AcceptHeaderLocaleResolver();
+        }
+    }
+    
     @Autowired
     private MockMvc mvc;
 
@@ -331,5 +350,31 @@ public class IndexControllerTest {
                 .andExpect(model().attribute("event", this.events.get(0)))
                 .andExpect(model().attribute("alerts", Arrays.asList("broken")))
                 .andExpect(model().attributeExists("registration"));
+    }
+    
+    @Test
+    public void registerShouldWork() throws Exception {        
+        final RegistrationEntity registrationEntity = new RegistrationEntity(this.events.get(0), "michael@euregjug.eu", "Simons", "Michael", false);
+        
+        when(this.recaptchaValidator.validate(any(HttpServletRequest.class))).thenReturn(new ValidationResult(true, new ArrayList<>()));
+        when(this.registrationService.register(eq(23), any(Registration.class))).thenReturn(registrationEntity);
+
+        this.mvc.perform(
+                    post("/register/{eventId}", 23)
+                    .locale(Locale.GERMAN)
+                    .param("firstName", "Michael")
+                    .param("name", "Simons")
+                    .param("email", "michael@euregjug.eu")
+                )
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isFound())
+                .andExpect(view().name("redirect:/register/23"))
+                .andExpect(flash().attribute("registered", true))
+                .andExpect(flash().attribute("event", this.events.get(0)))
+                .andExpect(flash().attribute("alerts", Arrays.asList("registered")));
+        
+        verify(this.registrationService).register(eq(23), any(Registration.class));
+        verify(this.registrationService).sendConfirmationMail(registrationEntity, Locale.GERMAN);
+        verifyNoMoreInteractions(this.eventRepository, this.registrationService);
     }
 }
