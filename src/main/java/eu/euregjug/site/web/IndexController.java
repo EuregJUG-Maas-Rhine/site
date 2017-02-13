@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 EuregJUG.
+ * Copyright 2015-2017 EuregJUG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -71,6 +71,10 @@ class IndexController {
     private static final String ATTRIBUTE_ALERTS = "alerts";
 
     private static final String ATTRIBUTE_REGISTERED = "registered";
+    
+    private static final String ATTRIBUTE_POST = "post";
+    
+    private static final String ATTRIBUTE_EVENT = "event";
 
     private final EventRepository eventRepository;
 
@@ -116,9 +120,9 @@ class IndexController {
                     .filter(PostEntity::isPublished);
             model
                     .addAttribute("previousPost", post.flatMap(this.postRepository::getPrevious))
-                    .addAttribute("post", post.map(postRenderingService::render).get())
+                    .addAttribute(ATTRIBUTE_POST, post.map(postRenderingService::render).get())
                     .addAttribute("nextPost", post.flatMap(this.postRepository::getNext));
-            rv = "post";
+            rv = ATTRIBUTE_POST;
 
         } catch (DateTimeException | NoSuchElementException e) {
             log.debug("Invalid request for post", e);
@@ -181,7 +185,7 @@ class IndexController {
             redirectAttributes.addFlashAttribute(ATTRIBUTE_ALERTS, Arrays.asList("invalidEvent"));
             rv = "redirect:/";
         } else {
-            model.addAttribute("event", event);
+            model.addAttribute(ATTRIBUTE_EVENT, event);
             if (!model.containsAttribute("registration")) {
                 model.addAttribute("registration", new Registration());
             }
@@ -212,7 +216,7 @@ class IndexController {
                 final RegistrationEntity registrationEntity = this.registrationService.register(eventId, registration);
                 this.registrationService.sendConfirmationMail(registrationEntity, locale);
                 redirectAttributes
-                        .addFlashAttribute("event", registrationEntity.getEvent())
+                        .addFlashAttribute(ATTRIBUTE_EVENT, registrationEntity.getEvent())
                         .addFlashAttribute(ATTRIBUTE_REGISTERED, true)
                         .addFlashAttribute(ATTRIBUTE_ALERTS, Arrays.asList(ATTRIBUTE_REGISTERED));
                 rv = "redirect:/register/" + eventId;
