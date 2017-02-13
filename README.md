@@ -1,6 +1,6 @@
 # euregjug.eu
 
-[![Build Status](https://travis-ci.org/EuregJUG-Maas-Rhine/site.svg?branch=master)](https://travis-ci.org/EuregJUG-Maas-Rhine/site)
+[![Build Status](https://travis-ci.org/EuregJUG-Maas-Rhine/site.svg?branch=master)](https://travis-ci.org/EuregJUG-Maas-Rhine/site) [![Test coverage](https://sonarqube.com/api/badges/measure?key=eu.euregjug:site&metric=coverage)](https://sonarqube.com/dashboard/index/eu.euregjug:site) [![Quality Gate](https://sonarqube.com/api/badges/gate?key=eu.euregjug:site&metric=coverage)](https://sonarqube.com/dashboard/index/eu.euregjug:site)
 
 ## About
 
