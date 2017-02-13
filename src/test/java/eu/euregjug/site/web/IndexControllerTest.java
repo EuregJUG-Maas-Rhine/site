@@ -410,7 +410,7 @@ public class IndexControllerTest {
 
     @Test
     public void shouldDisplayPost() throws Exception {
-        final Date postDate = Date.from(LocalDate.of(2017, 1, 1).atStartOfDay(ZoneId.systemDefault()).toInstant());        
+        final Date postDate = Date.from(LocalDate.of(2017, 1, 1).atStartOfDay(ZoneId.systemDefault()).toInstant());
         when(this.postRepository.findByPublishedOnAndSlug(postDate, "foo")).thenReturn(Optional.of(this.posts.get(0)));
         final Optional<PostEntity> previousPost = Optional.of(this.posts.get(1));
         when(this.postRepository.getPrevious(this.posts.get(0))).thenReturn(previousPost);
@@ -430,5 +430,21 @@ public class IndexControllerTest {
         verify(this.postRepository).getPrevious(this.posts.get(0));
         verify(this.postRepository).getNext(this.posts.get(0));
         verifyNoMoreInteractions(this.postRepository);
+    }
+
+    @Test
+    public void archiveShouldWork() throws Exception {
+        when(this.postRepository.findAll(any(Sort.class))).thenReturn(this.posts);
+        this.mvc.perform(
+                get("/archive")
+        )
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk())
+                .andExpect(view().name("archive"))
+                .andExpect(model().attributeExists("posts"));
+
+        verify(this.postRepository).findAll(any(Sort.class));
+        verifyNoMoreInteractions(this.postRepository);
+
     }
 }
