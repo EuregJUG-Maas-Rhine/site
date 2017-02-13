@@ -139,3 +139,14 @@ a.pivotal-link {
         width:100%;
     }
 }
+
+header.major {
+    background-image: url('/img/logo-euregjug-xsmall.png'); 
+    background-repeat: no-repeat;  
+    background-position: right;  
+    background-size: contain;   
+}
+
+header.major p {
+    max-width: 75%;
+}
