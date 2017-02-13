@@ -52,6 +52,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
@@ -105,18 +106,18 @@ import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
 @EnableSpringDataWebSupport // Needed to enable resolving of Pageable and other parameters
 public class IndexControllerTest {
 
-    
     /**
      * Makes the tests locale aware.
      */
     @TestConfiguration
     static class Config {
+
         @Bean
         public LocaleResolver localeResolver() {
             return new AcceptHeaderLocaleResolver();
         }
     }
-    
+
     @Autowired
     private MockMvc mvc;
 
@@ -157,7 +158,9 @@ public class IndexControllerTest {
         this.events = Arrays.asList(event1, event2);
 
         this.posts = new ArrayList<>();
-        this.posts.add(Reflect.on(new PostEntity(Date.from(LocalDate.of(2016, 8, 5).atStartOfDay(ZoneId.systemDefault()).toInstant()), "foo", "foo", "foo")).set("id", 2).get());
+        final PostEntity post = Reflect.on(new PostEntity(Date.from(LocalDate.of(2016, 8, 5).atStartOfDay(ZoneId.systemDefault()).toInstant()), "foo", "foo", "foo")).set("id", 2).get();
+        post.setStatus(Status.published);
+        this.posts.add(post);
         this.posts.add(Reflect.on(new PostEntity(Date.from(LocalDate.of(2016, 8, 4).atStartOfDay(ZoneId.systemDefault()).toInstant()), "bar", "bar", "bar")).set("id", 1).get());
 
         this.links = new ArrayList<>();
@@ -186,7 +189,7 @@ public class IndexControllerTest {
 
     @Test
     public void postShouldHandleInvalidDate() throws Exception {
-         this.mvc
+        this.mvc
                 .perform(
                         get("http://euregjug.eu/{year}/{month}/{day}/{slug}", 2016, 2, 30, "test")
                 )
@@ -277,9 +280,9 @@ public class IndexControllerTest {
         this.mvc
                 .perform(
                         get("http://euregjug.eu/feed.rss")
-                        .param("page", "1")
-                        .locale(Locale.ENGLISH)
-                        .accept("application/rss+xml"))
+                                .param("page", "1")
+                                .locale(Locale.ENGLISH)
+                                .accept("application/rss+xml"))
                 .andExpect(xpath("/rss/channel/title").string("EuregJUG Maas-Rhine - All things JVM!"))
                 .andExpect(xpath("/rss/channel/link").string("http://euregjug.eu"))
                 .andExpect(xpath("/rss/channel/description").string("RSS Feed from EuregJUG, the Java User Group for the Euregio Maas-Rhine (Aachen, Maastricht, Liege)."))
@@ -319,11 +322,11 @@ public class IndexControllerTest {
         when(this.recaptchaValidator.validate(any(HttpServletRequest.class))).thenReturn(new ValidationResult(false, new ArrayList<>()));
 
         this.mvc.perform(
-                    post("/register/{eventId}", 23)
-                    .param("firstName", "Michael")
-                    .param("name", "Simons")
-                    .param("email", "michael@euregjug.eu")
-                )
+                post("/register/{eventId}", 23)
+                        .param("firstName", "Michael")
+                        .param("name", "Simons")
+                        .param("email", "michael@euregjug.eu")
+        )
                 .andExpect(status().isOk())
                 .andExpect(view().name("register"))
                 .andExpect(model().attribute("registered", false))
@@ -339,11 +342,11 @@ public class IndexControllerTest {
         when(this.registrationService.register(eq(23), any(Registration.class))).thenThrow(new RegistrationService.InvalidRegistrationException("broken", "broken"));
 
         this.mvc.perform(
-                    post("/register/{eventId}", 23)
-                    .param("firstName", "Michael")
-                    .param("name", "Simons")
-                    .param("email", "michael@euregjug.eu")
-                )
+                post("/register/{eventId}", 23)
+                        .param("firstName", "Michael")
+                        .param("name", "Simons")
+                        .param("email", "michael@euregjug.eu")
+        )
                 .andExpect(status().isOk())
                 .andExpect(view().name("register"))
                 .andExpect(model().attribute("registered", false))
@@ -351,30 +354,81 @@ public class IndexControllerTest {
                 .andExpect(model().attribute("alerts", Arrays.asList("broken")))
                 .andExpect(model().attributeExists("registration"));
     }
-    
+
     @Test
-    public void registerShouldWork() throws Exception {        
+    public void registerShouldWork() throws Exception {
         final RegistrationEntity registrationEntity = new RegistrationEntity(this.events.get(0), "michael@euregjug.eu", "Simons", "Michael", false);
-        
+
         when(this.recaptchaValidator.validate(any(HttpServletRequest.class))).thenReturn(new ValidationResult(true, new ArrayList<>()));
         when(this.registrationService.register(eq(23), any(Registration.class))).thenReturn(registrationEntity);
 
         this.mvc.perform(
-                    post("/register/{eventId}", 23)
-                    .locale(Locale.GERMAN)
-                    .param("firstName", "Michael")
-                    .param("name", "Simons")
-                    .param("email", "michael@euregjug.eu")
-                )
-                .andDo(MockMvcResultHandlers.print())
+                post("/register/{eventId}", 23)
+                        .locale(Locale.GERMAN)
+                        .param("firstName", "Michael")
+                        .param("name", "Simons")
+                        .param("email", "michael@euregjug.eu")
+        )
                 .andExpect(status().isFound())
                 .andExpect(view().name("redirect:/register/23"))
                 .andExpect(flash().attribute("registered", true))
                 .andExpect(flash().attribute("event", this.events.get(0)))
                 .andExpect(flash().attribute("alerts", Arrays.asList("registered")));
-        
+
         verify(this.registrationService).register(eq(23), any(Registration.class));
         verify(this.registrationService).sendConfirmationMail(registrationEntity, Locale.GERMAN);
         verifyNoMoreInteractions(this.eventRepository, this.registrationService);
+    }
+
+    @Test
+    public void shouldHandleInvalidPost() throws Exception {
+        final Date postDate = Date.from(LocalDate.of(2017, 1, 1).atStartOfDay(ZoneId.systemDefault()).toInstant());
+        when(this.postRepository.findByPublishedOnAndSlug(postDate, "foo")).thenReturn(Optional.empty());
+
+        this.mvc.perform(
+                get("/2017/1/1/foo")
+        )
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isFound())
+                .andExpect(view().name("redirect:/"));
+
+        verify(this.postRepository).findByPublishedOnAndSlug(postDate, "foo");
+        verifyNoMoreInteractions(this.postRepository);
+    }
+
+    @Test
+    public void shouldHandleInvalidDate() throws Exception {
+        this.mvc.perform(
+                get("/2017/1/32/foo")
+        )
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isFound())
+                .andExpect(view().name("redirect:/"));
+
+        verifyZeroInteractions(this.postRepository);
+    }
+
+    @Test
+    public void shouldDisplayPost() throws Exception {
+        final Date postDate = Date.from(LocalDate.of(2017, 1, 1).atStartOfDay(ZoneId.systemDefault()).toInstant());        
+        when(this.postRepository.findByPublishedOnAndSlug(postDate, "foo")).thenReturn(Optional.of(this.posts.get(0)));
+        final Optional<PostEntity> previousPost = Optional.of(this.posts.get(1));
+        when(this.postRepository.getPrevious(this.posts.get(0))).thenReturn(previousPost);
+        when(this.postRepository.getNext(this.posts.get(0))).thenReturn(Optional.empty());
+
+        this.mvc.perform(
+                get("/2017/1/1/foo")
+        )
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk())
+                .andExpect(view().name("post"))
+                .andExpect(model().attribute("previousPost", previousPost))
+                .andExpect(model().attributeExists("post"))
+                .andExpect(model().attribute("nextPost", Optional.empty()));
+
+        verify(this.postRepository).findByPublishedOnAndSlug(postDate, "foo");
+        verify(this.postRepository).getPrevious(this.posts.get(0));
+        verify(this.postRepository).getNext(this.posts.get(0));
+        verifyNoMoreInteractions(this.postRepository);
     }
 }

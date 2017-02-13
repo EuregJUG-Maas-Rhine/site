@@ -72,7 +72,11 @@ class IndexController {
 
     private static final String ATTRIBUTE_REGISTERED = "registered";
 
+    private static final String ATTRIBUTE_POSTS = "posts";
+
     private static final String ATTRIBUTE_POST = "post";
+    
+    private static final String VIEW_POST = ATTRIBUTE_POST;
 
     private static final String ATTRIBUTE_EVENT = "event";
 
@@ -96,7 +100,7 @@ class IndexController {
         model
                 .addAttribute("upcomingEvents", this.eventRepository.findUpcomingEvents())
                 .addAttribute("links", this.linkRepository.findAllByOrderByTypeAscSortColAscTitleAsc().stream().collect(groupingBy(LinkEntity::getType)))
-                .addAttribute("posts", this.postRepository.findAllByStatus(Status.published, new PageRequest(page, 5, Direction.DESC, "publishedOn", "createdAt")).map(postRenderingService::render));
+                .addAttribute(ATTRIBUTE_POSTS, this.postRepository.findAllByStatus(Status.published, new PageRequest(page, 5, Direction.DESC, "publishedOn", "createdAt")).map(postRenderingService::render));
         return "index";
     }
 
@@ -122,7 +126,7 @@ class IndexController {
                     .addAttribute("previousPost", post.flatMap(this.postRepository::getPrevious))
                     .addAttribute(ATTRIBUTE_POST, post.map(postRenderingService::render).get())
                     .addAttribute("nextPost", post.flatMap(this.postRepository::getNext));
-            rv = ATTRIBUTE_POST;
+            rv = VIEW_POST;
 
         } catch (DateTimeException | NoSuchElementException e) {
             log.debug("Invalid request for post", e);
@@ -132,7 +136,7 @@ class IndexController {
 
     @RequestMapping({"/archive", "/archives"})
     public String archive(final Model model) {
-        model.addAttribute("posts",
+        model.addAttribute(ATTRIBUTE_POSTS,
                 this.postRepository
                 .findAll(new Sort(Direction.DESC, "publishedOn")).stream()
                 .filter(PostEntity::isPublished)
@@ -162,7 +166,7 @@ class IndexController {
             model.addAttribute(ATTRIBUTE_ALERTS, Arrays.asList("search.noResults"));
         }
         model
-                .addAttribute("posts", posts)
+                .addAttribute(ATTRIBUTE_POSTS, posts)
                 .addAttribute("q", q);
         return "archive";
     }
