@@ -48,6 +48,7 @@ import org.joor.Reflect;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -95,9 +96,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 )
 @ImportAutoConfiguration(MessageSourceAutoConfiguration.class)
 @EnableSpringDataWebSupport // Needed to enable resolving of Pageable and other parameters
-@MockBean(classes = {
-    RegistrationService.class
-})
 public class IndexControllerTest {
 
     @Autowired
@@ -114,6 +112,9 @@ public class IndexControllerTest {
 
     @MockBean
     private RecaptchaValidator recaptchaValidator;
+    
+    @MockBean
+    private RegistrationService registrationService;
 
     private final List<EventEntity> events;
 
@@ -298,12 +299,6 @@ public class IndexControllerTest {
         when(this.eventRepository.findOne(23)).thenReturn(Optional.of(this.events.get(0)));
         when(this.recaptchaValidator.validate(any(HttpServletRequest.class))).thenReturn(new ValidationResult(false, new ArrayList<>()));
 
-        final Registration registration = new Registration();
-        registration.setFirstName("Michael");
-        registration.setName("Simons");
-        registration.setEmail("michael@euregjug.eu");
-        registration.setSubscribeToNewsletter(true);
-
         this.mvc.perform(
                     post("/register/{eventId}", 23)
                     .param("firstName", "Michael")
@@ -315,6 +310,26 @@ public class IndexControllerTest {
                 .andExpect(model().attribute("registered", false))
                 .andExpect(model().attribute("event", this.events.get(0)))
                 .andExpect(model().attribute("alerts", Arrays.asList("invalidRegistration")))
+                .andExpect(model().attributeExists("registration"));
+    }
+    
+    @Test
+    public void registerShouldHandleInvalidRegistration() throws Exception {
+        when(this.eventRepository.findOne(23)).thenReturn(Optional.of(this.events.get(0)));
+        when(this.recaptchaValidator.validate(any(HttpServletRequest.class))).thenReturn(new ValidationResult(true, new ArrayList<>()));
+        when(this.registrationService.register(eq(23), any(Registration.class))).thenThrow(new RegistrationService.InvalidRegistrationException("broken", "broken"));
+
+        this.mvc.perform(
+                    post("/register/{eventId}", 23)
+                    .param("firstName", "Michael")
+                    .param("name", "Simons")
+                    .param("email", "michael@euregjug.eu")
+                )
+                .andExpect(status().isOk())
+                .andExpect(view().name("register"))
+                .andExpect(model().attribute("registered", false))
+                .andExpect(model().attribute("event", this.events.get(0)))
+                .andExpect(model().attribute("alerts", Arrays.asList("broken")))
                 .andExpect(model().attributeExists("registration"));
     }
 }
