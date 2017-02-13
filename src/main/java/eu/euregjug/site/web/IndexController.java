@@ -75,7 +75,7 @@ class IndexController {
     private static final String ATTRIBUTE_POSTS = "posts";
 
     private static final String ATTRIBUTE_POST = "post";
-    
+
     private static final String VIEW_POST = ATTRIBUTE_POST;
 
     private static final String ATTRIBUTE_EVENT = "event";
