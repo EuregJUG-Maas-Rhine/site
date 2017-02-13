@@ -1,41 +1,48 @@
 <!DOCTYPE HTML>
 <!--
-	Slate by Pixelarity
-	pixelarity.com @pixelarity
-	License: pixelarity.com/license
+        Slate by Pixelarity
+        pixelarity.com @pixelarity
+        License: pixelarity.com/license
 -->
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
       th:lang="${#locale.language}">
     <head th:replace="fragments/head :: head (_pageTitle=#{aboutTitle})">
-	<title>index.html</title>
+        <title>index.html</title>
     </head>
     <body>
-	<header th:replace="fragments/header :: header" />
+        <header th:replace="fragments/header :: header" />
 
-	<!-- Main -->
-	<section id="main" class="wrapper">
-	    <div class="inner">
+        <!-- Main -->
+        <section id="main" class="wrapper">
+            <div class="inner">
 
-		<header class="major">
-		    <h2 th:text="#{aboutTitle}">Page Title</h2>		    
-		</header>
+                <header class="major">
+                    <h2 th:text="#{aboutTitle}">Page Title</h2>		    
+                </header>
 
-		<!-- Content -->
-		<div class="content">
-		    <a href="#" class="image right"><img src="../../webapp/public/img/logo-euregjug.png" th:src="@{/img/logo-euregjug.png}" alt="" /></a>
-		    <div th:utext="#{about}">
-			<p>Aliquam massa urna, imperdiet sit amet mi non, bibendum euismod est. Curabitur mi justo, tincidunt vel eros ullamcorper, porta cursus justo. Cras vel neque eros. Vestibulum diam quam, mollis at magna consectetur non, malesuada quis augue. Morbi tincidunt pretium interdum est. Curabitur mi justo, tincidunt vel eros ullamcorper, porta cursus justo. Cras vel neque eros. Vestibulum diam.</p>
-		    </div>		    
-		</div>
+                <!-- Content -->
+                <div class="content">
 
-	    </div>
-	</section>
+                    <div class="row uniform 75%">
+                        <div class="6u 8u(large) 9u(medium) 12u$(small)" th:utext="#{about}">
+                            <p>Aliquam massa urna, imperdiet sit amet mi non, bibendum euismod est. Curabitur mi justo, tincidunt vel eros ullamcorper, porta cursus justo. Cras vel neque eros. Vestibulum diam quam, mollis at magna consectetur non, malesuada quis augue. Morbi tincidunt pretium interdum est. Curabitur mi justo, tincidunt vel eros ullamcorper, porta cursus justo. Cras vel neque eros. Vestibulum diam.</p>
+                        </div>
+                        <div class="3u$ 3u$(large) 3u(medium) 12u$(small) important(small)">
+                            <span class="image fit" style="margin: 0 auto; max-width:250px;">
+                                <img style="" src="../../webapp/public/img/logo-euregjug.png" th:src="@{/img/logo-euregjug.png}" alt="" />
+                            </span>
+                        </div>
+                    </div>
+                </div>
 
-	<section th:replace="fragments/contact :: #contact" />
+            </div>
+        </section>
 
-	<footer th:replace="fragments/footer :: footer" />
+        <section th:replace="fragments/contact :: #contact" />
 
-	<div th:replace="fragments/scripts :: body/script" />
+        <footer th:replace="fragments/footer :: footer" />
+
+        <div th:replace="fragments/scripts :: body/script" />
     </body>
 </html>
