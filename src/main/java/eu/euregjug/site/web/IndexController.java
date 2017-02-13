@@ -71,9 +71,9 @@ class IndexController {
     private static final String ATTRIBUTE_ALERTS = "alerts";
 
     private static final String ATTRIBUTE_REGISTERED = "registered";
-    
+
     private static final String ATTRIBUTE_POST = "post";
-    
+
     private static final String ATTRIBUTE_EVENT = "event";
 
     private final EventRepository eventRepository;

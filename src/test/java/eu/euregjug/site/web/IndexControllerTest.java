@@ -112,7 +112,7 @@ public class IndexControllerTest {
 
     @MockBean
     private RecaptchaValidator recaptchaValidator;
-    
+
     @MockBean
     private RegistrationService registrationService;
 
@@ -164,7 +164,7 @@ public class IndexControllerTest {
                 .andExpect(model().attribute("links", links))
                 .andExpect(model().attributeExists("posts"));
     }
-    
+
     @Test
     public void postShouldHandleInvalidDate() throws Exception {
          this.mvc
@@ -254,7 +254,7 @@ public class IndexControllerTest {
         final SimpleDateFormat df = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss 'GMT'", Locale.US);
         final String date1 = df.format(this.posts.get(0).getPublishedOn());
         final String date2 = df.format(this.posts.get(1).getPublishedOn());
-        
+
         this.mvc
                 .perform(
                         get("http://euregjug.eu/feed.rss")
@@ -312,7 +312,7 @@ public class IndexControllerTest {
                 .andExpect(model().attribute("alerts", Arrays.asList("invalidRegistration")))
                 .andExpect(model().attributeExists("registration"));
     }
-    
+
     @Test
     public void registerShouldHandleInvalidRegistration() throws Exception {
         when(this.eventRepository.findOne(23)).thenReturn(Optional.of(this.events.get(0)));
