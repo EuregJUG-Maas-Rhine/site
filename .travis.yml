@@ -9,8 +9,19 @@ addons:
     token:
       secure: W1nWotfsP4OChPo+edgCHvJ3zxaz1vLE7s5p6Gxoa6f2Rx0w1K7Djw4eWKI1dlBT9PBp1JoHkQteNuu+G8uNROwkHga1EI7EyUQab2wKsYJ89OsyxmLcUVWZ0qtFmNxkJ2913lWI58cg0oTTA8Qmq1uI0KNQTFUqNFcExFyVjNHrNPpedMISShR4Q/TKLJC+ccU68AOXCyKIfuH8Ie/jCNT8tzIhkqUxKdUI198Z4CP59+r1haHnExWsBT9FZtZ9mDnSsKjvQQ4hOz0RQNiP7Ih6ez95xtPrFx9r2kv7qLPpIEcwDgRbjGWnt13VYVzqvYUtfXh9IFM4u6JkABzJy9r2MQeedxpqutwzGtIeCBNzhIsFE4fXDzd0Zyj2dDdOlEwx6ZUMvsstUpWXyKKjUyt/nHTN6XrVlFG6oGctfUe3tD4p4l8cuXNIGMXaOzZy1MxfDZUUrL2J380lJUy4FKr1NVE36ISh8KJmNBheZ0VZbN2xhmCISCk02ii49MlVM+IWvhNlXBZ6tiLFpjoDqZ8myBP0UNai1pQ1N2Gzf1WN6lXiB/IeBUrokLplcabpZHDxxEo3+IfVsDuvtKVoaVGDEQDgzaTmbVjQX+FXYlPcDq6eCz0dPqF8AWtKZPrwGxWKRMMojiS+STIQ5IdtSpxZ9NZXfYFSvLWzialuz8M=
 script:
-  - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent package sonar:sonar
+- mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent package sonar:sonar
 cache:
   directories:
-    - '$HOME/.m2/repository'
-    - '$HOME/.sonar/cache'
+  - "$HOME/.m2/repository"
+  - "$HOME/.sonar/cache"
+deploy:
+  edge: true
+  provider: cloudfoundry
+  api: https://api.run.pivotal.io
+  username: michael@simons.ac
+  password:
+    secure: LyzlvOkyHJB+ekUuOteulEmWu/3eX2AC7R3d/Sl/dvZYyP3C2qgHs1oQ26dV8cQe9H56so03IC3qDt3a4GHaSdnDsb52h8IqAbAh600m/UOx06/0qDwpHhub1nvjWPofm7fXJzhAY6Pww3dO5NgZ1WZSgFeHrhJCND38EaX2H+aX+yh6f0u3TsYAS9jGGy3hQZVVWuYzI891ENVzBmE56zbE0hLaCLC0LKPz5V8r6Ba9Wqt+X3+jmoEuPvswJsReaSaFrqF427RJNfmwCRglITNlO/FVTFvtt7J3HCLDH1NuCw97zSOzR4gEYQ5ola4kGU1+YlfnwY9uJVc77HSKX0MLueEc164sTs51BVbvp2Do25G0PyuOJflKE71n29gSyJYTd5jOHnvIsTi6TFFhHL+wmHZSBWVkg1fR7z+LAF+VNRe3lJ0qhKafEc/TF+7uGrnJ5mWo0ntJ5DzpEpMU6QJVNZjpJ8wtBo0GdTyKTCMYG4971ib+LIVqLj/CXgiZYnEC8kT/UINDMC6jdMMEVOKJtuROcz/WifJ7CQFgUPVH4wElfYoWqh5updN3JRixyeqjSElmKh0EFPsCiyCYlYKXaWC48PZFgDN64Qr2DDBthIIxK8Lt2+LZ7xR57rJMLRPDxpfNR5ALT1qP0Ge/+xIg99HwYJ0vqDmdrLnYGhE=
+  organization: euregjug
+  space: development
+  on:
+    repo: EuregJUG-Maas-Rhine/site
