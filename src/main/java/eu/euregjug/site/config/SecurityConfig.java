@@ -16,6 +16,7 @@
 package eu.euregjug.site.config;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.actuate.autoconfigure.ManagementServerProperties;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.context.annotation.Bean;
@@ -64,6 +65,7 @@ public class SecurityConfig {
     @Configuration
     @EnableResourceServer
     @ConditionalOnBean(SecurityConfig.class)
+    @Order(ManagementServerProperties.ACCESS_OVERRIDE_ORDER)
     static class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
         /**
