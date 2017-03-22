@@ -92,7 +92,7 @@ public class RegistrationServiceTest {
         final RegistrationService service = new RegistrationService(eventRepository, registrationRepository, mailSender, null, messageSource, "info@euregjug.eu");
         final EventEntity event = mock(EventEntity.class);
         when(event.isNeedsRegistration()).thenReturn(true);
-        when(event.isOpen()).thenReturn(false);
+        when(event.isOpenForRegistration()).thenReturn(false);
         when(this.eventRepository.findOne(23)).thenReturn(Optional.of(event));
 
         expectedException.expect(RegistrationService.InvalidRegistrationException.class);
@@ -107,7 +107,7 @@ public class RegistrationServiceTest {
         final RegistrationService service = new RegistrationService(eventRepository, registrationRepository, mailSender, null, messageSource, "info@euregjug.eu");
         final EventEntity event = mock(EventEntity.class);
         when(event.isNeedsRegistration()).thenReturn(true);
-        when(event.isOpen()).thenReturn(true);
+        when(event.isOpenForRegistration()).thenReturn(true);
         when(this.eventRepository.findOne(23)).thenReturn(Optional.of(event));
         when(this.registrationRepository.findByEventAndEmail(event, "michael@euregjug.eu")).thenReturn(Optional.of(mock(RegistrationEntity.class)));
         expectedException.expect(RegistrationService.InvalidRegistrationException.class);
@@ -123,7 +123,7 @@ public class RegistrationServiceTest {
         final RegistrationService service = new RegistrationService(eventRepository, registrationRepository, mailSender, null, messageSource, "info@euregjug.eu");
         final EventEntity event = mock(EventEntity.class);
         when(event.isNeedsRegistration()).thenReturn(true);
-        when(event.isOpen()).thenReturn(true);
+        when(event.isOpenForRegistration()).thenReturn(true);
         when(this.eventRepository.findOne(23)).thenReturn(Optional.of(event));
         when(this.registrationRepository.findByEventAndEmail(event, "michael@euregjug.eu")).thenReturn(Optional.empty());
         when(this.registrationRepository.save(any(RegistrationEntity.class))).thenAnswer(AdditionalAnswers.returnsFirstArg());
