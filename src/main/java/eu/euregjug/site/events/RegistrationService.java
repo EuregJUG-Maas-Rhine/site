@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 EuregJUG.
+ * Copyright 2015-2017 EuregJUG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -110,7 +110,7 @@ public class RegistrationService {
         final String email = newRegistration.getEmail().toLowerCase();
         if (!event.isNeedsRegistration()) {
             throw new InvalidRegistrationException(String.format("Event %d doesn't need a registration", eventId), "eventNeedNoRegistration");
-        } else if (!event.isOpen()) {
+        } else if (!event.isOpenForRegistration()) {
             throw new InvalidRegistrationException(String.format("Event %d doesn't isn't open", eventId), "eventNotOpen");
         } else if (this.registrationRepository.findByEventAndEmail(event, email).isPresent()) {
             throw new InvalidRegistrationException(String.format("Guest '%s' already registered for event %d", email, eventId), "alreadyRegistered");

@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 EuregJUG.
+ * Copyright 2016-2017 EuregJUG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,13 +40,13 @@ public class EventEntityTest {
     }
     
     @Test
-    public void isOpenShouldWork() {
+    public void isOpenForRegistrationShouldWork() {
         EventEntity event;
         event = new EventEntity(GregorianCalendar.from(LocalDateTime.now().plusDays(1).atZone(ZoneId.systemDefault())), "test", "test");        
-        assertThat(event.isOpen(), is(true));
+        assertThat(event.isOpenForRegistration(), is(true));
         event.setStatus(Status.closed);
-        assertThat(event.isOpen(), is(false));
+        assertThat(event.isOpenForRegistration(), is(false));
         event = new EventEntity(GregorianCalendar.from(LocalDateTime.now().minusDays(1).atZone(ZoneId.systemDefault())), "test", "test");
-        assertThat(event.isOpen(), is(false));
+        assertThat(event.isOpenForRegistration(), is(false));
     }
 }

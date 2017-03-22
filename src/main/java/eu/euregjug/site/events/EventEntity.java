@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 EuregJUG.
+ * Copyright 2015-2017 EuregJUG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -207,8 +207,7 @@ public class EventEntity implements Serializable {
     /**
      * @return True if the event is still open for registration
      */
-    @JsonIgnore
-    public boolean isOpen() {
+    public boolean isOpenForRegistration() {
         return this.status == Status.open && this.heldOn.after(Calendar.getInstance());
     }
 
