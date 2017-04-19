@@ -53,7 +53,7 @@
     <java.version>1.8</java.version>
     <jquery.version>1.11.3</jquery.version>
     <respond.version>1.4.2</respond.version>
-    <rometools.version>1.7.0</rometools.version>
+    <rometools.version>1.7.2</rometools.version>
     <tika.version>1.13</tika.version>
     
     <!-- Same exclusions as pure JaCoCo -->
@@ -203,7 +203,7 @@
     <dependency>
       <groupId>eu.michael-simons</groupId>
       <artifactId>java-syndication</artifactId>
-      <version>0.2.3</version>
+      <version>0.2.5</version>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
