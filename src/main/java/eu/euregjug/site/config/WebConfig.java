@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 EuregJUG.
+ * Copyright 2015-2017 EuregJUG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -67,10 +67,5 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     @Override
     public void addCorsMappings(final CorsRegistry registry) {
         registry.addMapping("/api/**").allowedOrigins("*");
-    }
-
-    @Override
-    public void configureContentNegotiation(final ContentNegotiationConfigurer configurer) {
-        configurer.mediaType("ics", MediaType.valueOf("text/calendar"));
     }
 }
