@@ -159,7 +159,7 @@ public class EventEntity implements Serializable {
     private PostEntity post;
 
     /**
-     * Creation date of this post.
+     * Creation date of this event.
      */
     @Column(name = "created_at", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
