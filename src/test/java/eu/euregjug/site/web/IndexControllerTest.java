@@ -45,6 +45,8 @@ import java.util.Map;
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasProperty;
 import org.joor.Reflect;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -184,7 +186,8 @@ public class IndexControllerTest {
                 .andExpect(view().name("index"))
                 .andExpect(model().attribute("upcomingEvents", events))
                 .andExpect(model().attribute("links", links))
-                .andExpect(model().attributeExists("posts"));
+                .andExpect(model().attributeExists("posts"))
+                .andExpect(model().attribute("posts", hasProperty("totalElements", equalTo(15L))));
     }
 
     @Test
