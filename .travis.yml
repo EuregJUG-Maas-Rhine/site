@@ -8,8 +8,10 @@ addons:
   sonarqube:
     token:
       secure: W1nWotfsP4OChPo+edgCHvJ3zxaz1vLE7s5p6Gxoa6f2Rx0w1K7Djw4eWKI1dlBT9PBp1JoHkQteNuu+G8uNROwkHga1EI7EyUQab2wKsYJ89OsyxmLcUVWZ0qtFmNxkJ2913lWI58cg0oTTA8Qmq1uI0KNQTFUqNFcExFyVjNHrNPpedMISShR4Q/TKLJC+ccU68AOXCyKIfuH8Ie/jCNT8tzIhkqUxKdUI198Z4CP59+r1haHnExWsBT9FZtZ9mDnSsKjvQQ4hOz0RQNiP7Ih6ez95xtPrFx9r2kv7qLPpIEcwDgRbjGWnt13VYVzqvYUtfXh9IFM4u6JkABzJy9r2MQeedxpqutwzGtIeCBNzhIsFE4fXDzd0Zyj2dDdOlEwx6ZUMvsstUpWXyKKjUyt/nHTN6XrVlFG6oGctfUe3tD4p4l8cuXNIGMXaOzZy1MxfDZUUrL2J380lJUy4FKr1NVE36ISh8KJmNBheZ0VZbN2xhmCISCk02ii49MlVM+IWvhNlXBZ6tiLFpjoDqZ8myBP0UNai1pQ1N2Gzf1WN6lXiB/IeBUrokLplcabpZHDxxEo3+IfVsDuvtKVoaVGDEQDgzaTmbVjQX+FXYlPcDq6eCz0dPqF8AWtKZPrwGxWKRMMojiS+STIQ5IdtSpxZ9NZXfYFSvLWzialuz8M=
+install: 
+- ./mvnw dependency:go-offline
 script:
-- mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent package sonar:sonar
+- ./mvnw clean org.jacoco:jacoco-maven-plugin:prepare-agent package sonar:sonar
 cache:
   directories:
   - "$HOME/.m2/repository"
