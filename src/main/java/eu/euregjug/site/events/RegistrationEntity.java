@@ -28,8 +28,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -45,6 +47,7 @@ import lombok.Setter;
             @UniqueConstraint(name = "registrations_uk", columnNames = {"event_id", "email"})
         }
 )
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
 @EqualsAndHashCode(of = {"event", "email"})
 public class RegistrationEntity implements Serializable {
 
@@ -96,13 +99,6 @@ public class RegistrationEntity implements Serializable {
     @Column(name = "subscribe_to_newsletter", nullable = false)
     @Getter @Setter
     private boolean subscribeToNewsletter = false;
-
-    /**
-     * Needed for Hibernate, not to be called by application code.
-     */
-    @SuppressWarnings({"squid:S2637"})
-    protected RegistrationEntity() {
-    }
 
     public RegistrationEntity(final EventEntity event, final String email, final String name, final String firstName, final boolean subscribeToNewsletter) {
         this.event = event;

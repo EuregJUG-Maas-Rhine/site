@@ -28,8 +28,10 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.URL;
 
@@ -38,6 +40,7 @@ import org.hibernate.validator.constraints.URL;
  */
 @Entity
 @Table(name = "links")
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
 @EqualsAndHashCode(of = {"target"})
 public class LinkEntity implements Serializable {
 
@@ -104,13 +107,6 @@ public class LinkEntity implements Serializable {
     @Size(max = 128)
     @Getter @Setter
     private String localImageResource;
-
-    /**
-     * Needed for Hibernate, not to be called by application code.
-     */
-    @SuppressWarnings({"squid:S2637"})
-    protected LinkEntity() {
-    }
 
     public LinkEntity(final String target, final String title) {
         this.target = target;

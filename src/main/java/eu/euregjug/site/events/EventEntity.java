@@ -43,8 +43,10 @@ import org.hibernate.validator.constraints.NotBlank;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 import java.util.Optional;
+import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -60,6 +62,7 @@ import lombok.Setter;
         }
 )
 @JsonInclude(NON_NULL)
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
 @EqualsAndHashCode(of = {"heldOn", "name"})
 public class EventEntity implements Serializable {
 
@@ -173,13 +176,6 @@ public class EventEntity implements Serializable {
     @Enumerated(EnumType.STRING)
     @Getter @Setter
     private Status status;
-
-    /**
-     * Needed for Hibernate, not to be called by application code.
-     */
-    @SuppressWarnings({"squid:S2637"})
-    protected EventEntity() {
-    }
 
     /**
      * Creates a new Event on the given {@link #heldOn date} with the name

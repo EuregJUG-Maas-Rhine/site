@@ -47,8 +47,10 @@ import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.AnalyzerDiscriminator;
@@ -98,6 +100,7 @@ import org.hibernate.validator.constraints.NotBlank;
         )
 })
 @JsonInclude(Include.NON_EMPTY)
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
 @EqualsAndHashCode(of = {"publishedOn", "slug"})
 @AnalyzerDiscriminator(impl = PostLanguageDiscriminator.class)
 public class PostEntity implements Serializable {
@@ -205,13 +208,6 @@ public class PostEntity implements Serializable {
     @Enumerated(EnumType.STRING)
     @Getter @Setter
     private Status status;
-
-    /**
-     * Needed for Hibernate, not to be called by application code.
-     */
-    @SuppressWarnings({"squid:S2637"})
-    protected PostEntity() {
-    }
 
     public PostEntity(final Date publishedOn, final String slug, final String title, final String content) {
         this.publishedOn = publishedOn;
