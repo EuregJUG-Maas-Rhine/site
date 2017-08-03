@@ -20,12 +20,22 @@
 		<header class="major duke">
 		    <h2 th:text="#{blogTitle}">Page Title</h2>
 		    <p th:text="#{blogSubTitle}">Sed magna in pharetra ultricies dolor sit amet consequat adipiscing lorem.</p>
-		    <div class="alerts" th:if="${alerts != null and alerts.size() > 0}" >			
-			<span th:each="alert : ${alerts}" th:text="#{${alert}}">alert</span>			    			
+		    <div class="alerts" th:if="${alerts != null and alerts.size() > 0}" >
+			<span th:each="alert : ${alerts}" th:text="#{${alert}}">alert</span>
 		    </div>
 		</header>
 
-		<section id="posts" class="content">	
+		<section id="posts" class="content">
+                    <div class="upcomingEvents-teaser" th:if="${upcomingEvents.size()}">
+                        <header>
+                            <h3 th:text="#{upcomingEvents.short}">Magna Feugiat</h3>
+			</header>
+                         <ol id="upcomingEvents-teaser">
+                        <li th:each="upcomingEvent : ${upcomingEvents}">
+				    <a href="#" th:href="@{/register/{eventId}(eventId=${upcomingEvent.id})}"  th:utext="#{upcomingEvents.title.short(${upcomingEvent.heldOn.time},${upcomingEvent.name})}">27.12.2015 14:00 Some title</a>
+			    </li>
+                    </ol>
+                    </div>
 		    <div class="post" th:unless="${posts.hasContent()}">
 			<header>
 			<h3 th:text="#{noPosts}">No posts</h3>
@@ -56,23 +66,23 @@
 			    </div>
 			</div>
 		    </div>
-		    
+
 		    <nav>
 			<div class="row uniform">
-			    <div class="4u 6u(small) 12u(xsmall) nav_previous">				
+			    <div class="4u 6u(small) 12u(xsmall) nav_previous">
 				<a href="#" class="button" th:if="${posts.hasPrevious()}" th:href="@{/(page=${posts.previousPageable().getPageNumber()})}" th:text="#{paginatorNewer}">« Newer entries</a>
 				<span class="button disabled" th:unless="${posts.hasPrevious()}" th:text="#{paginatorFirstPage}" >at the first page</span>
 			    </div>
 			    <div class="4u 12u(small) nav_home">
 				<span class="button disabled" th:text="#{paginator(${posts.number}+1, ${posts.totalPages})}">Page 2 of 54</span>
 			    </div>
-			    <div class="4u 6u(small) 12u(xsmall)  nav_next">				
+			    <div class="4u 6u(small) 12u(xsmall)  nav_next">
 				<a href="#" class="button" th:if="${posts.hasNext()}" th:href="@{/(page=${posts.nextPageable().getPageNumber()})}" th:text="#{paginatorOlder}">Older entries »</a>
-				<span class="button disabled" th:unless="${posts.hasNext()}" th:text="#{paginatorLastPage}">at the last page</span>				
+				<span class="button disabled" th:unless="${posts.hasNext()}" th:text="#{paginatorLastPage}">at the last page</span>
 			    </div>
 			</div>
 		    </nav>
-		    
+
 		</section>
 
 		<div class="sidebar">
@@ -91,10 +101,10 @@
 				<span th:text="${upcomingEvent.description}">Sed tristique purus vitae volutpat commodo suscipit amet sed nibh. Proin a ullamcorper sed blandit. Sed tristique purus vitae volutpat commodo suscipit ullamcorper commodo suscipit amet sed nibh. Proin a ullamcorper sed blandit.</span>
 				<span class="readMore" th:if="${upcomingEvent.post}"><span th:text="#{readMore}">Read more</span> <a href="#" th:href="@{/{date}/{slug}(date=${#dates.format(upcomingEvent.post.publishedOn,'yyyy/MM/dd')},slug=${upcomingEvent.post.slug})}" th:text="${upcomingEvent.post.title}">Link</a></span>
 				<span class="register" th:if="${upcomingEvent.needsRegistration and upcomingEvent.openForRegistration}">
-				    <a href="#" class="button  icon fa-send" th:href="@{/register/{eventId}(eventId=${upcomingEvent.id})}" th:text="#{registerHere}">Register here</a>				    
+				    <a href="#" class="button  icon fa-send" th:href="@{/register/{eventId}(eventId=${upcomingEvent.id})}" th:text="#{registerHere}">Register here</a>
 				</span>
 			    </li>
-			</ol>			    
+			</ol>
 		    </section>
 
 		    <section id="profiles" class="links" th:if="${links.get(T(eu.euregjug.site.links.LinkEntity.Type).profile)}">
