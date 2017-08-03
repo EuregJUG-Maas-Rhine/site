@@ -1,5 +1,5 @@
 /*
-Copyright 2015 EuregJUG.
+Copyright 2015-2017 EuregJUG.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,12 +15,18 @@ limitations under the License.
 */
 
 #upcomingEvents ol {
-    list-style: none;    
+    list-style: none;
     padding-left: 0;
 }
 
-#upcomingEvents ol li {    
+#upcomingEvents ol li {
     margin-bottom: 2em;
+    padding-left: 0px;
+}
+
+#upcomingEvents-teaser {
+    list-style: none;
+    margin-left:0px;
     padding-left: 0px;
 }
 
@@ -36,11 +42,11 @@ limitations under the License.
 }
 
 #sponsors ul {
-    list-style: none;    
+    list-style: none;
     padding-left: 0;
 }
 
-#sponsors ul li {        
+#sponsors ul li {
     padding-left: 0;
 }
 
@@ -62,11 +68,11 @@ limitations under the License.
 }
 
 .imageblock.pull-right .content {
-    padding-left: 1em;    
+    padding-left: 1em;
 }
 
 .imageblock.pull-left .content {
-    padding-right: 1em;    
+    padding-right: 1em;
 }
 
 .nav_previous {
@@ -134,17 +140,17 @@ a.pivotal-link {
     .nav_previous, .nav_next {
         text-align:left;
     }
-    
+
     .nav_previous .button, .nav_next .button {
         width:100%;
     }
 }
 
 header.major.duke {
-    background-image: url('/img/logo-euregjug-xsmall.png'); 
-    background-repeat: no-repeat;  
-    background-position: right;  
-    background-size: contain;   
+    background-image: url('/img/logo-euregjug-xsmall.png');
+    background-repeat: no-repeat;
+    background-position: right;
+    background-size: contain;
 }
 
 header.major p {
