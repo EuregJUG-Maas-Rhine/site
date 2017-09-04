@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 EuregJUG.
+ * Copyright 2015-2017 EuregJUG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -64,4 +64,11 @@ public interface EventRepository extends Repository<EventEntity, Integer> {
      */
     @Transactional(readOnly = true)
     Page<EventEntity> findAll(Pageable pageable);
+
+    /**
+     * Deletes the given event.
+     *
+     * @param entity Event to delete
+     */
+    void delete(EventEntity entity);
 }
