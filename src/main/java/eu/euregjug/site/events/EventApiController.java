@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 EuregJUG.
+ * Copyright 2015-2017 EuregJUG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,12 +25,14 @@ import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import static org.springframework.http.HttpStatus.CREATED;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
 import org.springframework.web.bind.annotation.RestController;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -58,6 +60,23 @@ class EventApiController {
     public EventEntity create(@Valid @RequestBody final EventEntity newEvent) {
         newEvent.setStatus(Optional.ofNullable(newEvent.getStatus()).orElse(Status.open));
         return this.eventRepository.save(newEvent);
+    }
+
+    /**
+     * Deletes a given event from the system.
+     *
+     * @param id
+     */
+    @RequestMapping(value = "/{id:\\d+}", method = DELETE)
+    @PreAuthorize("isAuthenticated()")
+    @Transactional
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable final Integer id) {
+        final EventEntity event = this.eventRepository
+                .findOne(id)
+                .orElseThrow(ResourceNotFoundException::new);
+        this.registrationRepository.deleteByEvent(event);
+        this.eventRepository.delete(event);
     }
 
     /**

@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 EuregJUG.
+ * Copyright 2016-2017 EuregJUG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,6 +60,7 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.pr
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -207,6 +208,30 @@ public class EventApiControllerTest {
         verify(this.postRepository, times(2)).findOne(2);
         verify(this.postRepository, times(2)).findOne(23);
         verifyNoMoreInteractions(this.eventRepository, this.postRepository, this.registrationRepository);
+    }
+    
+    @Test
+    public void deleteShouldWork() throws Exception {
+        final EventEntity event = new EventEntity(Calendar.getInstance(), "NewName", "NewDescription");
+        when(this.eventRepository.findOne(4711)).thenReturn(Optional.empty());
+        when(this.eventRepository.findOne(4712)).thenReturn(Optional.of(event));
+        
+        this.mvc
+                .perform(
+                        MockMvcRequestBuilders.delete("/api/events/4711")
+                        .principal(() -> "euregjug")
+                ).andExpect(status().isNotFound());
+        
+        this.mvc
+                .perform(
+                        MockMvcRequestBuilders.delete("/api/events/4712")
+                        .principal(() -> "euregjug")
+                ).andExpect(status().isNoContent());
+        
+        verify(this.eventRepository, times(1)).findOne(4711);
+        verify(this.eventRepository, times(1)).findOne(4712);
+        verify(this.registrationRepository, times(1)).deleteByEvent(event);
+        verify(this.eventRepository, times(1)).delete(event);
     }
     
     @Test
