@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 EuregJUG.
+ * Copyright 2015-2017 EuregJUG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,4 +42,11 @@ public interface RegistrationRepository extends Repository<RegistrationEntity, I
 
     @Transactional(readOnly = true)
     List<RegistrationEntity> findAllByEventId(Integer eventId);
+
+    /**
+     * Deletes all registrations for a given event.
+     *
+     * @param event The event whose registrations should be deleted
+     */
+    void deleteByEvent(EventEntity event);
 }
