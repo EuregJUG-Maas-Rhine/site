@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 EuregJUG.
+ * Copyright 2015-2017 EuregJUG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -73,8 +73,9 @@ public class PostRepositoryImpl implements PostRepositoryExt {
         final FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(entityManager);
         final QueryBuilder queryBuilder = fullTextEntityManager.getSearchFactory().buildQueryBuilder().forEntity(PostEntity.class).get();
         return fullTextEntityManager
-                .createFullTextQuery(queryBuilder.keyword()
+                .createFullTextQuery(queryBuilder.simpleQueryString()
                 .onFields("content")
+                .withAndAsDefaultOperator()
                 .matching(keyword)
                 .createQuery(), PostEntity.class).getResultList();
     }
