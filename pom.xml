@@ -49,7 +49,7 @@
 
     <font-awesome.version>4.6.3</font-awesome.version>
     <hibernate.version>5.2.11.Final</hibernate.version>
-    <hibernate-search.version>5.8.0.Final</hibernate-search.version>
+    <hibernate-search.version>5.8.1.Final</hibernate-search.version>
     <html5shiv.version>3.7.3</html5shiv.version>
     <java.version>1.8</java.version>
     <jquery.version>1.11.3</jquery.version>
