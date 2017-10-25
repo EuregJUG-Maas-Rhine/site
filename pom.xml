@@ -131,7 +131,7 @@
     <dependency>
       <groupId>org.asciidoctor</groupId>
       <artifactId>asciidoctorj</artifactId>
-      <version>1.5.4</version>
+      <version>1.5.6</version>
     </dependency>
     <!-- Needed by Tika and spring-boot-starter-test -->
     <dependency>
