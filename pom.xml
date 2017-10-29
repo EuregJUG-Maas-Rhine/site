@@ -359,6 +359,7 @@
         <version>3.0.1</version>
         <configuration>
           <failBuildOnCVSS>8</failBuildOnCVSS>
+          <suppressionFile>src/checkstyle/owasp-suppressions.xml</suppressionFile>
         </configuration>
         <executions>
           <execution>

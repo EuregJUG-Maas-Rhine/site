@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.1.xsd">
+    <suppress>
+        <notes><![CDATA[
+        SSL Vulnerabilities in JRuby
+        ]]></notes>
+        <filePath regex="true">.*\bjruby-complete-1\.7\.26\.jar</filePath>
+        <cve>CVE-2016-2108</cve>
+        <cve>CVE-2009-3245</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+        SSL Vulnerabilities in JRuby
+        ]]></notes>
+        <filePath regex="true">.*\bjopenssl\.jar</filePath>
+        <cve>CVE-2016-2108</cve>
+        <cve>CVE-2009-3245</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+        It's in Redis, not in Spring.
+        ]]></notes>
+        <filePath regex="true">.*\bspring-boot-starter-data-redis-1\.5\.8\.RELEASE\.jar</filePath>
+        <cve>CVE-2015-4335</cve>
+    </suppress>
+</suppressions>
