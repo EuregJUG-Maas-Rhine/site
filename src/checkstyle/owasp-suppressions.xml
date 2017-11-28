@@ -20,7 +20,7 @@
         <notes><![CDATA[
         It's in Redis, not in Spring.
         ]]></notes>
-        <filePath regex="true">.*\bspring-boot-starter-data-redis-1\.5\.8\.RELEASE\.jar</filePath>
+        <filePath regex="true">.*\bspring-boot-starter-data-redis-1\.5\.\d+\.RELEASE\.jar</filePath>
         <cve>CVE-2015-4335</cve>
     </suppress>
 </suppressions>
