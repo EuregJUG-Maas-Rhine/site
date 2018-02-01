@@ -55,7 +55,7 @@
     <jquery.version>1.11.3</jquery.version>
     <respond.version>1.4.2</respond.version>
     <rometools.version>1.7.2</rometools.version>
-    <tika.version>1.16</tika.version>
+    <tika.version>1.17</tika.version>
     
     <!-- Same exclusions as pure JaCoCo -->
     <sonar.coverage.exclusions>**/Application.java,src/main/java/eu/euregjug/site/config/*</sonar.coverage.exclusions>
@@ -219,7 +219,7 @@
     <dependency>
       <groupId>org.jsoup</groupId>
       <artifactId>jsoup</artifactId>
-      <version>1.10.2</version>
+      <version>1.11.2</version>
     </dependency>
     <dependency>
       <groupId>org.hibernate</groupId>
