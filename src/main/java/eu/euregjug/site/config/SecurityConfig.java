@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 EuregJUG.
+ * Copyright 2015-2018 EuregJUG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,13 +16,14 @@
 package eu.euregjug.site.config;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.actuate.autoconfigure.ManagementServerProperties;
+import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
+import org.springframework.boot.actuate.health.HealthEndpoint;
+import org.springframework.boot.actuate.info.InfoEndpoint;
+import org.springframework.boot.actuate.metrics.MetricsEndpoint;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
-import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.core.annotation.Order;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -65,7 +66,6 @@ public class SecurityConfig {
     @Configuration
     @EnableResourceServer
     @ConditionalOnBean(SecurityConfig.class)
-    @Order(ManagementServerProperties.ACCESS_OVERRIDE_ORDER)
     static class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
         /**
@@ -89,8 +89,12 @@ public class SecurityConfig {
             http
                 .antMatcher("/api/**")
                     .authorizeRequests()
-                        .regexMatchers("/api/system/(?:info|health|metrics)").permitAll()
-                        .antMatchers("/api/system/**").authenticated()
+                        .requestMatchers(EndpointRequest.to(
+                                InfoEndpoint.class,
+                                HealthEndpoint.class,
+                                MetricsEndpoint.class
+                        )).permitAll()
+                        .requestMatchers(EndpointRequest.toAnyEndpoint()).authenticated()
                         .antMatchers("/api/**").permitAll()
                 .and()
                     .sessionManagement()
@@ -103,18 +107,17 @@ public class SecurityConfig {
     }
 
     @Configuration
-    @Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
     @ConditionalOnBean(SecurityConfig.class)
     protected static class ApplicationWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
 
         @Override
         protected void configure(final HttpSecurity http) throws Exception {
             http
-                .httpBasic()
-                    .and()
                 .authorizeRequests()
                     .antMatchers("/oauth/**").authenticated()
                     .antMatchers("/**").permitAll()
+                    .and()
+                .httpBasic()
                     .and()
                 .sessionManagement()
                     .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
