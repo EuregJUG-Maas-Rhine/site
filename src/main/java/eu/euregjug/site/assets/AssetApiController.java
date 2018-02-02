@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 EuregJUG.
+ * Copyright 2015-2018 EuregJUG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,13 +15,12 @@
  */
 package eu.euregjug.site.assets;
 
-import com.mongodb.gridfs.GridFSDBFile;
+import com.mongodb.client.gridfs.model.GridFSFile;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import org.apache.tika.Tika;
 import org.apache.tika.io.TikaInputStream;
 import org.apache.tika.mime.MediaType;
@@ -41,8 +40,11 @@ import static java.time.format.DateTimeFormatter.RFC_1123_DATE_TIME;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import static java.time.ZoneId.of;
 import static java.time.ZonedDateTime.now;
+import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.IOUtils;
+import org.springframework.data.mongodb.gridfs.GridFsResource;
 import static org.springframework.http.HttpStatus.CREATED;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
@@ -68,7 +70,7 @@ class AssetApiController {
     ) throws IOException {
 
         // Check duplicates
-        final GridFSDBFile file = this.gridFs.findOne(Query.query(Criteria.where("filename").is(assetData.getOriginalFilename())));
+        final GridFSFile file = this.gridFs.findOne(Query.query(Criteria.where("filename").is(assetData.getOriginalFilename())));
         if (file != null) {
             throw new DataIntegrityViolationException(String.format("Asset with name '%s' already exists", assetData.getOriginalFilename()));
         } else {
@@ -91,7 +93,7 @@ class AssetApiController {
             final HttpServletRequest request,
             final HttpServletResponse response
     ) throws IOException {
-        final GridFSDBFile file = this.gridFs.findOne(Query.query(Criteria.where("filename").is(filename)));
+        final GridFsResource file = this.gridFs.getResource(filename);
         if (file == null) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         } else {
@@ -100,7 +102,7 @@ class AssetApiController {
             response.setHeader("Content-Disposition", String.format("inline; filename=\"%s\"", file.getFilename()));
             response.setHeader("Expires", now(of("UTC")).plusDays(cacheForDays).format(RFC_1123_DATE_TIME));
             response.setHeader("Cache-Control", String.format("max-age=%d, %s", TimeUnit.DAYS.toSeconds(cacheForDays), "public"));
-            file.writeTo(response.getOutputStream());
+            IOUtils.copy(file.getInputStream(), response.getOutputStream());
             response.flushBuffer();
         }
     }

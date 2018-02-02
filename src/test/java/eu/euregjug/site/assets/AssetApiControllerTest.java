@@ -15,11 +15,11 @@
  */
 package eu.euregjug.site.assets;
 
-import com.mongodb.gridfs.GridFSDBFile;
+import com.mongodb.client.gridfs.model.GridFSFile;
 import eu.euregjug.site.config.SecurityTestConfig;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -57,12 +57,13 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.isNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
+import org.springframework.data.mongodb.gridfs.GridFsResource;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -95,7 +96,7 @@ public class AssetApiControllerTest {
     @Test
     public void createShouldThrowException() throws Exception {
         final MockMultipartFile multipartFile = new MockMultipartFile("assetData", this.getClass().getResourceAsStream("/eu/euregjug/site/assets/asset.png"));
-        when(this.gridFsTemplate.findOne(any(Query.class))).thenReturn(mock(GridFSDBFile.class));
+        when(this.gridFsTemplate.findOne(any(Query.class))).thenReturn(mock(GridFSFile.class));
 
         mvc
                 .perform(
@@ -137,8 +138,8 @@ public class AssetApiControllerTest {
     public void failedMimetypeDetectionShouldWork() throws Exception {
         final Reflect controllerReflect = Reflect.on(this.controller);
         // Much more evil isn't possible, i guess... DirtiesContext!!!!
-        Tika tika = controllerReflect.field("tika").get();
-        tika = spy(tika);
+
+        final Tika tika = spy(controllerReflect.field("tika").<Tika>get());
         when(tika.detect(any(InputStream.class), any(String.class))).thenThrow(IOException.class);
         controllerReflect.set("tika", tika);
 
@@ -166,23 +167,20 @@ public class AssetApiControllerTest {
                 .perform(get("/api/assets/notthere.jpg"))
                 .andExpect(status().isNotFound());
 
-        verify(this.gridFsTemplate).findOne(any(Query.class));
+        verify(this.gridFsTemplate).getResource("notthere.jpg");
         verifyNoMoreInteractions(this.gridFsTemplate);
     }
 
     @Test
-    public void getShoudWork() throws Exception {
-        GridFSDBFile file = mock(GridFSDBFile.class);
+    public void getShouldWork() throws Exception {
+        final String fileName = "messages.txt";
+        
+        final GridFsResource file = mock(GridFsResource.class);
         when(file.getContentType()).thenReturn("text/plain");
         when(file.getFilename()).thenReturn("helloword.txt");
-        when(file.writeTo(any(OutputStream.class))).then(invocation -> {
-            final OutputStream out = invocation.getArgumentAt(0, OutputStream.class);
-            final byte[] message = "Hello, World!".getBytes(StandardCharsets.UTF_8);
-            out.write(message);
-            return (long) message.length;
-        });
-
-        when(this.gridFsTemplate.findOne(any(Query.class))).thenReturn(file);
+        when(file.getInputStream()).thenReturn(new ByteArrayInputStream("Hello, World!".getBytes(StandardCharsets.UTF_8)));
+        
+        when(this.gridFsTemplate.getResource(fileName)).thenReturn(file);
 
         final DateTimeFormatter formatter = new DateTimeFormatterBuilder()
                 .appendText(DAY_OF_WEEK, TextStyle.SHORT)
@@ -192,13 +190,13 @@ public class AssetApiControllerTest {
                 .appendText(MONTH_OF_YEAR, TextStyle.SHORT)
                 .appendLiteral(" .*").toFormatter(Locale.ENGLISH);
         mvc
-                .perform(get("/api/assets/message.txt"))
+                .perform(get("/api/assets/{fileName}", fileName))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.header().string("Content-Type", "text/plain"))
                 .andExpect(MockMvcResultMatchers.header().string("Content-Disposition", "inline; filename=\"helloword.txt\""))
                 .andExpect(MockMvcResultMatchers.header().string("Expires", new BaseMatcher<String>() {
                     @Override
-                    public boolean matches(Object item) {                        
+                    public boolean matches(Object item) {
                         return ((String) item).matches(LocalDateTime.now(ZoneId.of("UTC")).plusDays(365).format(formatter));
                     }
 
@@ -209,7 +207,7 @@ public class AssetApiControllerTest {
                 }))
                 .andExpect(MockMvcResultMatchers.header().string("Cache-Control", "max-age=31536000, public"));
 
-        verify(this.gridFsTemplate).findOne(any(Query.class));
+        verify(this.gridFsTemplate).getResource(fileName);
         verifyNoMoreInteractions(this.gridFsTemplate);
     }
 }
