@@ -450,6 +450,7 @@
           <environmentVariables>
             <it-database.port>${it-database.port}</it-database.port>
           </environmentVariables>
+          <classesDirectory>${project.build.outputDirectory}</classesDirectory>
         </configuration>
       </plugin>
       <plugin>
