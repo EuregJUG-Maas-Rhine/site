@@ -37,6 +37,7 @@ import org.hamcrest.Description;
 import org.joor.Reflect;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatchers;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,7 +60,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
@@ -155,7 +155,7 @@ public class AssetApiControllerTest {
                 .andExpect(content().string("asset.png"));
 
         verify(this.gridFsTemplate).findOne(any(Query.class));
-        verify(this.gridFsTemplate).store(any(InputStream.class), eq("asset.png"), isNull(String.class));
+        verify(this.gridFsTemplate).store(any(InputStream.class), eq("asset.png"), ArgumentMatchers.<String>isNull());
         verifyNoMoreInteractions(this.gridFsTemplate);
     }
 

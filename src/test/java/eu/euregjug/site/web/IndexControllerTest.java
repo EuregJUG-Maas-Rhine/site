@@ -50,8 +50,8 @@ import static org.hamcrest.Matchers.hasProperty;
 import org.joor.Reflect;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
@@ -173,7 +173,7 @@ public class IndexControllerTest {
     public void indexShouldWork() throws Exception {
         when(this.eventRepository.findUpcomingEvents()).thenReturn(events);
         when(this.linkRepository.findAllByOrderByTypeAscSortColAscTitleAsc()).thenReturn(links);
-        final PageRequest pageRequest = new PageRequest(0, 5, Sort.Direction.DESC, "publishedOn", "createdAt");
+        final PageRequest pageRequest = PageRequest.of(0, 5, Sort.Direction.DESC, "publishedOn", "createdAt");
         final PageImpl<PostEntity> postsPage = new PageImpl<>(this.posts, pageRequest, 15);
         when(this.postRepository.findAllByStatus(Status.published, pageRequest)).thenReturn(postsPage);
 
