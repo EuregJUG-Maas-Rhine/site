@@ -100,7 +100,7 @@ class IndexController {
         model
                 .addAttribute("upcomingEvents", this.eventRepository.findUpcomingEvents())
                 .addAttribute("links", this.linkRepository.findAllByOrderByTypeAscSortColAscTitleAsc().stream().collect(groupingBy(LinkEntity::getType)))
-                .addAttribute(ATTRIBUTE_POSTS, this.postRepository.findAllByStatus(Status.published, new PageRequest(page, 5, Direction.DESC, "publishedOn", "createdAt")).map(postRenderingService::render));
+                .addAttribute(ATTRIBUTE_POSTS, this.postRepository.findAllByStatus(Status.published, PageRequest.of(page, 5, Direction.DESC, "publishedOn", "createdAt")).map(postRenderingService::render));
         return "index";
     }
 
