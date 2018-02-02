@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 EuregJUG.
+ * Copyright 2015-2018 EuregJUG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,13 @@
 package eu.euregjug.site.support.thymeleaf;
 
 import eu.euregjug.site.support.thymeleaf.expressions.Temporals;
-import java.util.HashMap;
-import java.util.Map;
-import org.thymeleaf.context.IProcessingContext;
-import org.thymeleaf.dialect.AbstractDialect;
-import org.thymeleaf.dialect.IExpressionEnhancingDialect;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+import org.thymeleaf.context.IExpressionContext;
+import org.thymeleaf.dialect.IExpressionObjectDialect;
+import org.thymeleaf.expression.IExpressionObjectFactory;
 
 /**
  * This is a custom dialect for the thymeleaf templates. It contains among
@@ -28,17 +30,36 @@ import org.thymeleaf.dialect.IExpressionEnhancingDialect;
  *
  * @author Michael J. Simons, 2015-01-04
  */
-public final class EuregJUGDialect extends AbstractDialect implements IExpressionEnhancingDialect {
+public final class EuregJUGDialect implements IExpressionObjectDialect {
 
     @Override
-    public String getPrefix() {
+    public String getName() {
         return "eur";
     }
 
     @Override
-    public Map<String, Object> getAdditionalExpressionObjects(final IProcessingContext processingContext) {
-        final Map<String, Object> expressionObjects = new HashMap<>();
-        expressionObjects.put("temporals", new Temporals(processingContext.getContext().getLocale()));
-        return expressionObjects;
+    public IExpressionObjectFactory getExpressionObjectFactory() {
+        return new EuregJUGDialectExpressionObjectFactory();
+    }
+
+    static class EuregJUGDialectExpressionObjectFactory implements IExpressionObjectFactory {
+
+        private final Set<String> allExpressionObjectNames = Collections.unmodifiableSet(new HashSet<>(Arrays.asList("extemporals")));
+
+        @Override
+        public Set<String> getAllExpressionObjectNames() {
+            return allExpressionObjectNames;
+        }
+
+        @Override
+        public Object buildObject(final IExpressionContext context, final String expressionObjectName) {
+            return new Temporals(context.getLocale());
+        }
+
+        @Override
+        public boolean isCacheable(final String expressionObjectName) {
+            return true;
+        }
+
     }
 }

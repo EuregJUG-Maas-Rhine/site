@@ -42,13 +42,13 @@
                         </header>
                     </div>
                     <div th:each="post : ${posts}" class="post">
-                        <header th:with="permalink=@{/{date}/{slug}(date=${#temporals.format(post.publishedOn,'yyyy/MM/dd')},slug=${post.slug})}">
+                        <header th:with="permalink=@{/{date}/{slug}(date=${#extemporals.format(post.publishedOn,'yyyy/MM/dd')},slug=${post.slug})}">
                             <h3>
                                 <a href="#" th:href="${permalink}"
                                    th:text="${post.title}">Dolore Amet Consequat
                                 </a>
                             </h3>
-                            <p><em th:text="#{publishedOn(${#temporals.formatDate(post.publishedOn, 'MEDIUM')})}">Published On</em>, <a href="#" th:href="${permalink}">Permalink</a></p>
+                            <p><em th:text="#{publishedOn(${#extemporals.formatDate(post.publishedOn, 'MEDIUM')})}">Published On</em>, <a href="#" th:href="${permalink}">Permalink</a></p>
                         </header>
                         <div class="body">
                             <div th:utext="${post.content}" th:remove="tag">

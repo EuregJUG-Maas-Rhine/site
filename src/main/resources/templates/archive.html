@@ -37,10 +37,10 @@
                 <!-- Content -->
                 <div class="content">
                     <section th:each="entry : ${posts.entrySet()}">
-                        <h5 class="alt" th:text="${#temporals.format(entry.key, 'MMMM yyyy')}">Month</h5>
+                        <h5 class="alt" th:text="${#extemporals.format(entry.key, 'MMMM yyyy')}">Month</h5>
                         <ul>
                             <li th:each="post : ${entry.value}">
-                                <span th:text="${#temporals.formatDate(post.publishedOn, 'SHORT')}">Date</span> - <a href="#" th:href="@{/{date}/{slug}(date=${#temporals.format(post.publishedOn,'yyyy/MM/dd')},slug=${post.slug})}" th:text="${post.title}">Post</a>				
+                                <span th:text="${#extemporals.formatDate(post.publishedOn, 'SHORT')}">Date</span> - <a href="#" th:href="@{/{date}/{slug}(date=${#extemporals.format(post.publishedOn,'yyyy/MM/dd')},slug=${post.slug})}" th:text="${post.title}">Post</a>				
                             </li>
                         </ul>
                     </section>		    		    	    
