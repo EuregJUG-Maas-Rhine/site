@@ -56,6 +56,7 @@
     <respond.version>1.4.2</respond.version>
     <rometools.version>1.7.2</rometools.version>
     <tika.version>1.17</tika.version>
+    <bouncycastle.version>1.56</bouncycastle.version>
     
     <!-- Same exclusions as pure JaCoCo -->
     <sonar.coverage.exclusions>**/Application.java,src/main/java/eu/euregjug/site/config/*</sonar.coverage.exclusions>
@@ -152,6 +153,21 @@
       <version>${tika.version}</version>
     </dependency>
     <dependency>
+      <groupId>org.bouncycastle</groupId>
+      <artifactId>bcprov-jdk15on</artifactId>
+      <version>${bouncycastle.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.bouncycastle</groupId>
+      <artifactId>bcpkix-jdk15on</artifactId>
+      <version>${bouncycastle.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.bouncycastle</groupId>
+      <artifactId>bcmail-jdk15on</artifactId>
+      <version>${bouncycastle.version}</version>
+    </dependency>
+    <dependency>
       <groupId>org.apache.tika</groupId>
       <artifactId>tika-parsers</artifactId>
       <version>${tika.version}</version>
@@ -195,6 +211,14 @@
         <exclusion>
           <groupId>org.ow2.asm</groupId>
           <artifactId>asm</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.bouncycastle</groupId>
+          <artifactId>bcprov-jdk15on</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.bouncycastle</groupId>
+          <artifactId>bcmail-jdk15on</artifactId>
         </exclusion>
       </exclusions>
     </dependency>
