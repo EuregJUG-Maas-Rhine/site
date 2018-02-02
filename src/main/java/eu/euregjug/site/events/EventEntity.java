@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 EuregJUG.
+ * Copyright 2015-2018 EuregJUG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,10 +39,10 @@ import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import org.hibernate.validator.constraints.NotBlank;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 import java.util.Optional;
+import javax.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 EuregJUG.
+ * Copyright 2016-2018 EuregJUG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,12 @@
 package eu.euregjug.site.events;
 
 import java.io.Serializable;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * Commandobject for new registrations. Needs getters and setters and all to
