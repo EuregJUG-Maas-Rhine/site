@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 EuregJUG.
+ * Copyright 2016-2018 EuregJUG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ public class RegistrationRepositoryIT {
     @Test
     public void idGeneratorsShouldWorkWithPostgreSQLAsExpected() {
         // data-id.sql creates on registration with id "1"
-        final EventEntity event = this.eventRepository.findOne(1).get();
+        final EventEntity event = this.eventRepository.findById(1).get();
         final RegistrationEntity savedRegistration = this.registrationRepository.save(new RegistrationEntity(event, "foo@bar.baz", "idGeneratorsShouldWorkWithPostgreSQLAsExpected", null, true));
         Assert.assertThat(savedRegistration.getId(), is(2));
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2017 EuregJUG.
+ * Copyright 2016-2018 EuregJUG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -65,7 +65,7 @@ public class RegistrationServiceTest {
     @Test
     public void shouldHandleInvalidEvent() {
         final RegistrationService service = new RegistrationService(eventRepository, registrationRepository, mailSender, null, messageSource, "info@euregjug.eu");
-        when(this.eventRepository.findOne(23)).thenReturn(Optional.empty());
+        when(this.eventRepository.findById(23)).thenReturn(Optional.empty());
 
         expectedException.expect(RegistrationService.InvalidRegistrationException.class);
         expectedException.expectMessage("No event with the id 23");
@@ -78,7 +78,7 @@ public class RegistrationServiceTest {
         final RegistrationService service = new RegistrationService(eventRepository, registrationRepository, mailSender, null, messageSource, "info@euregjug.eu");
         final EventEntity event = mock(EventEntity.class);
         when(event.isNeedsRegistration()).thenReturn(false);
-        when(this.eventRepository.findOne(23)).thenReturn(Optional.of(event));
+        when(this.eventRepository.findById(23)).thenReturn(Optional.of(event));
 
         expectedException.expect(RegistrationService.InvalidRegistrationException.class);
         expectedException.expectMessage("Event 23 doesn't need a registration");
@@ -93,7 +93,7 @@ public class RegistrationServiceTest {
         final EventEntity event = mock(EventEntity.class);
         when(event.isNeedsRegistration()).thenReturn(true);
         when(event.isOpenForRegistration()).thenReturn(false);
-        when(this.eventRepository.findOne(23)).thenReturn(Optional.of(event));
+        when(this.eventRepository.findById(23)).thenReturn(Optional.of(event));
 
         expectedException.expect(RegistrationService.InvalidRegistrationException.class);
         expectedException.expectMessage("Event 23 doesn't isn't open");
@@ -108,7 +108,7 @@ public class RegistrationServiceTest {
         final EventEntity event = mock(EventEntity.class);
         when(event.isNeedsRegistration()).thenReturn(true);
         when(event.isOpenForRegistration()).thenReturn(true);
-        when(this.eventRepository.findOne(23)).thenReturn(Optional.of(event));
+        when(this.eventRepository.findById(23)).thenReturn(Optional.of(event));
         when(this.registrationRepository.findByEventAndEmail(event, "michael@euregjug.eu")).thenReturn(Optional.of(mock(RegistrationEntity.class)));
         expectedException.expect(RegistrationService.InvalidRegistrationException.class);
         expectedException.expectMessage("Guest 'michael@euregjug.eu' already registered for event 23");
@@ -124,7 +124,7 @@ public class RegistrationServiceTest {
         final EventEntity event = mock(EventEntity.class);
         when(event.isNeedsRegistration()).thenReturn(true);
         when(event.isOpenForRegistration()).thenReturn(true);
-        when(this.eventRepository.findOne(23)).thenReturn(Optional.of(event));
+        when(this.eventRepository.findById(23)).thenReturn(Optional.of(event));
         when(this.registrationRepository.findByEventAndEmail(event, "michael@euregjug.eu")).thenReturn(Optional.empty());
         when(this.registrationRepository.save(any(RegistrationEntity.class))).thenAnswer(AdditionalAnswers.returnsFirstArg());
         
@@ -139,7 +139,7 @@ public class RegistrationServiceTest {
         assertThat(registrationEntity.getName(), is(registration.getName()));
         assertThat(registrationEntity.getEmail(), is(registration.getEmail()));
         
-        verify(this.eventRepository).findOne(23);
+        verify(this.eventRepository).findById(23);
         verify(this.registrationRepository).findByEventAndEmail(event, "michael@euregjug.eu");
         verify(this.registrationRepository).save(any(RegistrationEntity.class));
         verifyNoMoreInteractions(this.eventRepository, this.registrationRepository);

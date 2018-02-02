@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2017 EuregJUG.
+ * Copyright 2016-2018 EuregJUG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -240,7 +240,7 @@ public class IndexControllerTest {
 
     @Test
     public void registerFormShouldWork() throws Exception {
-        when(this.eventRepository.findOne(23)).thenReturn(Optional.of(this.events.get(0)));
+        when(this.eventRepository.findById(23)).thenReturn(Optional.of(this.events.get(0)));
 
         this.mvc
                 .perform(get("http://euregjug.eu/register/{eventId}", 23))
@@ -250,20 +250,20 @@ public class IndexControllerTest {
                 .andExpect(model().attribute("event", this.events.get(0)))
                 .andExpect(model().attributeExists("registration"));
 
-        verify(this.eventRepository).findOne(23);
+        verify(this.eventRepository).findById(23);
         verifyNoMoreInteractions(this.eventRepository);
     }
 
     @Test
     public void registerFormShouldHandleInvalidEvent() throws Exception {
-        when(this.eventRepository.findOne(23)).thenReturn(Optional.empty());
+        when(this.eventRepository.findById(23)).thenReturn(Optional.empty());
 
         this.mvc
                 .perform(get("http://euregjug.eu/register/{eventId}", 23))
                 .andExpect(status().isFound())
                 .andExpect(view().name("redirect:/"));
 
-        verify(this.eventRepository).findOne(23);
+        verify(this.eventRepository).findById(23);
         verifyNoMoreInteractions(this.eventRepository);
     }
 
@@ -308,7 +308,7 @@ public class IndexControllerTest {
 
     @Test
     public void registerShouldHandleInvalidData() throws Exception {
-        when(this.eventRepository.findOne(23)).thenReturn(Optional.of(this.events.get(0)));
+        when(this.eventRepository.findById(23)).thenReturn(Optional.of(this.events.get(0)));
 
         this.mvc.perform(post("/register/{eventId}", 23))
                 .andExpect(status().isOk())
@@ -321,7 +321,7 @@ public class IndexControllerTest {
 
     @Test
     public void registerShouldHandleInvalidRecaptca() throws Exception {
-        when(this.eventRepository.findOne(23)).thenReturn(Optional.of(this.events.get(0)));
+        when(this.eventRepository.findById(23)).thenReturn(Optional.of(this.events.get(0)));
         when(this.recaptchaValidator.validate(any(HttpServletRequest.class))).thenReturn(new ValidationResult(false, new ArrayList<>()));
 
         this.mvc.perform(
@@ -340,7 +340,7 @@ public class IndexControllerTest {
 
     @Test
     public void registerShouldHandleInvalidRegistration() throws Exception {
-        when(this.eventRepository.findOne(23)).thenReturn(Optional.of(this.events.get(0)));
+        when(this.eventRepository.findById(23)).thenReturn(Optional.of(this.events.get(0)));
         when(this.recaptchaValidator.validate(any(HttpServletRequest.class))).thenReturn(new ValidationResult(true, new ArrayList<>()));
         when(this.registrationService.register(eq(23), any(Registration.class))).thenThrow(new RegistrationService.InvalidRegistrationException("broken", "broken"));
 

@@ -183,7 +183,7 @@ class IndexController {
             final Model model,
             final RedirectAttributes redirectAttributes
     ) {
-        final EventEntity event = this.eventRepository.findOne(eventId).orElse(null);
+        final EventEntity event = this.eventRepository.findById(eventId).orElse(null);
         String rv;
         if (event == null) {
             redirectAttributes.addFlashAttribute(ATTRIBUTE_ALERTS, Arrays.asList("invalidEvent"));

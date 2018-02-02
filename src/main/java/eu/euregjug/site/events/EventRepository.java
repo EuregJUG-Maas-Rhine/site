@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 EuregJUG.
+ * Copyright 2015-2018 EuregJUG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,7 +54,7 @@ public interface EventRepository extends Repository<EventEntity, Integer> {
      * @return Event with the given Id or an empty optional
      */
     @Transactional(readOnly = true)
-    Optional<EventEntity> findOne(Integer id);
+    Optional<EventEntity> findById(Integer id);
 
     /**
      * Selects a "page" of events.

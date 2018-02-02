@@ -105,7 +105,7 @@ public class RegistrationService {
     @Transactional
     public RegistrationEntity register(final Integer eventId, final Registration newRegistration) {
         final EventEntity event = this.eventRepository
-                .findOne(eventId)
+                .findById(eventId)
                 .orElseThrow(() -> new InvalidRegistrationException(String.format("No event with the id %d", eventId), "invalidEvent"));
         final String email = newRegistration.getEmail().toLowerCase();
         if (!event.isNeedsRegistration()) {

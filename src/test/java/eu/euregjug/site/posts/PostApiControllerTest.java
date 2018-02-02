@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 EuregJUG.
+ * Copyright 2016-2018 EuregJUG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -99,14 +99,14 @@ public class PostApiControllerTest {
         postEntity1.setStatus(Status.published);
         when(this.postRepository.save(postEntity1)).then(invocation -> {
             // Do the stuff JPA would do for us...
-            final PostEntity rv = invocation.getArgumentAt(0, PostEntity.class);
+            final PostEntity rv = invocation.getArgument(0);
             return Reflect.on(rv).call("updateUpdatedAt").set("id", 4711).get();
         });
 
         final PostEntity postEntity2 = new PostEntity(new Date(), "new-site-is-live2", "New site is live", "Welcome to the new EuregJUG website. We have switched off the old static pages and replaced it with a little application based on Hibernate, Spring Data JPA, Spring Boot and Thymeleaf.");
         when(this.postRepository.save(postEntity2)).then(invocation -> {
             // Do the stuff JPA would do for us...
-            final PostEntity rv = invocation.getArgumentAt(0, PostEntity.class);
+            final PostEntity rv = invocation.getArgument(0);
             return Reflect.on(rv).call("updateUpdatedAt").set("id", 4712).get();
         });
 
@@ -214,8 +214,8 @@ public class PostApiControllerTest {
         oldEntity.setLocale(new Locale("de", "DE"));
         oldEntity.setFormat(Format.asciidoc);
         oldEntity.setStatus(Status.hidden);
-        when(this.postRepository.findOne(4711)).thenReturn(Optional.empty());
-        when(this.postRepository.findOne(4712)).thenReturn(Optional.of(oldEntity));
+        when(this.postRepository.findById(4711)).thenReturn(Optional.empty());
+        when(this.postRepository.findById(4712)).thenReturn(Optional.of(oldEntity));
 
         this.mvc
                 .perform(
@@ -262,8 +262,8 @@ public class PostApiControllerTest {
                         preprocessResponse(prettyPrint())
                 ));
 
-        verify(this.postRepository).findOne(4711);
-        verify(this.postRepository, times(2)).findOne(4712);
+        verify(this.postRepository).findById(4711);
+        verify(this.postRepository, times(2)).findById(4712);
         verifyNoMoreInteractions(this.postRepository);
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2017 EuregJUG.
+ * Copyright 2016-2018 EuregJUG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -82,26 +82,26 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         uriPort = 80
 )
 public class EventApiControllerTest {
-    
+
     @Autowired
     private MockMvc mvc;
-    
+
     @Autowired
     private ObjectMapper objectMapper;
-    
+
     @MockBean
     private EventRepository eventRepository;
-    
+
     @MockBean
     private PostRepository postRepository;
-    
+
     @MockBean
     private RegistrationRepository registrationRepository;
-    
+
     private JacksonTester<EventEntity> json;
-    
+
     private final List<EventEntity> events;
-    
+
     public EventApiControllerTest() {
         ZonedDateTime eventDate;
         eventDate = ZonedDateTime.of(2016, 9, 14, 18, 0, 0, 0, ZoneId.of("Europe/Berlin"));
@@ -109,7 +109,7 @@ public class EventApiControllerTest {
                 new EventEntity(GregorianCalendar.from(eventDate), "name-1", "description-1")
         ).set("id", 42).get();
         event1.setDuration(60);
-        
+
         eventDate = ZonedDateTime.of(2016, 11, 22, 18, 0, 0, 0, ZoneId.of("Europe/Berlin"));
         final EventEntity event2 = Reflect.on(
                 new EventEntity(GregorianCalendar.from(eventDate), "name-2", "description-2")
@@ -117,27 +117,27 @@ public class EventApiControllerTest {
         event2.setDuration(90);
         this.events = Arrays.asList(event1, event2);
     }
-    
+
     @Before
     public void setup() {
         JacksonTester.initFields(this, objectMapper);
     }
-    
+
     @Test
     public void createShouldWork() throws Exception {
         final EventEntity eventEntity = new EventEntity(Calendar.getInstance(), "Mark Paluch - Hallo, ich bin Redis", "Mark spricht in diesem Vortrag über den Open Source NoSQL Data Store Redis. Der Vortrag ist eine Einführung in Redis und veranschaulicht mit Hilfe von Code-Beispielen, wie Redis mit Spring Data, Hibernate OGM und plain Java verwendet werden kann. Der Vortrag findet bei Thinking Networks in Aachen statt.");
         eventEntity.setNeedsRegistration(true);
-        eventEntity.setType(Type.talk);        
+        eventEntity.setType(Type.talk);
         eventEntity.setPost(new PostEntity(new Date(), "foo", "foo", "foo"));
         Reflect.on(eventEntity).set("id", 30).get();
-        
+
         when(this.eventRepository.save(any(EventEntity.class))).then(invocation -> {
             // Do the stuff JPA would do for us...
-            final EventEntity rv = invocation.getArgumentAt(0, EventEntity.class);            
+            final EventEntity rv = invocation.getArgument(0);
             Assert.assertThat(rv.getId(), nullValue());
             return Reflect.on(rv).call("prePersistAndUpdate").set("id", 4712).get();
         });
-        
+
         this.mvc
                 .perform(
                         post("/api/events")
@@ -154,11 +154,11 @@ public class EventApiControllerTest {
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint())
                 ));
-        
+
         verify(this.eventRepository).save(any(EventEntity.class));
         verifyNoMoreInteractions(this.eventRepository, this.postRepository, this.registrationRepository);
     }
-    
+
     @Test
     public void addPostShouldWork() throws Exception {
         final ZonedDateTime eventDate = ZonedDateTime.of(2016, 9, 14, 18, 0, 0, 0, ZoneId.of("Europe/Berlin"));
@@ -168,27 +168,27 @@ public class EventApiControllerTest {
         final PostEntity post = Reflect.on(
                 new PostEntity(new Date(), "ruckblick-zum-aim42-vortrag-mit-gernot-starke", "Rückblick zum aim42 Vortrag mit Gernot Starke", "Am 7. April lud die Euregio JUG zusammen mit der http://www.inside-online.de/de/[inside Unternehmensgruppe] zu einem Vortrag von Gernot Starke zum Thema _aim42 - software architecture improvement_ ein.")
         ).call("updateUpdatedAt").set("id", 23).get();
-        
-        when(this.eventRepository.findOne(1)).thenReturn(Optional.empty());
-        when(this.eventRepository.findOne(42)).thenReturn(Optional.of(event));
-        when(this.postRepository.findOne(2)).thenReturn(Optional.empty());
-        when(this.postRepository.findOne(23)).thenReturn(Optional.of(post));
-        
+
+        when(this.eventRepository.findById(1)).thenReturn(Optional.empty());
+        when(this.eventRepository.findById(42)).thenReturn(Optional.of(event));
+        when(this.postRepository.findById(2)).thenReturn(Optional.empty());
+        when(this.postRepository.findById(23)).thenReturn(Optional.of(post));
+
         this.mvc.perform(
                 put("/api/events/{id}/post/{postId}", 1, 2)
                 .principal(() -> "euregjug")
         ).andExpect(status().isNotFound());
-        
+
         this.mvc.perform(
                 put("/api/events/{id}/post/{postId}", 42, 2)
                 .principal(() -> "euregjug")
         ).andExpect(status().isNotFound());
-        
+
         this.mvc.perform(
                 put("/api/events/{id}/post/{postId}", 1, 23)
                 .principal(() -> "euregjug")
         ).andExpect(status().isNotFound());
-        
+
         this.mvc.perform(
                 put("/api/events/{id}/post/{postId}", 42, 23)
                 .principal(() -> "euregjug")
@@ -202,44 +202,44 @@ public class EventApiControllerTest {
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint())
                 ));
-        
-        verify(this.eventRepository, times(2)).findOne(1);
-        verify(this.eventRepository, times(2)).findOne(42);
-        verify(this.postRepository, times(2)).findOne(2);
-        verify(this.postRepository, times(2)).findOne(23);
+
+        verify(this.eventRepository, times(2)).findById(1);
+        verify(this.eventRepository, times(2)).findById(42);
+        verify(this.postRepository, times(2)).findById(2);
+        verify(this.postRepository, times(2)).findById(23);
         verifyNoMoreInteractions(this.eventRepository, this.postRepository, this.registrationRepository);
     }
-    
+
     @Test
     public void deleteShouldWork() throws Exception {
         final EventEntity event = new EventEntity(Calendar.getInstance(), "NewName", "NewDescription");
-        when(this.eventRepository.findOne(4711)).thenReturn(Optional.empty());
-        when(this.eventRepository.findOne(4712)).thenReturn(Optional.of(event));
-        
+        when(this.eventRepository.findById(4711)).thenReturn(Optional.empty());
+        when(this.eventRepository.findById(4712)).thenReturn(Optional.of(event));
+
         this.mvc
                 .perform(
                         MockMvcRequestBuilders.delete("/api/events/4711")
                         .principal(() -> "euregjug")
                 ).andExpect(status().isNotFound());
-        
+
         this.mvc
                 .perform(
                         MockMvcRequestBuilders.delete("/api/events/4712")
                         .principal(() -> "euregjug")
                 ).andExpect(status().isNoContent());
-        
-        verify(this.eventRepository, times(1)).findOne(4711);
-        verify(this.eventRepository, times(1)).findOne(4712);
+
+        verify(this.eventRepository, times(1)).findById(4711);
+        verify(this.eventRepository, times(1)).findById(4712);
         verify(this.registrationRepository, times(1)).deleteByEvent(event);
         verify(this.eventRepository, times(1)).delete(event);
     }
-    
+
     @Test
     public void getShouldWork() throws Exception {
         final PageImpl page = new PageImpl(this.events);
-        
+
         when(this.eventRepository.findAll(any(Pageable.class))).thenReturn(page);
-        
+
         this.mvc
                 .perform(
                         get("/api/events")
@@ -260,20 +260,20 @@ public class EventApiControllerTest {
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint())
                 ));
-        
+
         verify(this.eventRepository).findAll(any(Pageable.class));
         verifyNoMoreInteractions(this.eventRepository, this.postRepository, this.registrationRepository);
     }
-    
+
     @Test
     public void getRegistrationsShouldWork() throws Exception {
         final List<RegistrationEntity> registrations = this.events.stream()
                 .filter(event -> event.getId() == 42)
                 .map(event -> new RegistrationEntity(event, "mail" + event.getId() + "@euregjug.eu", "name " + event.getId(), "vorname " + event.getId(), event.getId() == 42))
                 .collect(toList());
-        
+
         when(this.registrationRepository.findAllByEventId(42)).thenReturn(registrations);
-        
+
         this.mvc
                 .perform(
                         get("/api/events/{id}/registrations", 42)
@@ -288,11 +288,11 @@ public class EventApiControllerTest {
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint())
                 ));
-        
+
         verify(this.registrationRepository).findAllByEventId(42);
         verifyNoMoreInteractions(this.eventRepository, this.postRepository, this.registrationRepository);
     }
-    
+
     @Test
     public void updateShouldShouldWork() throws Exception {
         final EventEntity updateEntity = new EventEntity(Calendar.getInstance(), "NewName", "NewDescription");
@@ -310,10 +310,10 @@ public class EventApiControllerTest {
         oldEntity.setNeedsRegistration(false);
         oldEntity.setType(Type.meetup);
         oldEntity.setStatus(Status.open);
-        
-        when(this.eventRepository.findOne(23)).thenReturn(Optional.empty());
-        when(this.eventRepository.findOne(42)).thenReturn(Optional.of(oldEntity));
-        
+
+        when(this.eventRepository.findById(23)).thenReturn(Optional.empty());
+        when(this.eventRepository.findById(42)).thenReturn(Optional.of(oldEntity));
+
         this.mvc
                 .perform(
                         put("/api/events/{id}", 23)
@@ -326,7 +326,7 @@ public class EventApiControllerTest {
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint())
                 ));
-        
+
         this.mvc
                 .perform(
                         put("/api/events/{id}", 42)
@@ -344,7 +344,7 @@ public class EventApiControllerTest {
                 .andExpect(jsonPath("$.location", equalTo(updateEntity.getLocation())))
                 .andExpect(jsonPath("$.type", equalTo("talk")))
                 .andExpect(jsonPath("$.status", equalTo("open")));
-        
+
         updateEntity.setStatus(EventEntity.Status.closed);
         this.mvc
                 .perform(
@@ -367,9 +367,9 @@ public class EventApiControllerTest {
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint())
                 ));
-        
-        verify(this.eventRepository).findOne(23);
-        verify(this.eventRepository, times(2)).findOne(42);
+
+        verify(this.eventRepository).findById(23);
+        verify(this.eventRepository, times(2)).findById(42);
         verifyNoMoreInteractions(this.eventRepository, this.postRepository, this.registrationRepository);
     }
 }

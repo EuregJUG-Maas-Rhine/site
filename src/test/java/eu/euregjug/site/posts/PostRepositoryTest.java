@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 EuregJUG.
+ * Copyright 2016-2018 EuregJUG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ public class PostRepositoryTest {
 
     @Test
     public void getPreviousShouldWork() {
-        PostEntity currentPost = postRepository.findOne(3).get();
+        PostEntity currentPost = postRepository.findById(3).get();
         currentPost = postRepository.getPrevious(currentPost).get();
         assertThat(currentPost.getId(), is(2));
         currentPost = postRepository.getPrevious(currentPost).get();
@@ -45,7 +45,7 @@ public class PostRepositoryTest {
 
     @Test
     public void getNextShouldWork() {
-        PostEntity currentPost = postRepository.findOne(3).get();
+        PostEntity currentPost = postRepository.findById(3).get();
         currentPost = postRepository.getNext(currentPost).get();
         assertThat(currentPost.getId(), is(4));
         currentPost = postRepository.getNext(currentPost).get();

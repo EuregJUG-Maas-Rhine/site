@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 EuregJUG.
+ * Copyright 2015-2018 EuregJUG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ public interface PostRepository extends Repository<PostEntity, Integer>, PostRep
      * @return Post with the given Id or an empty optional
      */
     @Transactional(readOnly = true)
-    Optional<PostEntity> findOne(Integer id);
+    Optional<PostEntity> findById(Integer id);
 
     /**
      * Selects a post by date and slug.

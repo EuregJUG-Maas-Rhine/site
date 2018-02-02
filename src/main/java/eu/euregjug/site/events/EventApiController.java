@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 EuregJUG.
+ * Copyright 2015-2018 EuregJUG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -73,7 +73,7 @@ class EventApiController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable final Integer id) {
         final EventEntity event = this.eventRepository
-                .findOne(id)
+                .findById(id)
                 .orElseThrow(ResourceNotFoundException::new);
         this.registrationRepository.deleteByEvent(event);
         this.eventRepository.delete(event);
@@ -93,8 +93,8 @@ class EventApiController {
     @PreAuthorize("isAuthenticated()")
     @Transactional
     public EventEntity addPost(@PathVariable final Integer id, @PathVariable final Integer postId) {
-        final EventEntity eventEntity = this.eventRepository.findOne(id).orElse(null);
-        final PostEntity postEntity = this.postRepository.findOne(postId).orElse(null);
+        final EventEntity eventEntity = this.eventRepository.findById(id).orElse(null);
+        final PostEntity postEntity = this.postRepository.findById(postId).orElse(null);
         if (eventEntity == null || postEntity == null) {
             throw new ResourceNotFoundException();
         }
@@ -117,7 +117,7 @@ class EventApiController {
     @PreAuthorize("isAuthenticated()")
     @Transactional
     public EventEntity update(@PathVariable final Integer id, @Valid @RequestBody final EventEntity updatedEvent) {
-        final EventEntity eventEntity = this.eventRepository.findOne(id).orElseThrow(ResourceNotFoundException::new);
+        final EventEntity eventEntity = this.eventRepository.findById(id).orElseThrow(ResourceNotFoundException::new);
         eventEntity.setDescription(updatedEvent.getDescription());
         eventEntity.setDuration(updatedEvent.getDuration());
         eventEntity.setNeedsRegistration(updatedEvent.isNeedsRegistration());
