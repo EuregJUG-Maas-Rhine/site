@@ -270,12 +270,11 @@ public class IndexControllerTest {
     @Test
     public void feedShouldWork() throws Exception {
         when(this.eventRepository.findUpcomingEvents()).thenReturn(events);
-        final PageRequest pageRequest = new PageRequest(1, 5, Sort.Direction.DESC, "publishedOn", "createdAt");
+        final PageRequest pageRequest = PageRequest.of(1, 5, Sort.Direction.DESC, "publishedOn", "createdAt");
         final PageImpl<PostEntity> postsPage = new PageImpl<>(this.posts, pageRequest, 15);
         when(this.postRepository.findAllByStatus(Status.published, pageRequest)).thenReturn(postsPage);
         when(this.linkRepository.findAllByOrderByTypeAscSortColAscTitleAsc()).thenReturn(new ArrayList<>());
 
-        final ZoneId zoneUtc = ZoneId.of("UTC");
         final SimpleDateFormat df = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss 'GMT'", Locale.US);
         final String date1 = df.format(this.posts.get(0).getPublishedOn());
         final String date2 = df.format(this.posts.get(1).getPublishedOn());
