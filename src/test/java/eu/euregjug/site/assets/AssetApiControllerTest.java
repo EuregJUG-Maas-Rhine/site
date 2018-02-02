@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 EuregJUG.
+ * Copyright 2016-2018 EuregJUG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -64,7 +64,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.fileUpload;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
@@ -99,7 +99,7 @@ public class AssetApiControllerTest {
 
         mvc
                 .perform(
-                        fileUpload("/api/assets")
+                        multipart("/api/assets")
                         .file(multipartFile)
                 )
                 .andExpect(status().isConflict())
@@ -117,7 +117,7 @@ public class AssetApiControllerTest {
 
         mvc
                 .perform(
-                        fileUpload("/api/assets")
+                        multipart("/api/assets")
                         .file(multipartFile)
                 )
                 .andExpect(status().isCreated())
@@ -147,7 +147,7 @@ public class AssetApiControllerTest {
 
         mvc
                 .perform(
-                        fileUpload("/api/assets")
+                        multipart("/api/assets")
                         .file(multipartFile)
                 )
                 .andExpect(status().isCreated())
