@@ -3,3 +3,4 @@ applications:
 - name: euregjug
   path: target/site.jar
   memory: 2G
+  buildpack: https://github.com/cloudfoundry/java-buildpack.git#v4.9
