@@ -138,7 +138,7 @@ class IndexController {
     public String archive(final Model model) {
         model.addAttribute(ATTRIBUTE_POSTS,
                 this.postRepository
-                .findAll(new Sort(Direction.DESC, "publishedOn")).stream()
+                .findAll(Sort.by("publishedOn").ascending()).stream()
                 .filter(PostEntity::isPublished)
                 .map(Post::new)
                 .collect(groupingBy(
