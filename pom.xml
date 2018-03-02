@@ -56,6 +56,7 @@
     <respond.version>1.4.2</respond.version>
     <rometools.version>1.7.2</rometools.version>
     <tika.version>1.17</tika.version>
+    <flyway.version>4.2.0</flyway.version>
     
     <!-- Same exclusions as pure JaCoCo -->
     <sonar.coverage.exclusions>**/Application.java,src/main/java/eu/euregjug/site/config/*</sonar.coverage.exclusions>
