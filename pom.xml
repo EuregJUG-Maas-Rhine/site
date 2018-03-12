@@ -349,7 +349,6 @@
             <configuration>
               <configLocation>src/checkstyle/checkstyle.xml</configLocation>
               <suppressionsLocation>src/checkstyle/checkstyle-suppressions.xml</suppressionsLocation>
-              <encoding>UTF-8</encoding>
               <consoleOutput>true</consoleOutput>
               <failsOnError>true</failsOnError>
               <linkXRef>false</linkXRef>
@@ -382,7 +381,6 @@
         <configuration>
           <target>${java.version}</target>
           <source>${java.version}</source>
-          <encoding>${project.build.sourceEncoding}</encoding>
           <compilerArgs>
             <arg>-parameters</arg>
           </compilerArgs>
