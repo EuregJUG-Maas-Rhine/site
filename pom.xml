@@ -3,10 +3,6 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <prerequisites>
-    <maven>3.3</maven>
-  </prerequisites>
-
   <groupId>eu.euregjug</groupId>
   <artifactId>site</artifactId>
   <version>0.0.1-SNAPSHOT</version>
@@ -328,6 +324,9 @@
             <id>enforce</id>
             <configuration>
               <rules>
+                <requireMavenVersion>
+                  <version>3.3</version>
+                </requireMavenVersion>
                 <DependencyConvergence />
               </rules>
             </configuration>
