@@ -61,6 +61,10 @@
 				    <p th:if="${#fields.hasErrors('email')}"><small class="help-block" th:errors="*{email}">Error</small></p>
 				</div>			    
 			    </div>
+			    <div class="row uniform">
+					<div class="6u 12u$(small)">
+					<p class="copyright" th:text="#{dsgvoHint}">dsgvoHint</p></div>
+			    </div>
 			    <div class="row uniform" th:if="${@mailChimpConfig.enabled}">
 				<div class="6u 12u$(small)">
 				<input id="subscribeToNewsletter" name="subscribeToNewsletter" type="checkbox" th:checked="*{subscribeToNewsletter}"/><label for="subscribeToNewsletter" th:text="#{registration.subscribeToNewsletter}">subscribeToNewsletter</label></div>
