@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 EuregJUG.
+ * Copyright 2015-2018 EuregJUG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,9 @@ package eu.euregjug.site.events;
 
 import java.util.List;
 import java.util.Optional;
+
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -49,4 +52,18 @@ public interface RegistrationRepository extends Repository<RegistrationEntity, I
      * @param event The event whose registrations should be deleted
      */
     void deleteByEvent(EventEntity event);
+
+    /**
+     * Counts the registrations for a given event.
+     *
+     * @param event The event whose registrations should be counted
+     */
+    int countByEvent(EventEntity event);
+
+    /**
+     * Deletes all registrations for events in the past.
+     */
+    @Modifying
+    @Query("Delete from RegistrationEntity r where r.event in (select e from EventEntity e where e.heldOn < current_timestamp())")
+    void deleteAllFromExpiredEvents();
 }

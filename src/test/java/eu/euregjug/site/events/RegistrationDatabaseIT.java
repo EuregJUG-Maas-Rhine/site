@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 EuregJUG.
+ * Copyright 2016-2018 EuregJUG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,12 +15,16 @@
  */
 package eu.euregjug.site.events;
 
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.is;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+
+import static org.junit.Assert.*;
 import static org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace.NONE;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -33,7 +37,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = NONE)
 @ActiveProfiles("it")
-public class RegistrationRepositoryIT {
+public class RegistrationDatabaseIT {
     
     @Autowired
     private EventRepository eventRepository;
@@ -43,9 +47,22 @@ public class RegistrationRepositoryIT {
     
     @Test
     public void idGeneratorsShouldWorkWithPostgreSQLAsExpected() {
-        // data-id.sql creates on registration with id "1"
+        // data-it.sql creates on registration with id "1"
         final EventEntity event = this.eventRepository.findOne(1).get();
         final RegistrationEntity savedRegistration = this.registrationRepository.save(new RegistrationEntity(event, "foo@bar.baz", "idGeneratorsShouldWorkWithPostgreSQLAsExpected", null, true));
-        Assert.assertThat(savedRegistration.getId(), is(2));
+        assertThat(savedRegistration.getId(), is(5));
+    }
+
+    @Test
+    public void deletionOfOldRegistrationsShouldWork() {
+        assertThat(this.registrationRepository.findAllByEventId(2).size(), is(3));
+        this.registrationRepository.deleteAllFromExpiredEvents();
+        assertThat(this.registrationRepository.findAllByEventId(2).size(), is(0));
+        assertThat(this.registrationRepository.findAllByEventId(1).size(), is(greaterThanOrEqualTo(1)));
+    }
+
+    @Test
+    public void shouldRetrieveCorrectNumberOfStaleEvents() {
+        assertThat(eventRepository.findAllExpiredWithoutStatistics().size(), is(1));
     }
 }

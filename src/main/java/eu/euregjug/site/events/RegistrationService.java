@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 EuregJUG.
+ * Copyright 2015-2018 EuregJUG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -143,6 +143,18 @@ public class RegistrationService {
             log.warn("Could not send an email to {} for event '{}': {}", registrationEntity.getEmail(), registrationEntity.getEvent().getName(), e.getMessage());
             log.debug("Full error", e);
         }
+    }
+
+    /**
+     * Selects all the expired events which don't have some super simple statistical data, gets the data, stores it
+     * and then deletes the old registrations.
+     */
+    @Transactional
+    public void cleanupOldRegistrations() {
+        this.eventRepository.findAllExpiredWithoutStatistics().forEach(event ->
+            event.setNumberOfRegistrations(this.registrationRepository.countByEvent(event))
+        );
+        this.registrationRepository.deleteAllFromExpiredEvents();
     }
 
     /**

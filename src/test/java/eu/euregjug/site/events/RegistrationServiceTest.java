@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2017 EuregJUG.
+ * Copyright 2016-2018 EuregJUG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package eu.euregjug.site.events;
 
+import java.util.Arrays;
 import java.util.Optional;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -143,5 +144,22 @@ public class RegistrationServiceTest {
         verify(this.registrationRepository).findByEventAndEmail(event, "michael@euregjug.eu");
         verify(this.registrationRepository).save(any(RegistrationEntity.class));
         verifyNoMoreInteractions(this.eventRepository, this.registrationRepository);
+    }
+
+    @Test
+    public void shouldCleanupOldRegistrations() {
+        final EventEntity event = mock(EventEntity.class);
+
+        when(this.eventRepository.findAllExpiredWithoutStatistics()).thenReturn(Arrays.asList(event));
+        when(this.registrationRepository.countByEvent(event)).thenReturn(23);
+
+        final RegistrationService service = new RegistrationService(eventRepository, registrationRepository, mailSender, null, messageSource, "info@euregjug.eu");
+        service.cleanupOldRegistrations();
+
+        verify(this.eventRepository).findAllExpiredWithoutStatistics();
+        verify(this.registrationRepository).countByEvent(event);
+        verify(event).setNumberOfRegistrations(23);
+        verify(this.registrationRepository).deleteAllFromExpiredEvents();
+        verifyNoMoreInteractions(this.eventRepository, this.registrationRepository, event);
     }
 }

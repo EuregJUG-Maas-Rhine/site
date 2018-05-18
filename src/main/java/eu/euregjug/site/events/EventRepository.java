@@ -71,4 +71,10 @@ public interface EventRepository extends Repository<EventEntity, Integer> {
      * @param entity Event to delete
      */
     void delete(EventEntity entity);
+
+    /**
+     * @return A list of events in the past without having any kind of statistics.
+     */
+    @Query("Select e from EventEntity e where e.heldOn < current_timestamp() and e.numberOfRegistrations is null")
+    List<EventEntity> findAllExpiredWithoutStatistics();
 }

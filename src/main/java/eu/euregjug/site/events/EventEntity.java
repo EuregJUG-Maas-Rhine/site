@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 EuregJUG.
+ * Copyright 2015-2018 EuregJUG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -176,6 +176,16 @@ public class EventEntity implements Serializable {
     @Enumerated(EnumType.STRING)
     @Getter @Setter
     private Status status;
+
+    /**
+     * The number of registions this event had. In the context of GDPR we decided to delete all
+     * registrations for an event one day after the event, but we want to know at least the number
+     * of people who registered.
+     */
+    @Getter @Setter
+    @JsonIgnore
+    @Column(name = "number_of_registrations")
+    private Integer numberOfRegistrations;
 
     /**
      * Creates a new Event on the given {@link #heldOn date} with the name
