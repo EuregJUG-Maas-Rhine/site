@@ -6,3 +6,4 @@
 \____/\__,_|_|  \___|\__, \____/ \___/ \____/     \_|  |_/\__,_|\__,_|___/      \_| \_|_| |_|_|_| |_|\___|
                       __/ |                                                                               
                      |___/                                                                                
+Running ${AnsiColor.BRIGHT_BLUE}${application.version}${AnsiColor.DEFAULT} on ${AnsiStyle.BOLD}${AnsiColor.BRIGHT_RED}Spring Boot${AnsiColor.DEFAULT}${AnsiStyle.NORMAL} ${AnsiColor.BRIGHT_BLUE}${spring-boot.version}${AnsiColor.DEFAULT}.
