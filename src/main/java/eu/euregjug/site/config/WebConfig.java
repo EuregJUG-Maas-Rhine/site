@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 EuregJUG.
+ * Copyright 2015-2018 EuregJUG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,6 +38,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     @Override
     public void addViewControllers(final ViewControllerRegistry registry) {
         registry.addViewController("/about").setViewName("about");
+        registry.addViewController("/imprint").setViewName("imprint");
     }
 
     @Bean
