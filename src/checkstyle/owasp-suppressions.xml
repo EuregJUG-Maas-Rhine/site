@@ -2,7 +2,7 @@
 <suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.1.xsd">
     <suppress>
         <notes><![CDATA[
-        SSL Vulnerabilities in JRuby
+        SSL Vulnerabilities in JRuby.
         ]]></notes>
         <filePath regex="true">.*\bjruby-complete-1\.7\.26\.jar</filePath>
         <cve>CVE-2016-2108</cve>
@@ -10,7 +10,7 @@
     </suppress>
     <suppress>
         <notes><![CDATA[
-        SSL Vulnerabilities in JRuby
+        SSL Vulnerabilities in JRuby.
         ]]></notes>
         <filePath regex="true">.*\bjopenssl\.jar</filePath>
         <cve>CVE-2016-2108</cve>
@@ -25,9 +25,16 @@
     </suppress>
     <suppress>
         <notes><![CDATA[
-        This is a false positive
+        This is a false positive.
         ]]></notes>
         <filePath regex="true">.*\blombok-1\.16\.\d+\.jar</filePath>
         <cve>CVE-2016-0749</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+        It's in tika core, not in Vorbis.
+        ]]></notes>
+        <filePath regex="true">.*\bvorbis-java-tika-0\.8\.jar</filePath>
+        <cve>CVE-2018-1335</cve>
     </suppress>
 </suppressions>
