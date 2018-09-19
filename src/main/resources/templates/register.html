@@ -45,19 +45,19 @@
 			<form method="post" class="registrationForm" action="#"  th:action="@{/register/{eventId}(eventId=${event.id})}" th:object="${registration}">
 			    <div class="row uniform">
 				<div class="6u$ 12u$(small)" th:classappend="${#fields.hasErrors('firstName')} ? 'has-error'">
-				    <input type="text" th:field="*{firstName}" th:placeholder="#{registration.firstName}" />
+				    <input type="text" th:field="*{firstName}" th:placeholder="#{registration.firstName}" autocomplete="given-name" />
 				    <p th:if="${#fields.hasErrors('firstName')}"><small class="help-block" th:errors="*{firstName}">Error</small></p>
 				</div>
 			    </div>
 			    <div class="row uniform">
 				<div class="6u$ 12u$(small)" th:classappend="${#fields.hasErrors('name')} ? 'has-error'">
-				    <input type="text" th:field="*{name}"  th:placeholder="#{registration.name}" />
+				    <input type="text" th:field="*{name}"  th:placeholder="#{registration.name}" autocomplete="family-name" />
 				    <p th:if="${#fields.hasErrors('name')}"><small class="help-block" th:errors="*{name}">Error</small></p>
 				</div>
 			    </div>
 			    <div class="row uniform">
 				<div class="6u$ 12u$(small)" th:classappend="${#fields.hasErrors('email')} ? 'has-error'">
-				    <input type="email" th:field="*{email}" th:placeholder="#{registration.email}" />
+				    <input type="email" th:field="*{email}" th:placeholder="#{registration.email}" autocomplete="email" />
 				    <p th:if="${#fields.hasErrors('email')}"><small class="help-block" th:errors="*{email}">Error</small></p>
 				</div>			    
 			    </div>
