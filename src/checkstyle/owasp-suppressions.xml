@@ -37,4 +37,11 @@
         <filePath regex="true">.*\bvorbis-java-tika-0\.8\.jar</filePath>
         <cve>CVE-2018-1335</cve>
     </suppress>
+    <suppress>
+        <notes><![CDATA[
+        Unsure which version of the driver to use..
+        ]]></notes>
+        <filePath regex="true">.*\bpostgresql-9\.4\.1212\.jre7\.jar</filePath>
+        <cve>CVE-2016-7048</cve>
+    </suppress>
 </suppressions>
